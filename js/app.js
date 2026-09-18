@@ -12,7 +12,7 @@
   const monthName = m => ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'][m-1];
 
   /* ================= IoT 实时采集引擎（模拟智能硬件自动上报） ================= */
-  const live = { on:true, lastSync:'—', t:DB.weather.temp, shed:24.3, sheepT:39.2, online:0, ndvi:0.74, hum:58, visitors:48 };
+  const live = { on:true, lastSync:'—', t:DB.weather.temp, shed:24.3, online:0, ndvi:0.74, hum:58, visitors:48 };
   let iotTimer = null;
   function liveOnline(){ return DB.deviceList.filter(x=>x.state==='在线').reduce((s,x)=>s+x.count,0); }
   live.online = liveOnline();
@@ -22,7 +22,6 @@
       if (!live.on) return;
       live.t = +(DB.weather.temp + (Math.random()*0.6-0.3)).toFixed(1);
       live.shed = +(24 + Math.random()*0.8).toFixed(1);
-      live.sheepT = +(39.2 + (Math.random()*0.4-0.2)).toFixed(1);
       live.online = Math.max(0, liveOnline() + (Math.random()<0.25?-1:0));
       live.ndvi = +(0.74 + (Math.random()*0.02-0.01)).toFixed(3);
       live.hum = Math.round(56 + Math.random()*6);
@@ -35,7 +34,7 @@
   }
   function renderLive(){
     const map = {
-      wtemp: live.t+'℃', shed: live.shed+'℃', sheepT: live.sheepT+'℃',
+      wtemp: live.t+'℃', shed: live.shed+'℃',
       online: fmt(live.online)+' 台', ndvi: live.ndvi.toFixed(3), hum: live.hum+'%',
       visitors: live.visitors+' 人', sync: live.lastSync
     };
@@ -200,14 +199,14 @@
     <div class="bigscreen bs-v8">
       <div class="bs-sweeps"><i></i><i></i><i></i></div>
       <div class="bs-letters">
-        ${['牛·羊·草·牧·数·据·云','牧·场·智·能·感·知','草·畜·平·衡·轮·牧','耳·标·测·温·定·位','自·动·称·重·分·群','饲·草·储·备·打·草','犊·牛·保·温·饮·水','政·务·对·接·溯·源','牧·户·游·接·待','智·慧·农·机·作·业','雪·灾·预·警·防·火','冷·链·产·品·溯·源','北·斗·短·报·文','无·人·机·巡·场'].map((t,i)=>`<span style="--x:${(i*7.1+1).toFixed(1)}%;--d:${(9+(i%5)*1.8).toFixed(1)}s;--dl:-${(i*0.85).toFixed(2)}s">${t}</span>`).join('')}
+        ${['牛·草·牧·数·据·云','牧·场·智·能·感·知','草·畜·平·衡·轮·牧','耳·标·测·温·定·位','自·动·称·重·分·群','饲·草·储·备·打·草','犊·牛·保·温·饮·水','政·务·对·接·溯·源','牧·户·游·接·待','智·慧·农·机·作·业','雪·灾·预·警·防·火','冷·链·产·品·溯·源','北·斗·短·报·文','无·人·机·巡·场'].map((t,i)=>`<span style="--x:${(i*7.1+1).toFixed(1)}%;--d:${(9+(i%5)*1.8).toFixed(1)}s;--dl:-${(i*0.85).toFixed(2)}s">${t}</span>`).join('')}
       </div>
       <div class="bs-radar"><i></i><i></i><i></i><b></b></div>
       <div class="bs-bits">01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101 01010011 01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101</div>
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=16" alt="YILATE">
+          <img src="assets/logo.png?v=17" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -238,7 +237,7 @@
           <section class="bs-panel">
             <div class="bsp-title">🐂 牛群结构与存栏 <em>LIVESTOCK</em></div>
             <div class="bsp-big">${fmt(c.totalAnimals)}</div>
-            <div class="bsp-sub">大牛 102 · 小牛 84 · 羊 300 · 马 20</div>
+            <div class="bsp-sub">大牛 102 · 小牛 84</div>
             <div id="bsStock" class="bs-chart"></div>
           </section>
           <section class="bs-panel">
@@ -521,12 +520,12 @@
         ${statCard({icon:'🍖', label:'本季出栏屠宰', value:c.slHead+' 头只', sub:'检疫合格率 100%', color:'#b3541e', bg:'#fbeee6'})}
         ${statCard({icon:'🛍️', label:'产品销售收入', value:money(c.saleAmount), sub:'冷鲜肉/奶食/绒品/文创', color:'#f59e0b', bg:'#fef3c7'})}
         ${statCard({icon:'🏕️', label:'牧游订单', value:c.todayOrders+' 单', sub:'今日游客 48 人 · 评分 4.9', color:'#8b5cf6', bg:'#ede9fe'})}
-        ${statCard({icon:'⚖️', label:'草畜平衡', value:c.sheepUnits.toLocaleString()+' 羊单位', sub:'安全线内 '+DB.grassland.balance.rate+'%', color:'#4f46e5', bg:'#eef2ff'})}
+        ${statCard({icon:'⚖️', label:'草畜平衡', value:c.sheepUnits.toLocaleString()+' 标准家畜单位', sub:'安全线内 '+DB.grassland.balance.rate+'%', color:'#4f46e5', bg:'#eef2ff'})}
       </div>
       <div class="live-strip">
         <div class="ls-title">● 实时采集 <small>智能硬件自动上报 · 无需人工录入</small></div>
         <div class="ls-chips">
-          <span>🐑 羊均体温 <b data-live="sheepT">39.2℃</b></span>
+          <span>🐄 牛只体温 <b>38.6℃</b></span>
           <span>🏠 圈舍温度 <b data-live="shed">24.3℃</b></span>
           <span>📡 设备在线 <b data-live="online">${fmt(liveOnline())} 台</b></span>
           <span>🛰️ 草场 NDVI <b data-live="ndvi">0.740</b></span>
@@ -598,7 +597,7 @@
     const m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     return `
     <div class="page">
-      ${pageHeader('四季循环生产 · 全年生产模拟', '从接羔到出栏、从打草到牧游，一个家庭牧场的完整年度循环', `
+      ${pageHeader('四季循环生产 · 全年生产模拟', '从产犊到出栏、从打草到牧游，一个家庭牧场的完整年度循环', `
         <button class="btn solid sm" data-cycle="prev">◀ 上个月</button>
         <button class="btn solid sm" data-cycle="next">下个月 ▶</button>
         <button class="btn ghost sm" data-cycle="today">回到本月</button>`)}
@@ -635,7 +634,7 @@
                 ['🌱','天然草场','种草改良 · 以草定畜'],
                 ['🐑','放牧轮牧','四季营盘 · 分区轮牧'],
                 ['🌾','打草储备','夏秋打草 · 饲草入库'],
-                ['🍼','繁殖饲养','接羔产犊 · 暖棚越冬'],
+                ['🍼','繁殖饲养','产犊产犊 · 暖棚越冬'],
                 ['⚖️','育肥管理','称重分群 · 智能补饲'],
                 ['🍖','出栏屠宰','定点屠宰 · 检疫合格'],
                 ['📦','产品加工','分割冷藏 · 品牌销售'],
@@ -645,7 +644,7 @@
                   <div class="fn-ico">${ico}</div><div class="fn-name">${tt}</div><div class="fn-desc">${dd}</div>
                 </div>${i<7?'<div class="flow-arrow">→</div>':''}`).join('')}
             </div>
-            <div class="card-note">💡 一年四季闭环：春接羔防疫 → 夏轮牧打草 → 秋防疫出栏 → 冬补饲牧游，收入反哺草场与智慧装备，草原越养越好。</div>`)}
+            <div class="card-note">💡 一年四季闭环：春产犊防疫 → 夏轮牧打草 → 秋防疫出栏 → 冬补饲牧游，收入反哺草场与智慧装备，草原越养越好。</div>`)}
         </div>
         <div class="col1">
           ${card('四季营盘档案', `
@@ -699,11 +698,11 @@
     const c = compute();
     return `
     <div class="page">
-      ${pageHeader('养殖管理', '四畜分群 · 电子档案 · 繁殖动态 · 智能监测', addBtn('登记牲畜个体'))}
+      ${pageHeader('养殖管理', '西门塔尔牛分群 · 电子档案 · 繁殖动态 · 智能监测', addBtn('登记牲畜个体'))}
       <div class="kpi-grid kpi-4">
-        ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'羊单位 '+fmt(c.sheepUnits), color:'#4f46e5', bg:'#eef2ff'})}
+        ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'标准家畜单位 '+fmt(c.sheepUnits), color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 186 头 · 200 枚含备件', color:'#0ea5e9', bg:'#e0f2fe'})}
-        ${statCard({icon:'🍼', label:'本年度繁殖', value:'产犊 120 · 羔羊 188', sub:'犊牛成活率 96.0% · 羔羊 98.0%', color:'#b3541e', bg:'#fbeee6'})}
+        ${statCard({icon:'🍼', label:'本年度繁殖', value:'产犊 84 头', sub:'犊牛成活率 96.0%', color:'#b3541e', bg:'#fbeee6'})}
         ${statCard({icon:'💉', label:'免疫率', value:'96.8%', sub:'春秋两防 · 应免尽免', color:'#475569', bg:'#f1f5f9'})}
       </div>
       <div class="card">
@@ -718,7 +717,7 @@
       ${card('增重分析 · 三分群全自动保定称自动采集', growthHtml())}
       <div class="grid-3">
         <div class="col2">
-          ${card('繁殖与接羔记录', tableHtml(['日期','畜种','事项','成活率','负责人','备注'],
+          ${card('繁殖与产犊记录', tableHtml(['日期','畜种','事项','成活率','负责人','备注'],
             DB.birthRecords.map(r=>[r.date, r.species, r.item, r.survival, r.operator, r.note])) + `
             <div style="margin-top:12px"><button class="btn solid sm" data-modal="birth">＋ 新增繁殖记录</button></div>`)}
           ${card('个体档案（可登记/删除）', tableHtml(['耳标号','畜种','品种','性别','年龄','体重','健康','位置','体温','设备','操作'],
@@ -732,8 +731,8 @@
           ${card('今日繁殖关注', `
             <div class="mini-alerts">
               <div class="ma-item"><span>🐂</span><div><b>1 头发情预警</b><p>AN-10234 · 今日 14:00 配种</p></div></div>
-              <div class="ma-item"><span>🐑</span><div><b>5 只母羊待产</b><p>产羔暖棚 2 号 · 温度 24℃</p></div></div>
-              <div class="ma-item"><span>🐴</span><div><b>马群繁殖记录</b><p>本季配种 12 匹 · 受胎率 91%</p></div></div>
+              <div class="ma-item"><span>🐄</span><div><b>3 头母牛待产</b><p>犊牛舍恒温值守 · 预产期临近</p></div></div>
+              <div class="ma-item"><span>🐮</span><div><b>犊牛建档 84 头</b><p>电子耳标 ・ 健康观察中</p></div></div>
             </div>`)}
         </div>
       </div>
@@ -839,8 +838,8 @@
     bindDel($('#content'));
     $('#content').querySelectorAll('[data-add="登记牲畜个体"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('登记牲畜个体', [
-        {name:'species', label:'畜种', type:'select', options:['牛','羊','马','骆驼'].map(v=>({v}))},
-        {name:'breed', label:'品种', type:'text', value:'呼伦贝尔羊'},
+        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+        {name:'breed', label:'品种', type:'text', value:'西门塔尔牛'},
         {name:'sex', label:'性别', type:'select', options:['母','公'].map(v=>({v}))},
         {name:'age', label:'年龄', type:'text', placeholder:'例：2岁'},
         {name:'weight', label:'体重', type:'text', placeholder:'例：56kg'},
@@ -860,8 +859,8 @@
     if (birthBtn) birthBtn.addEventListener('click', ()=>{
       openModal('新增繁殖记录', [
         {name:'date', label:'日期', type:'date', required:true},
-        {name:'species', label:'畜种', type:'select', options:['牛','羊','马','骆驼'].map(v=>({v}))},
-        {name:'item', label:'事项', type:'text', placeholder:'例：接羔 100 只', required:true},
+        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+        {name:'item', label:'事项', type:'text', placeholder:'例：产犊 100 只', required:true},
         {name:'survival', label:'成活率', type:'text', placeholder:'例：97.6%'},
         {name:'operator', label:'负责人', type:'text'},
         {name:'note', label:'备注', type:'textarea'}
@@ -878,7 +877,7 @@
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🌾', label:'草场总面积', value:fmt(g.total)+' 亩', sub:'放牧 '+fmt(g.grazing)+' · 打草 '+fmt(g.hay), color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🧭', label:'生态类型', value:gt.length+' 类', sub:'分类经营 · 精准管护', color:'#0ea5e9', bg:'#e0f2fe'})}
-        ${statCard({icon:'⚖️', label:'载畜量使用率', value:g.balance.rate+'%', sub:'羊单位 '+fmt(g.balance.actual)+' / '+fmt(g.balance.capacity), color:'#b3541e', bg:'#fbeee6'})}
+        ${statCard({icon:'⚖️', label:'载畜量使用率', value:g.balance.rate+'%', sub:'标准家畜单位 '+fmt(g.balance.actual)+' / '+fmt(g.balance.capacity), color:'#b3541e', bg:'#fbeee6'})}
         ${statCard({icon:'🛡️', label:'休牧/禁牧地块', value:g.pastures.filter(p=>p.util===0&&p.usage==='放牧场').length+' 块', sub:'返青保护 + 留茬休牧', color:'#475569', bg:'#f1f5f9'})}
       </div>
       ${card('生态类型分类', `
@@ -894,7 +893,7 @@
         </div>`)}
       <div class="grid-3">
         <div class="col2">
-          ${card('地块台账（可新增/编辑/删除）', tableHtml(['地块','生态类型','利用方式','面积','载畜(羊单位)','草高','状态','操作'],
+          ${card('地块台账（可新增/编辑/删除）', tableHtml(['地块','生态类型','利用方式','面积','载畜(标准家畜单位)','草高','状态','操作'],
             g.pastures.map(p=>[
               `<b>${p.name}</b>`,
               `<span class="gt-tag" style="--gc:${(gt.find(t=>t.name.startsWith(p.type)||t.name.includes(p.type))||{}).color||'#8a9a5b'}">${p.type}</span>`,
@@ -917,7 +916,7 @@
     {name:'type', label:'生态类型', type:'select', options:['草甸草原','典型草原','低湿地','退牧还草区','沙化治理区'].map(v=>({v}))},
     {name:'usage', label:'利用方式', type:'select', options:[{v:'放牧场'},{v:'打草场'},{v:'休牧区'},{v:'禁牧区'}]},
     {name:'area', label:'面积（亩）', type:'number'},
-    {name:'su', label:'载畜量（羊单位）', type:'number'},
+    {name:'su', label:'载畜量（标准家畜单位）', type:'number'},
     {name:'height', label:'牧草高度', type:'text', placeholder:'例：28cm'},
     {name:'status', label:'状态', type:'text', placeholder:'例：轮牧中'},
     {name:'util', label:'利用率 %', type:'number'}
@@ -1003,7 +1002,7 @@
     <div class="page">
       ${pageHeader('屠宰加工', '定点屠宰 · 检疫合格 · 冷链分割 · 产品联动', addBtn('登记屠宰记录'))}
       <div class="kpi-grid kpi-4">
-        ${statCard({icon:'🍖', label:'已屠宰（本季）', value:sl.reduce((a,r)=>a+r.head,0)+' 头只', sub:'牛10 · 羊180', color:'#b3541e', bg:'#fbeee6'})}
+        ${statCard({icon:'🍖', label:'已屠宰（本季）', value:sl.reduce((a,r)=>a+r.head,0)+' 头只', sub:'西门塔尔牛定点屠宰', color:'#b3541e', bg:'#fbeee6'})}
         ${statCard({icon:'✅', label:'检疫合格率', value:'100%', sub:'旗动物检疫所出证', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'❄️', label:'冷库容量', value:'40 吨', sub:'-18℃ 冻库 · 0-4℃ 排酸间', color:'#64748b', bg:'#f1f5f9'})}
         ${statCard({icon:'📋', label:'出栏计划', value:sp.reduce((a,x)=>a+x.head,0)+' 头只', sub:'秋冬季（10-12月）', color:'#f59e0b', bg:'#fef3c7'})}
@@ -1034,7 +1033,7 @@
     $('#content').querySelectorAll('[data-add="登记屠宰记录"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('登记屠宰记录', [
         {name:'date', label:'日期', type:'date', value:'2026-02-16', required:true},
-        {name:'species', label:'畜种', type:'select', options:['牛','羊','马','骆驼'].map(v=>({v}))},
+        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
         {name:'head', label:'头数', type:'number', required:true},
         {name:'weight', label:'出肉量', type:'text', placeholder:'例：1.2吨'},
         {name:'inspector', label:'检疫机构', type:'text', value:'旗动物检疫所'},
@@ -1075,7 +1074,7 @@
           ${card('疫病防控要点（寒冷地区）', `
             <div class="cold-list">
               <div class="cold-item">❄️ 冬春保温防寒 · 暖棚恒温 24℃，减少应激</div>
-              <div class="cold-item">🧴 每周圈舍消毒 1 次 · 接羔前后重点消毒</div>
+              <div class="cold-item">🧴 每周圈舍消毒 1 次 · 产犊前后重点消毒</div>
               <div class="cold-item">🩺 新调入牲畜隔离观察 21 天</div>
               <div class="cold-item">🗑️ 病死畜无害化处理 · 台账可追溯</div>
               <div class="cold-item">📡 体温耳标异常自动预警 · 远程诊断</div>
@@ -1093,9 +1092,9 @@
     $('#content').querySelectorAll('[data-add="登记防疫记录"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('登记防疫记录', [
         {name:'date', label:'日期', type:'date', value:'2026-02-16', required:true},
-        {name:'species', label:'畜种', type:'select', options:['牛','羊','马','骆驼'].map(v=>({v}))},
-        {name:'group', label:'群体', type:'text', placeholder:'例：全群 / 羔羊'},
-        {name:'vaccine', label:'疫苗/项目', type:'select', options:['口蹄疫 O 型','口蹄疫 A 型','羊三联四防','小反刍兽疫','炭疽','布病监测','出栏前检疫'].map(v=>({v}))},
+        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+        {name:'group', label:'群体', type:'text', placeholder:'例：全群 / 犊牛'},
+        {name:'vaccine', label:'疫苗/项目', type:'select', options:['口蹄疫 O 型','口蹄疫 A 型','炭疽','布病监测','犊牛腹泻疫苗','出栏前检疫'].map(v=>({v}))},
         {name:'dose', label:'剂量', type:'text', placeholder:'例：1,200 头份'},
         {name:'operator', label:'操作人', type:'text'},
         {name:'status', label:'状态', type:'select', options:[{v:'完成'},{v:'计划中'}]}
@@ -1105,8 +1104,8 @@
     if (medBtn) medBtn.addEventListener('click', ()=>{
       openModal('登记用药（含休药期）', [
         {name:'date', label:'日期', type:'date', value:'2026-02-16'},
-        {name:'species', label:'畜种', type:'select', options:['牛','羊','马','骆驼'].map(v=>({v}))},
-        {name:'group', label:'群体', type:'text', placeholder:'例：育肥羊 60 只'},
+        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+        {name:'group', label:'群体', type:'text', placeholder:'例：育肥牛 60 头'},
         {name:'drug', label:'药品', type:'text', required:true, placeholder:'例：伊维菌素（驱虫）'},
         {name:'withdrawal', label:'休药期（天）', type:'number', placeholder:'例：21'},
         {name:'operator', label:'兽医', type:'text'},
@@ -1413,7 +1412,7 @@
       <div class="card">
         <div class="card-head"><h3>产品库存</h3></div>
         <div class="prod-stock">
-          ${inv.map(x=>`<div class="ps-item"><div class="ps-ico">${x.name.includes('肉')?'🥩':x.name.includes('奶')||x.name.includes('奶酪')?'🧀':x.name.includes('绒')?'🧣':x.name.includes('羊毛')?'🧶':'🎁'}</div>
+          ${inv.map(x=>`<div class="ps-item"><div class="ps-ico">${x.name.includes('肉')?'🥩':x.name.includes('奶')||x.name.includes('奶酪')?'🧀':x.name.includes('绒')?'🧣':'🎁'}</div>
             <div class="ps-name">${x.name}</div><div class="ps-price">${x.price}</div>
             <div class="ps-stock"><b>${x.stock}</b> ${x.unit}</div><div class="ps-note">${x.note}</div></div>`).join('')}
         </div>
@@ -1447,7 +1446,7 @@
     const t = DB.tourism;
     return `
     <div class="page">
-      ${pageHeader('文旅牧游', '牧户游 · 全季运营：蒙古包 / 骑马 / 研学 / 冰雪那达慕', addBtn('新增订单'))}
+      ${pageHeader('文旅牧游', '牧户游 · 全季运营：蒙古包 / 研学 / 打草体验 / 冰雪牧游', addBtn('新增订单'))}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🎫', label:'今日订单', value:t.orders.length+' 单', sub:'待接待 1 单', color:'#8b5cf6', bg:'#ede9fe'})}
         ${statCard({icon:'👨‍👩‍👧', label:'今日游客', value:'48 人', sub:'亲子 2 团 · 散客 5 组', color:'#4f46e5', bg:'#eef2ff'})}
@@ -1482,7 +1481,7 @@
             <div class="cold-item">🧭 全部向导持证 · 骑乘线路投保</div></div>`)}
           ${card('四季旅游路线', `
             <div class="season-list">
-              ${[['春','草原苏醒 · 接羔研学','4-5月'],['夏','绿海深处 · 深度游牧','6-8月'],['秋','金色草原 · 打草体验','9-10月'],['冬','雪原秘境 · 冰雪那达慕','11-2月']].map(x=>`
+              ${[['春','草原苏醒 · 产犊研学','4-5月'],['夏','绿海深处 · 深度游牧','6-8月'],['秋','金色草原 · 打草体验','9-10月'],['冬','雪原秘境 · 冰雪那达慕','11-2月']].map(x=>`
                 <div class="sl-row" style="--sl:${SEASON_COLOR[x[0]]}"><span class="sl-m">${x[0]}</span><span class="sl-t">${x[1]}（${x[2]}）</span></div>`).join('')}
             </div>`)}
         </div>
@@ -1524,7 +1523,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=16" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=17" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -1535,8 +1534,8 @@
         <div class="col2">
           ${card('牧场简介', `
             <p class="prose">${r.name}位于呼伦贝尔市新巴尔虎左旗吉布胡郎图苏木呼伦嘎查，${r.founded} 年建场，以<strong>基础母牛繁育</strong>为核心产业，现有 3 栋标准化圈舍（配套独立活动区）、基础母牛 200 头，采用“散养为主、圈养繁育为辅”的养殖模式。牧场所在区域极端低温可达 <strong>-45℃</strong>、积雪期约 140 天，高寒环境对母牛繁育与越冬安全提出严峻考验。</p>
-            <p class="prose">牧场以<strong>西门塔尔牛</strong>为核心畜种，配合羊群、马群经营；2026 年完成智慧化升级，接入监控、耳标测温、北斗定位、全自动保定称、TMR 拌料机等设备，构建“<strong>可视、可测、可控、可预警</strong>”的养殖管理体系；用一套平台管理 ${fmt(r.area)} 亩草场、${fmt(compute().totalAnimals)} 头只牲畜与 ${fmt(compute().devTotal)} 台（套）联网装备。</p>
-            <p class="prose">牧场坚持<strong>草畜平衡、以草定畜、四季循环</strong>：春季接羔防疫、夏季轮牧打草、秋季出栏储备、冬季补饲牧游，全年循环闭环、草原越养越好。</p>
+            <p class="prose">牧场以<strong>西门塔尔牛</strong>为唯一核心畜种；2026 年完成智慧化升级，接入监控、耳标测温、北斗定位、全自动保定称、TMR 拌料机等设备，构建“<strong>可视、可测、可控、可预警</strong>”的养殖管理体系；用一套平台管理 ${fmt(r.area)} 亩草场、${fmt(compute().totalAnimals)} 头只牲畜与 ${fmt(compute().devTotal)} 台（套）联网装备。</p>
+            <p class="prose">牧场坚持<strong>草畜平衡、以草定畜、四季循环</strong>：春季产犊防疫、夏季轮牧打草、秋季出栏储备、冬季补饲牧游，全年循环闭环、草原越养越好。</p>
             <div class="honor-row">${['西门塔尔牛繁育示范牧场','巴尔虎草原智慧养殖示范','新巴尔虎左旗家庭牧场示范场','高寒牧区越冬示范'].map(h=>`<span class="honor">🏅 ${h}</span>`).join('')}</div>`)}
           ${card('智慧化建设历程', `
             <div class="timeline">
@@ -1596,7 +1595,7 @@
     const c = compute(), m = DB.months[demoMonth-1];
     const has = (...ks)=>ks.some(k=>q.includes(k));
     if (has('存栏','多少头','牲畜','有几','结构') && !has('转场')){
-      return `📊 当前存栏 ${fmt(c.totalAnimals)} 头只\n${DB.species.map(x=>x.emoji+' '+x.name+' '+fmt(x.count)).join(' · ')}\n西门塔尔牛为核心畜种，大牛 102 头（大牛棚圈）+ 小牛 84 头（犊牛舍）\n草场 ${fmt(DB.meta.area)} 亩 · 折合羊单位 ${fmt(c.sheepUnits)}\n本年度产犊 84 头，成活率 96.0%。`;
+      return `📊 当前存栏 ${fmt(c.totalAnimals)} 头只\n${DB.species.map(x=>x.emoji+' '+x.name+' '+fmt(x.count)).join(' · ')}\n西门塔尔牛为核心畜种，大牛 102 头（大牛棚圈）+ 小牛 84 头（犊牛舍）\n草场 ${fmt(DB.meta.area)} 亩 · 折合标准家畜单位 ${fmt(c.sheepUnits)}\n本年度产犊 84 头，成活率 96.0%。`;
     }
     if (has('饲草','过冬','储备','干草','青贮','饲料')){
       const inv = DB.forageInventory.map(x=>`· ${x.name} ${x.stock}/${x.target}${x.unit}`).join('\n');
@@ -1606,14 +1605,14 @@
       return `📡 联网终端 ${fmt(c.devTotal)} 台，在线率 ${c.devRate}%（在线 ${fmt(c.devOnline)} 台）\n成套装备 ${fmt(c.kit)} 台套 · 离线/检修 ${fmt(c.devOffline)} 台（饲料粉碎机检修）\n已生成设备巡检工单，维修状态实时回写。`;
     }
     if (has('防疫','疫苗','口蹄疫','免疫','布病','驱虫','炭疽')){
-      return `💉 年度免疫程序 ${DB.vaccinePlans.length} 项：春秋两防，含口蹄疫（O/A 型）、羊三联四防、小反刍兽疫、炭疽、布病监测。\n已完成记录 ${DB.vaccineRecords.filter(r=>r.status==='完成').length} 条，免疫率 96.8%。\n口蹄疫防控要点：新购牲畜隔离 21 天、圈舍每周消毒、发现口蹄水疱立即上报旗疫控中心。`;
+      return `💉 年度免疫程序 ${DB.vaccinePlans.length} 项：春秋两防，含口蹄疫（O/A 型）、炭疽、布病监测、犊牛腹泻疫苗。\n已完成记录 ${DB.vaccineRecords.filter(r=>r.status==='完成').length} 条，免疫率 96.8%。\n口蹄疫防控要点：新购牲畜隔离 21 天、圈舍每周消毒、发现口蹄水疱立即上报旗疫控中心。`;
     }
     if (has('屠宰','出栏','检疫','杀')){
       const sl = DB.slaughterRecords.reduce((a,r)=>a+r.head,0);
       return `🍖 本季已屠宰 ${sl} 头只，检疫合格率 100%（旗动物检疫所出证）。\n秋冬季出栏计划：西门塔尔牛 62 头。\n流程：停用药物 14 天 → 产地检疫 → 定点屠宰 → 排酸 → 分割 → 溯源入库。`;
     }
     if (has('产品','销售','收入','多少钱','收益')){
-      return `🛍️ 产品销售收入累计 ${money(c.saleAmount)}\n在售：冷鲜牛羊肉、奶豆腐/奶皮子、手工奶酪、羊绒制品、驼绒礼盒、草原文创。\n每件产品一品一码可溯源：批次 → 耳标 → 草场。`;
+      return `🛍️ 产品销售收入累计 ${money(c.saleAmount)}\n在售：冷鲜牛肉、犊牛、奶豆腐/奶皮子、手工奶酪、草原文创。\n每件产品一品一码可溯源：批次 → 耳标 → 草场。`;
     }
     if (has('牧户游','订单','游客','旅游','住宿','那达慕','活动','节庆')){
       const events = DB.hulunbuir.events.filter(e=>e.status!=='已完成').map(e=>`· ${e.date} ${e.name}（${e.place}）`).join('\n');
@@ -1623,14 +1622,14 @@
       const next = DB.hulunbuir.migration.find(x=>x.status!=='已完成');
       return `🔄 当前 ${demoMonth} 月 · ${m.season}季（${m.name}）\n本季任务：${m.tasks.join('；')}\n下次转场：${next?`${next.season} ${next.route}（${next.distance} · ${next.time}）`:'暂无'}\n转场原则：春避返青、夏逐水草、秋储冬草、冬御风雪。`;
     }
-    if (has('接羔','产犊','繁殖','产羔','小牛','小羊','产驹')){
+    if (has('产犊','繁殖','小牛','犊牛')){
       return `🍼 本年度繁殖：产犊 84 头（西门塔尔），犊牛成活率 96.0%\n高寒牧区产犊要点：\n1）犊牛房恒温 22℃，出生后立即擦干保温\n2）初乳 2 小时内饲喂，必要时灌服\n3）饮水加热器保持常开（水温 12℃），防冰水应激。`;
     }
     if (has('天气','温度','降温','寒潮','冷','下雪','白灾','雪灾')){
-      return `🌦️ ${DB.weather.place}：${DB.weather.icon} ${live.t}℃（体感 ${DB.weather.feels}℃）\n${DB.weather.wind} · ${DB.weather.snow}\n⚠️ ${DB.weather.alert}\n❄️ 今夜最低 ${DB.weather.low}℃，请确保犊羊暖棚加温、饮水槽防冻正常。`;
+      return `🌦️ ${DB.weather.place}：${DB.weather.icon} ${live.t}℃（体感 ${DB.weather.feels}℃）\n${DB.weather.wind} · ${DB.weather.snow}\n⚠️ ${DB.weather.alert}\n❄️ 今夜最低 ${DB.weather.low}℃，请确保犊牛暖棚加温、饮水槽防冻正常。`;
     }
     if (has('草场','载畜量','NDVI','植被','退化','打草','亩')){
-      return `🌾 草场 ${fmt(DB.meta.area)} 亩（放牧 ${fmt(DB.meta.grazingArea)} · 打草 ${fmt(DB.meta.hayArea)}）· 位于新巴尔虎左旗呼伦嘎查\n载畜量使用率 ${DB.grassland.balance.rate}%（安全线 90%）· 羊单位 ${fmt(c.sheepUnits)}/${fmt(DB.grassland.balance.capacity)}\nNDVI ${live.ndvi.toFixed(3)} · 植被优良\n分类：草甸/典型/低湿地/改良/沙化 6 类，以类定用。`;
+      return `🌾 草场 ${fmt(DB.meta.area)} 亩（放牧 ${fmt(DB.meta.grazingArea)} · 打草 ${fmt(DB.meta.hayArea)}）· 位于新巴尔虎左旗呼伦嘎查\n载畜量使用率 ${DB.grassland.balance.rate}%（安全线 90%）· 标准家畜单位 ${fmt(c.sheepUnits)}/${fmt(DB.grassland.balance.capacity)}\nNDVI ${live.ndvi.toFixed(3)} · 植被优良\n分类：草甸/典型/低湿地/改良/沙化 6 类，以类定用。`;
     }
     if (has('预警','告警','风险','紧急')){
       const hi = DB.tasks.filter(t=>t.level==='高');
@@ -1640,7 +1639,7 @@
       return `📱 一畜一码全程溯源：出生 → 免疫 → 转场 → 出栏检疫 → 分割加工 → 销售，全链路可查。\n消费者扫码即可看到耳标号、草场、防疫记录，绿色畜产品认证基地。`;
     }
     if (has('帮助','你会','能干什么','功能','怎么用')){
-      return `👩‍🌾 我可以帮你：\n· 查存栏 / 草场 / 饲草 / 防疫 / 屠宰 / 产品 / 订单 / 设备\n· 给寒冷地区饲养建议（接羔、防寒、防疫、补饲）\n· 查预警与转场计划\n直接问我，或点下方快捷问题。`;
+      return `👩‍🌾 我可以帮你：\n· 查存栏 / 草场 / 饲草 / 防疫 / 屠宰 / 产品 / 订单 / 设备\n· 给寒冷地区饲养建议（产犊、防寒、防疫、补饲）\n· 查预警与转场计划\n直接问我，或点下方快捷问题。`;
     }
     if (has('你好','在吗','hi','嗨','哈喽')){
       return `你好呀！我是智能服务小伊 👩‍🌾\n想了解牧场的任何情况都可以问我，比如「饲草够不够过冬」「该不该转场了」。`;
@@ -1711,7 +1710,7 @@
     const today = new Date();
     return `
     <div class="page">
-      ${pageHeader('牧事日志 · 牧民的一天', '每天记一记：巡栏打卡 + 今天干了啥 + 明天要干啥，接羔季再也不乱', addBtn('写日志','logs'))}
+      ${pageHeader('牧事日志 · 牧民的一天', '每天记一记：巡栏打卡 + 今天干了啥 + 明天要干啥，产犊季再也不乱', addBtn('写日志','logs'))}
       <div class="grid-3">
         <div class="col2">
           ${card('今日巡栏打卡', `
@@ -1729,12 +1728,12 @@
             <div class="season-list">
               ${DB.months.filter(m=>m.m===demoMonth).map(m=>m.tasks.map(t=>`<div class="sl-row now" style="--sl:${SEASON_COLOR[m.season]}"><span class="sl-m">${m.m}月</span><span class="sl-t">${t}</span></div>`).join('')).join('')}
             </div>
-            <div class="card-note">接羔季口诀：初乳 2 小时内、暖棚恒温 24℃、羔羊补铁防脐带炎。</div>`)}
+            <div class="card-note">产犊季口诀：初乳 2 小时内、犊牛舍恒温 22℃、饮水保持不冻。</div>`)}
           ${card('牧民经验库（老话新用）', `
             <div class="cold-list">
-              <div class="cold-item">🌙 "马不吃夜草不肥，羊不看夜圈不实" —— 冬季夜间巡圈最重要</div>
+              <div class="cold-item">🌙 "牛不吃夜草不肥，圈不看夜不实" —— 冬季夜间巡圈最重要</div>
               <div class="cold-item">🧊 "冬储草，春不慌" —— 饲草备到 3 月底是底线</div>
-              <div class="cold-item">🐏 "看膘定料，看天转场" —— 依据天气和体况决定补饲与转场</div>
+              <div class="cold-item">🐂 "看膘定料，看天转场" —— 依据天气和体况决定补饲与转场</div>
             </div>`)}
         </div>
       </div>
@@ -1792,7 +1791,7 @@
           ${card('出栏收益测算 · 现在卖还是再等等？', `
             <div class="calc-box">
               <div class="calc-row">
-                <label><span>畜种</span><select id="calSpecies"><option>牛</option><option>羊</option><option>马</option><option>骆驼</option></select></label>
+                <label><span>畜种</span><select id="calSpecies"><option>牛</option></select></label>
                 <label><span>头数</span><input id="calHead" type="number" value="10"></label>
                 <label><span>均重（kg）</span><input id="calWeight" type="number" value="500"></label>
                 <label><span>单价（元/kg）</span><input id="calPrice" type="number" value="28"></label>
@@ -1814,14 +1813,14 @@
       ${card('转场费用记录（可新增/删除）', tableHtml(['日期','路线','项目','金额','操作'],
         DB.migrationCosts.map(mc=>[mc.date, mc.route, mc.item, '¥'+fmt(mc.amount), delBtn('migrationCosts', mc.id)])))}
       <div style="margin:0 0 18px">${addBtn('记一笔转场费','migrationCosts')}</div>
-      <div class="card-note">⛽ 一次转场少则几百、多则上千：油料、车马费、路上饲草都要记。全年转场 4 次，合计约 ¥3,000-5,000。</div>
+      <div class="card-note">⛽ 一次转场少则几百、多则上千：油料、车辆费、路上饲草都要记。全年转场 4 次，合计约 ¥3,000-5,000。</div>
     </div>`;
   }
   const ledgerFields = [
     {name:'date', label:'日期', type:'date', value:'2026-02-16'},
     {name:'type', label:'类型', type:'select', options:[{v:'收入'},{v:'支出'}]},
     {name:'category', label:'分类', type:'select', options:['产品','牧游','饲草','防疫','设备','人工','保险','其他'].map(v=>({v}))},
-    {name:'item', label:'项目', type:'text', required:true, placeholder:'例：冷鲜牛羊肉'},
+    {name:'item', label:'项目', type:'text', required:true, placeholder:'例：冷鲜牛肉'},
     {name:'amount', label:'金额（元）', type:'number', required:true},
     {name:'note', label:'备注', type:'text'}
   ];
@@ -1838,7 +1837,7 @@
       openModal('记一笔转场费', [
         {name:'date', label:'日期', type:'date', value:'2026-02-16'},
         {name:'route', label:'路线', type:'select', options:['冬营盘→春营盘','春营盘→夏营盘','夏营盘→秋营盘','秋营盘→冬营盘'].map(v=>({v}))},
-        {name:'item', label:'项目', type:'select', options:[{v:'油料'},{v:'车马费'},{v:'路上饲草'},{v:'住宿'},{v:'其他'}]},
+        {name:'item', label:'项目', type:'select', options:[{v:'油料'},{v:'车辆费'},{v:'路上饲草'},{v:'住宿'},{v:'其他'}]},
         {name:'amount', label:'金额（元）', type:'number', required:true},
         {name:'note', label:'备注', type:'text'}
       ], v=>{
@@ -1868,8 +1867,8 @@
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🧑‍🌾', label:'在岗雇工', value:on+' 人', sub:'共 '+DB.workers.length+' 人', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'💰', label:'考勤工钱合计', value:'¥'+fmt(pay), sub:'按考勤记录实时汇总', color:'#4f46e5', bg:'#eef2ff'})}
-        ${statCard({icon:'📋', label:'考勤记录', value:DB.attendance.length+' 条', sub:'接羔季每日记', color:'#f59e0b', bg:'#fef3c7'})}
-        ${statCard({icon:'🌾', label:'旺季用工', value:'4 人', sub:'接羔季 2-4 月 · 旅游季 5-10 月', color:'#b3541e', bg:'#fbeee6'})}
+        ${statCard({icon:'📋', label:'考勤记录', value:DB.attendance.length+' 条', sub:'产犊季每日记', color:'#f59e0b', bg:'#fef3c7'})}
+        ${statCard({icon:'🌾', label:'旺季用工', value:'4 人', sub:'产犊季 2-4 月 · 旅游季 5-10 月', color:'#b3541e', bg:'#fbeee6'})}
       </div>
       ${card('雇工名单（可新增/编辑/删除）', tableHtml(['姓名','岗位','电话','工资','结算','状态','排班','备注','操作'],
         DB.workers.map(w=>[`<b>${w.name}</b>`, w.role, w.phone, w.wage+' 元', pill(w.wageType, w.wageType==='月薪'?'info':'warn'),
@@ -1879,12 +1878,12 @@
       ${card('考勤工钱（可新增/删除）', tableHtml(['日期','工人','干活内容','工时','工钱','操作'],
         DB.attendance.map(a=>[a.date, a.worker, a.task, a.hours+' 小时', '¥'+fmt(a.pay), delBtn('attendance', a.id)])))}
       <div style="margin:0 0 18px">${addBtn('记考勤','attendance')}</div>
-      <div class="card-note">💡 用工提醒：接羔季（2-4 月）至少 2 名技术工；工钱日结留签字/转账记录；旺季保险给临时工上一份意外险。</div>
+      <div class="card-note">💡 用工提醒：产犊季（2-4 月）至少 2 名技术工；工钱日结留签字/转账记录；旺季保险给临时工上一份意外险。</div>
     </div>`;
   }
   const workerFields = [
     {name:'name', label:'姓名', type:'text', required:true},
-    {name:'role', label:'岗位', type:'select', options:['放牧工','接羔技术','兽医','挤奶工','牧户游服务员','厨师','司机'].map(v=>({v}))},
+    {name:'role', label:'岗位', type:'select', options:['放牧工','产犊技术','兽医','挤奶工','牧户游服务员','厨师','司机'].map(v=>({v}))},
     {name:'phone', label:'电话', type:'text'},
     {name:'wage', label:'工资', type:'text', placeholder:'例：6000'},
     {name:'wageType', label:'结算方式', type:'select', options:[{v:'月薪'},{v:'日结'},{v:'按件'}]},
@@ -1902,7 +1901,7 @@
       openModal('记考勤工钱', [
         {name:'date', label:'日期', type:'date', value:'2026-02-16'},
         {name:'worker', label:'工人', type:'select', options: DB.workers.map(w=>({v:w.name}))},
-        {name:'task', label:'干活内容', type:'text', placeholder:'例：接羔 + 巡圈'},
+        {name:'task', label:'干活内容', type:'text', placeholder:'例：产犊 + 巡圈'},
         {name:'hours', label:'工时', type:'number', placeholder:'小时'},
         {name:'pay', label:'工钱（元）', type:'number', required:true},
         {name:'note', label:'备注', type:'text'}
@@ -1955,7 +1954,7 @@
   }
   const insFields = [
     {name:'date', label:'日期', type:'date', value:'2026-02-16'},
-    {name:'species', label:'畜种', type:'select', options:['牛','羊','马','骆驼'].map(v=>({v}))},
+    {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
     {name:'head', label:'数量', type:'number'},
     {name:'reason', label:'出险原因', type:'select', options:[{v:'冻死（白灾）'},{v:'狼害'},{v:'疫病'},{v:'其他意外'}]},
     {name:'est', label:'预估损失', type:'text', placeholder:'例：¥2,400'},

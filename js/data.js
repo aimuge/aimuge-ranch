@@ -60,18 +60,10 @@ const DEFAULT_DATA = {
     { key:'cattle', name:'牛', emoji:'🐂', color:'#0f766e', breed:'西门塔尔牛', count:186,
       structure:'大牛 102 · 小牛（犊牛）84', gps:20, tempAvg:'38.6℃',
       trend:[150,158,166,172,178,182,186] },
-    { key:'sheep', name:'羊', emoji:'🐑', color:'#14b8a6', breed:'巴尔虎羊', count:300,
-      structure:'基础母羊 210 · 羔羊 90（待核实）', gps:0, tempAvg:'39.1℃',
-      trend:[240,252,264,276,288,294,300] },
-    { key:'horse', name:'马', emoji:'🐴', color:'#0891b2', breed:'蒙古马', count:20,
-      structure:'成年马 16 · 马驹 4（待核实）', gps:20, tempAvg:'37.8℃',
-      trend:[14,15,16,17,18,19,20] }
   ],
   groups: [
     { id:'G1', name:'大牛棚圈 · 大牛', count:102, desc:'西门塔尔成年牛 · 保温棚圈 + 活动区', status:'正常' },
-    { id:'G2', name:'犊牛舍 · 小牛（犊牛）', count:84, desc:'单独保温 · 犊牛舍恒温看护', status:'重点看护' },
-    { id:'G3', name:'羊群', count:300, desc:'巴尔虎羊 · 夏季散养放牧（数量待核实）', status:'正常' },
-    { id:'G4', name:'马群', count:20, desc:'蒙古马 · 骑乘与牧户游（数量待核实）', status:'正常' }
+    { id:'G2', name:'犊牛舍 · 小牛（犊牛）', count:84, desc:'单独保温 · 犊牛舍恒温看护', status:'重点看护' }
   ],
   animals: [
     { id:'YL-0001', species:'牛', breed:'西门塔尔', sex:'母', age:'4岁', weight:'612kg', health:'发情预警', location:'大牛棚圈', device:'AI 识别 · 在线', temp:'38.8℃', note:'AI 已识别，建议今日配种' },
@@ -100,7 +92,7 @@ const DEFAULT_DATA = {
 
   /* ---------- 草场：13,300 亩（自家 3,860 + 租赁 9,440） ---------- */
   grasslandTypes: [
-    { id:'GT1', name:'草甸草原（打草区）', icon:'🌿', color:'#0f766e', area:2500, species:'羊草 · 披碱草', use:'打草 + 轮牧', note:'打草场 1,500 亩所在' },
+    { id:'GT1', name:'草甸草原（打草区）', icon:'🌿', color:'#0f766e', area:2500, species:'披碱草 · 冰草', use:'打草 + 轮牧', note:'打草场 1,500 亩所在' },
     { id:'GT2', name:'典型草原（轮牧区 · 租赁）', icon:'🌱', color:'#14b8a6', area:7600, species:'针茅 · 冷蒿 · 冰草', use:'四季轮牧', note:'牛群放牧主体草场' },
     { id:'GT3', name:'低湿地 / 河漫滩', icon:'💧', color:'#0891b2', area:1500, species:'芦苇 · 苔草', use:'应急放牧', note:'补水草场' },
     { id:'GT4', name:'退牧还草 / 补播改良区', icon:'🌾', color:'#f0b429', area:1200, species:'改良草种混播', use:'禁牧围封', note:'恢复植被' },
@@ -233,11 +225,11 @@ const DEFAULT_DATA = {
     products: [
       { id:'TP1', icon:'⛺', name:'蒙古包住宿 · 暖冬版', desc:'地暖蒙古包 · 独立卫浴', price:'¥580/晚', season:'全年' },
       { id:'TP2', icon:'🐂', name:'牧牛体验 · 犊牛喂奶', desc:'亲子喂犊牛 · 犊牛舍参观', price:'¥120/人', season:'全年' },
-      { id:'TP3', icon:'🐎', name:'草原骑马体验', desc:'蒙古马骑乘 · 牧民向导', price:'¥180/次', season:'全年' },
+      { id:'TP3', icon:'🌾', name:'草原打草体验', desc:'打草 · 捆草 · 农机作业观摩', price:'¥120/人', season:'夏秋' },
       { id:'TP4', icon:'🥛', name:'传统奶食品工坊', desc:'奶茶 · 奶豆腐 · 黄油制作', price:'¥120/人', season:'全年' },
       { id:'TP5', icon:'🔥', name:'篝火晚会 + 巴尔虎长调', desc:'长调 · 呼麦 · 星空篝火', price:'¥98/人', season:'夏秋' },
       { id:'TP6', icon:'🎓', name:'草原研学营（亲子）', desc:'智慧牧场参观 · 牧事体验', price:'¥388/家庭', season:'夏' },
-      { id:'TP7', icon:'🛷', name:'冬季冰雪那达慕', desc:'雪地赛马 · 冰上活动', price:'¥228/人', season:'冬季' },
+      { id:'TP7', icon:'🛷', name:'冬季牧场冰雪营', desc:'雪地摄影 · 冰雪研学 · 暖冬蒙古包', price:'¥228/人', season:'冬季' },
       { id:'TP8', icon:'🏭', name:'智慧牧场参观', desc:'监控室 · 耳标 · TMR 饲喂演示', price:'¥88/人', season:'全年' }
     ],
     orders: [
@@ -257,21 +249,21 @@ const DEFAULT_DATA = {
   /* ---------- 呼伦贝尔 / 巴尔虎文化 ---------- */
   hulunbuir: {
     features: [
-      { icon:'🏇', name:'巴尔虎那达慕', desc:'赛马 · 摔跤 · 射箭' },
+      { icon:'🏇', name:'巴尔虎那达慕', desc:'摔跤 · 射箭 · 民俗展演' },
       { icon:'⛰️', name:'祭敖包', desc:'祈福风调雨顺 · 人畜兴旺' },
-      { icon:'🐎', name:'蒙古马文化', desc:'草原骏马 · 骑乘研学' },
+      { icon:'🐂', name:'传统游牧转场', desc:'四季营盘 · 轮牧智慧' },
       { icon:'🐂', name:'西门塔尔牛养殖', desc:'高寒牧区繁育 · 犊牛保育' },
       { icon:'🥛', name:'奶食品文化', desc:'奶茶 · 奶豆腐 · 黄油' },
       { icon:'⛺', name:'蒙古包营造技艺', desc:'传统毡房 · 非遗体验' },
       { icon:'🎤', name:'巴尔虎长调', desc:'草原天籁 · 篝火晚会' },
-      { icon:'❄️', name:'冰雪那达慕', desc:'雪地赛马 · 冰上阿日嘎' }
+      { icon:'❄️', name:'冰雪那达慕', desc:'冰雪民俗 · 雪地那达慕' }
     ],
     events: [
       { id:'EV1', date:'4 月中旬', name:'接犊节 · 犊牛保育观摩', place:'伊拉特智慧牧场', type:'民俗活动', status:'筹备', note:'犊牛舍开放参观' },
       { id:'EV2', date:'6 月中旬', name:'祭敖包', place:'呼伦嘎查敖包', type:'祭祀', status:'计划', note:'祈福仪式' },
-      { id:'EV3', date:'7 月中旬', name:'巴尔虎那达慕', place:'吉布胡郎图苏木', type:'那达慕', status:'计划', note:'赛马/摔跤/射箭' },
+      { id:'EV3', date:'7 月中旬', name:'巴尔虎那达慕', place:'吉布胡郎图苏木', type:'那达慕', status:'计划', note:'摔跤/射箭/民俗展演' },
       { id:'EV4', date:'8 月', name:'智慧牧场研学营', place:'伊拉特智慧牧场', type:'研学', status:'筹备', note:'监控室/耳标/TMR 演示' },
-      { id:'EV5', date:'11 月下旬', name:'冰雪那达慕', place:'伊拉特智慧牧场', type:'冰雪', status:'计划', note:'雪地赛马' }
+      { id:'EV5', date:'11 月下旬', name:'冬季牧场开放日', place:'伊拉特智慧牧场', type:'冰雪', status:'计划', note:'冰雪摄影/研学体验' }
     ],
     migration: [
       { id:'MG1', season:'春转场', route:'冬营盘 → 春营盘', distance:'8 km', time:'5 月上旬', status:'待执行', note:'避开返青脆弱期' },
@@ -335,7 +327,7 @@ const DEFAULT_DATA = {
   /* ---------- 数字人讲解词（后台可改） ---------- */
   narration: [
     { id:'NR1', text:'您好，我是伊拉特智慧牧场牧场主小伊。伊拉特智慧牧场位于内蒙古呼伦贝尔市新巴尔虎左旗吉布胡郎图苏木呼伦嘎查，2016 年建场，由牧民伊拉特经营，是一家以西门塔尔牛繁育为核心的家庭牧场。' },
-    { id:'NR2', text:'牧场草场共 13,300 亩，其中自家天然散养草场 3,860 亩，租赁草场 9,440 亩；现存栏牛 186 头，其中大牛 102 头、小牛 84 头，另有羊 300 只、马 20 匹。' },
+    { id:'NR2', text:'牧场草场共 13,300 亩，其中自家天然散养草场 3,860 亩，租赁草场 9,440 亩；现存栏牛 186 头，其中大牛 102 头、小牛 84 头。' },
     { id:'NR3', text:'牧场建有两个棚圈：大牛棚圈养大牛 102 头，犊牛舍养小牛 84 头，并配套牛只活动区和饲草区；养殖方式是冬季圈养、夏季散养，草场按春夏秋冬四季营盘轮牧。' },
     { id:'NR4', text:'装备方面，全场有 9 项智能设备：视频监控 6 路覆盖生活区、饲草区、设备区、犊牛舍、牛只活动区和牛舍内；耳标测温 200 个、北斗定位项圈 5 个；还有智能巡检机器狗、三分群全自动保定称、TMR 拌料机、撒料机、饲料粉碎机和农机作业终端。' },
     { id:'NR5', text:'目前现状：本年度产犊 84 头，犊牛成活率 96%；计划出栏 62 头；天然草已入库 900 捆，目标 1,000 捆，冬储可覆盖到明年 4 月。' },
@@ -403,18 +395,17 @@ const DEFAULT_DATA = {
   photos: [
     { id:'PH1', date:'2026-06-05', title:'呼伦贝尔草原 · 夏营盘', url:'assets/photos/grassland-green.jpg', note:'新巴尔虎左旗草原 · 生态优先' },
     { id:'PH2', date:'2026-09-10', title:'呼伦贝尔草原 · 秋季', url:'assets/photos/grassland-golden.jpg', note:'金色牧区 · 打草储备季' },
-    { id:'PH3', date:'2026-07-02', title:'草原马群', url:'assets/photos/horses.jpg', note:'草原牧马' },
     { id:'PH4', date:'2026-04-12', title:'蒙古包 · 游牧人家', url:'assets/photos/yurts.jpg', note:'传统游牧生活' }
   ],
   migrationCosts: [
     { id:'MC1', date:'2026-05-06', route:'冬营盘→春营盘', item:'油料（车+摩托）', amount:320, note:'' },
     { id:'MC2', date:'2026-05-07', route:'冬营盘→春营盘', item:'路上饲草', amount:180, note:'' },
-    { id:'MC3', date:'2026-11-02', route:'秋营盘→冬营盘', item:'油料 + 车马费', amount:520, note:'请车 1 台' }
+    { id:'MC3', date:'2026-11-02', route:'秋营盘→冬营盘', item:'油料 + 车辆费', amount:520, note:'请车 1 台' }
   ]
 };
 
 /* ============ 持久化与通用 CRUD（支持 a.b 路径） ============ */
-const KEY = 'yilate-ranch-v14';
+const KEY = 'yilate-ranch-v17';
 let DB = loadDB();
 
 function loadDB(){
