@@ -207,7 +207,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=15" alt="YILATE">
+          <img src="assets/logo.png?v=16" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1524,7 +1524,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=15" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=16" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -1586,8 +1586,8 @@
   }
 
 
-  /* ================= 畜牧业智能体 ================= */
-  const agentMsgs = [ {role:'bot', text:'您好，我是「伊拉特智慧牧场牧场主 · 小伊」👩‍🌾\n我可以基于牧场实时数据回答：存栏、饲草、防疫、屠宰、产品、牧游、设备、转场、天气预警等问题，也可以给寒冷地区养牛、保犊和越冬管理建议。'} ];
+  /* ================= 智能服务小伊 ================= */
+  const agentMsgs = [ {role:'bot', text:'您好，我是「智能服务小伊」👩‍🌾\n我可以基于牧场实时数据回答：存栏、饲草、防疫、屠宰、产品、牧游、设备、转场、天气预警等问题，也可以给寒冷地区养牛、保犊和越冬管理建议。'} ];
   const escTxt = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   function msgHtml(m){
     return `<div class="am ${m.role==='user'?'user':'bot'}"><div class="am-ava">${m.role==='user'?'🧑':'👩‍🌾'}</div><div class="am-bubble">${escTxt(m.text).replace(/\n/g,'<br>')}</div></div>`;
@@ -1643,7 +1643,7 @@
       return `👩‍🌾 我可以帮你：\n· 查存栏 / 草场 / 饲草 / 防疫 / 屠宰 / 产品 / 订单 / 设备\n· 给寒冷地区饲养建议（接羔、防寒、防疫、补饲）\n· 查预警与转场计划\n直接问我，或点下方快捷问题。`;
     }
     if (has('你好','在吗','hi','嗨','哈喽')){
-      return `你好呀！我是伊拉特智慧牧场牧场主 · 小伊 👩‍🌾\n想了解牧场的任何情况都可以问我，比如「饲草够不够过冬」「该不该转场了」。`;
+      return `你好呀！我是智能服务小伊 👩‍🌾\n想了解牧场的任何情况都可以问我，比如「饲草够不够过冬」「该不该转场了」。`;
     }
     if (has('整体','情况','总结','日报','今天','汇总','汇报','快报')){
       return `📋 今日牧场快报\n· 存栏 ${fmt(c.totalAnimals)} 头只 · 当前 ${monthName(demoMonth)} ${m.season}季（${m.name}）\n· 设备在线率 ${c.devRate}%（${fmt(live.online)} 台在线）\n· 饲草储备 ${c.foragePct}% · 产品收入 ${money(c.saleAmount)}\n· 牧游订单 ${c.todayOrders} 单 · 游客 ${live.visitors} 人\n· 高优先级预警 ${DB.tasks.filter(t=>t.level==='高').length} 项\n· 建议：今夜最低 -31℃，暖棚加温至 26℃，早晚巡圈。`;
@@ -1657,7 +1657,7 @@
     <div class="page agent-page">
       <div class="agent-head">
         <div class="ah-avatar">👩‍🌾</div>
-        <div class="ah-txt"><b>我是伊拉特智慧牧场牧场主小伊</b><span>伊拉特牧场数据问答 · 高寒牧区养殖顾问 · 智能体</span></div>
+        <div class="ah-txt"><b>智能服务小伊</b><span>伊拉特牧场数据问答 · 高寒牧区养殖顾问</span></div>
         <div class="ah-online">● 在线</div>
       </div>
       <div class="agent-brief" id="agentBrief">${brief}</div>
@@ -2282,7 +2282,7 @@
     insurance:  { title:'保险理赔', render:pageInsurance, after:afterInsurance },
     admin:      { title:'后台管理', render:pageAdmin, after:afterAdmin },
     gallery:    { title:'牧场相册', render:pageGallery, after:afterGallery },
-    agent:      { title:'我是伊拉特智慧牧场牧场主小伊', render:pageAgent, after:afterAgent },
+    agent:      { title:'智能服务小伊', render:pageAgent, after:afterAgent },
     cycle:      { title:'四季循环', render:pageCycle, after:afterCycle },
     livestock:  { title:'养殖管理', render:pageLivestock, after:afterLivestock },
     grassland:  { title:'草场分类', render:pageGrassland, after:afterGrassland },

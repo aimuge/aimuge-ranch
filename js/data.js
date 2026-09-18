@@ -52,7 +52,7 @@ const DEFAULT_DATA = {
     { key:'insurance',  icon:'🛡️', title:'保险理赔' },
     { key:'gallery',    icon:'📷', title:'牧场相册' },
     { key:'admin',      icon:'⚙️', title:'后台管理' },
-    { key:'agent',      icon:'👩‍🌾', title:'我是伊拉特智慧牧场牧场主小伊' }
+    { key:'agent',      icon:'👩‍🌾', title:'智能服务小伊' }
   ],
 
   /* ---------- 养殖：牛 186 头（大牛 102 + 小牛 84） ---------- */
