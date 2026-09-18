@@ -207,7 +207,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=14" alt="YILATE">
+          <img src="assets/logo.png?v=15" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -336,10 +336,13 @@
 
       <div class="bs-dh" id="dhBox" title="点击小伊或小牛听讲解">
         <div class="dh-bubble">
-          <div class="dh-hi">伊拉特牧场主 · 小伊 👋</div>
-          <div class="dh-text" id="dhText">${intro}</div>
-          <div class="dh-codeflow"><span>YILATE · SMART RANCH · HULUNBUIR · 智慧牧场 · 数据感知 ·</span><span>YILATE · SMART RANCH · HULUNBUIR · 智慧牧场 · 数据感知 ·</span></div>
-          <div class="dh-tip">🔊 点击小伊或小牛听讲解</div>
+          <div class="dh-hi">小伊 · 牧场简介</div>
+          <div class="dh-text" id="dhText">${DB.meta.name} · 牧场档案</div>
+          <div class="dh-codeflow">
+            <span>YILATE SMART RANCH · 呼伦贝尔 · 新巴尔虎左旗 · 吉布胡郎图苏木 · 呼伦嘎查 ·</span>
+            <span>YILATE SMART RANCH · 呼伦贝尔 · 新巴尔虎左旗 · 吉布胡郎图苏木 · 呼伦嘎查 ·</span>
+          </div>
+          <div class="dh-tip">🔊 点头像或小牛听简介</div>
         </div>
         <div class="dh-avatar">
           <svg viewBox="0 0 180 220" class="dh-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="伊拉特牧场主小伊抱着小牛">
@@ -438,8 +441,8 @@
     });
 
     /* ⑦ 数字人讲解：小伊（牧场主）轮播 + 语音朗读 */
-    const lines = (DB.narration || []).map(n=>n.text).filter(Boolean);
-    if (!lines.length) lines.push('您好，我是伊拉特智慧牧场牧场主小伊，欢迎来到伊拉特智慧牧场数据驾驶舱。');
+    const profileIntro = (DB.narration && DB.narration[0] && DB.narration[0].text) || intro;
+    const lines = [profileIntro];
 
     let li = 0, voiceOn = false;
     const textEl = $('#dhText'), voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
@@ -1521,7 +1524,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=14" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=15" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
