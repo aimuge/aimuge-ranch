@@ -1921,3 +1921,47 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 /* 监控 6 路：3 列网格 */
 .bs-cams{grid-template-columns:repeat(3,1fr)}
 @media (max-width:980px){ .bs-cams{grid-template-columns:repeat(2,1fr)} }
+
+/* ============ v14 数据大屏 · 智能装备图标在线状态 ============ */
+.bs-equip-summary{display:flex;align-items:center;gap:12px;margin:5px 0 7px;font-size:10px;color:#7f9bbf}
+.bs-equip-summary span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.bs-equip-summary i{display:inline-block;width:6px;height:6px;border-radius:50%}
+.bs-equip-summary i.ok{background:#34d399;box-shadow:0 0 9px rgba(52,211,153,.95)}
+.bs-equip-summary i.off{background:#94a3b8;box-shadow:0 0 7px rgba(148,163,184,.55)}
+.bs-equip-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.bs-equip{position:relative;display:flex;align-items:center;gap:7px;min-width:0;padding:5px 7px;border-radius:10px;overflow:hidden;
+  background:linear-gradient(140deg,rgba(30,50,84,.96),rgba(14,26,48,.96));border:1px solid rgba(74,124,247,.22);transition:transform .25s,box-shadow .25s,border-color .25s}
+.bs-equip:hover{transform:translateY(-2px);border-color:rgba(94,234,212,.55)}
+.bs-equip.is-online{box-shadow:inset 0 0 18px rgba(45,212,191,.06)}
+.bs-equip.is-offline{opacity:.76;border-color:rgba(100,116,139,.28);box-shadow:none}
+.bs-equip .dev-ico{width:28px;height:28px;border-radius:8px;background:rgba(15,118,110,.20);border-color:rgba(94,234,212,.30);color:#5eead4}
+.bs-equip.is-online .dev-ico{box-shadow:0 0 12px -3px rgba(94,234,212,.85)}
+.bs-equip.is-offline .dev-ico{filter:grayscale(1);background:#202b3d;border-color:#3a465a;color:#8b98ab;box-shadow:none}
+.bs-equip-meta{min-width:0;line-height:1.15}
+.bs-equip-meta b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:#e5eefc}
+.bs-equip-meta small{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8.5px;color:#7f9bbf}
+.bs-equip.is-offline .bs-equip-meta b{color:#b4bdca}.bs-equip.is-offline .bs-equip-meta small{color:#7c8799}
+.bs-equip-dot{position:absolute;right:5px;top:5px;width:5px;height:5px;border-radius:50%;background:#94a3b8}
+.bs-equip.is-online .bs-equip-dot{background:#34d399;box-shadow:0 0 8px rgba(52,211,153,.95);animation:bsDotPulse 1.8s ease-in-out infinite}
+.bs-equip.is-offline .bs-equip-dot{background:#64748b;box-shadow:none}
+
+/* 小伊抱着小牛：点击小牛触发语音 */
+.dh-calf{cursor:pointer;transform-origin:90px 165px;animation:dhCalfGlow 2.8s ease-in-out infinite}
+.dh-calf:hover{filter:brightness(1.14) drop-shadow(0 0 7px rgba(94,234,212,.75))}
+@keyframes dhCalfGlow{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1px) scale(1.015)}}
+@media (max-width:1200px){.bs-equip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:980px){.bs-equip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bs-equip-meta b{font-size:10.5px}}
+@media (max-width:640px){.bs-equip-grid{grid-template-columns:1fr}.bs-equip-summary{gap:8px;flex-wrap:wrap}}
+@media (prefers-reduced-motion: reduce){.bs-equip.is-online .bs-equip-dot,.dh-calf{animation:none}}
+
+/* v14.1 小伊讲解框：右上角窄屏、只放牧场简介、字母流动 */
+.bs-v8 .bs-dh .dh-bubble{width:220px;max-width:220px;padding:9px 11px 8px}
+.bs-v8 .bs-dh .dh-text{min-height:0;max-height:48px;overflow:hidden;font-size:10px;line-height:1.55;color:#bdd4ee}
+.dh-codeflow{display:flex;gap:14px;width:100%;overflow:hidden;margin-top:5px;padding:3px 0;border-top:1px solid rgba(94,234,212,.16);border-bottom:1px solid rgba(94,234,212,.16);
+  white-space:nowrap;font-size:7px;letter-spacing:1.6px;color:rgba(94,234,212,.72);text-transform:uppercase}
+.dh-codeflow span{animation:dhCodeFlow 11s linear infinite}
+@keyframes dhCodeFlow{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.dh-tip{margin-top:4px;font-size:8.5px}
+@media (max-width:1200px){.bs-v8 .bs-dh .dh-bubble{width:196px;max-width:196px}.bs-v8 .bs-dh .dh-text{font-size:9.5px;max-height:44px}}
+@media (max-width:980px){.bs-v8 .bs-dh .dh-bubble{width:100%;max-width:100%}.bs-v8 .bs-dh .dh-text{max-height:none}}
+@media (prefers-reduced-motion: reduce){.dh-codeflow span{animation:none}}

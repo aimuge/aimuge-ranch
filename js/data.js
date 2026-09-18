@@ -5,15 +5,15 @@ const DEFAULT_DATA = {
     owner:'伊拉特',
     location:'内蒙古 · 呼伦贝尔市 · 新巴尔虎左旗 · 吉布胡郎图苏木呼伦嘎查',
     gps:'约 48.0°N, 118.1°E（场部）',
-    area:6000, grazingArea:4500, hayArea:1500,
+    area:13300, areaSelf:3860, areaRented:9440, grazingArea:11800, hayArea:1500,
     founded:2016, smartSince:2026,
     climate:'寒温带大陆性季风气候 · 极端低温 -45℃ · 积雪期约 140 天',
     slogan:'高寒牧区西门塔尔牛智慧养殖：可视 · 可测 · 可控 · 可预警',
     developer:'内蒙古艾牧戈数智科技有限公司',
     mode:'冬季圈养 · 夏季散养（散养为主、圈养繁育为辅）',
     facilities:[
-      { id:'FA1', icon:'🏠', name:'大牛棚圈', desc:'成年牛 136 头 · 保温棚圈', detail:'1 栋 · 配套牛只活动区' },
-      { id:'FA2', icon:'🐮', name:'犊牛舍', desc:'犊牛 24 头 · 单独保温', detail:'1 栋 · 恒温看护' },
+      { id:'FA1', icon:'🏠', name:'大牛棚圈', desc:'大牛 102 头 · 保温棚圈', detail:'1 栋 · 配套牛只活动区' },
+      { id:'FA2', icon:'🐮', name:'犊牛舍', desc:'小牛（犊牛）84 头 · 单独保温', detail:'1 栋 · 恒温看护' },
       { id:'FA3', icon:'🌾', name:'牛只活动区', desc:'自由活动 · 饮水点', detail:'配套运动场' },
       { id:'FA4', icon:'🧊', name:'饲草区', desc:'天然草 900 捆 · 防火防潮', detail:'1 处草垛堆放区 · 监控 1 路' },
       { id:'FA5', icon:'🏘️', name:'生活区', desc:'住区 · 接待 · 蒙古包营地', detail:'监控 1 路' },
@@ -52,14 +52,14 @@ const DEFAULT_DATA = {
     { key:'insurance',  icon:'🛡️', title:'保险理赔' },
     { key:'gallery',    icon:'📷', title:'牧场相册' },
     { key:'admin',      icon:'⚙️', title:'后台管理' },
-    { key:'agent',      icon:'🤖', title:'畜牧业智能体' }
+    { key:'agent',      icon:'👩‍🌾', title:'我是伊拉特智慧牧场牧场主小伊' }
   ],
 
-  /* ---------- 养殖：160 头西门塔尔牛 ---------- */
+  /* ---------- 养殖：牛 186 头（大牛 102 + 小牛 84） ---------- */
   species: [
-    { key:'cattle', name:'牛', emoji:'🐂', color:'#0f766e', breed:'西门塔尔牛', count:160,
-      structure:'成年牛 136 · 犊牛 24（核心牛群 160 头）', gps:20, tempAvg:'38.6℃',
-      trend:[120,128,134,140,146,152,160] },
+    { key:'cattle', name:'牛', emoji:'🐂', color:'#0f766e', breed:'西门塔尔牛', count:186,
+      structure:'大牛 102 · 小牛（犊牛）84', gps:20, tempAvg:'38.6℃',
+      trend:[150,158,166,172,178,182,186] },
     { key:'sheep', name:'羊', emoji:'🐑', color:'#14b8a6', breed:'巴尔虎羊', count:300,
       structure:'基础母羊 210 · 羔羊 90（待核实）', gps:0, tempAvg:'39.1℃',
       trend:[240,252,264,276,288,294,300] },
@@ -68,8 +68,8 @@ const DEFAULT_DATA = {
       trend:[14,15,16,17,18,19,20] }
   ],
   groups: [
-    { id:'G1', name:'大牛棚圈 · 成年牛', count:136, desc:'西门塔尔成年牛 · 保温棚圈 + 活动区', status:'正常' },
-    { id:'G2', name:'犊牛舍 · 犊牛', count:24, desc:'单独保温 · 犊牛舍恒温看护', status:'重点看护' },
+    { id:'G1', name:'大牛棚圈 · 大牛', count:102, desc:'西门塔尔成年牛 · 保温棚圈 + 活动区', status:'正常' },
+    { id:'G2', name:'犊牛舍 · 小牛（犊牛）', count:84, desc:'单独保温 · 犊牛舍恒温看护', status:'重点看护' },
     { id:'G3', name:'羊群', count:300, desc:'巴尔虎羊 · 夏季散养放牧（数量待核实）', status:'正常' },
     { id:'G4', name:'马群', count:20, desc:'蒙古马 · 骑乘与牧户游（数量待核实）', status:'正常' }
   ],
@@ -82,8 +82,8 @@ const DEFAULT_DATA = {
     { id:'YL-0036', species:'牛', breed:'西门塔尔', sex:'公', age:'18月龄', weight:'486kg', health:'健康', location:'大牛棚圈', device:'自动称重 · 已过称', temp:'38.6℃', note:'育肥出栏候选' }
   ],
   birthRecords: [
-    { id:'BR1', date:'2026-03-18', species:'牛', item:'产犊 24 头', survival:'96.0%', operator:'伊拉特', note:'犊牛舍恒温 · 初乳 2 小时内饲喂' },
-    { id:'BR2', date:'2026-04-06', species:'牛', item:'犊牛建档 24 头', survival:'100%', operator:'伊拉特', note:'电子耳标建档完成' }
+    { id:'BR1', date:'2026-03-18', species:'牛', item:'产犊 84 头', survival:'96.0%', operator:'伊拉特', note:'犊牛舍恒温 · 初乳 2 小时内饲喂' },
+    { id:'BR2', date:'2026-04-06', species:'牛', item:'犊牛建档 84 头', survival:'100%', operator:'伊拉特', note:'电子耳标建档完成' }
   ],
 
   /* ---------- 增重分析（数据来自三分群全自动保定称） ---------- */
@@ -98,24 +98,24 @@ const DEFAULT_DATA = {
     ]
   },
 
-  /* ---------- 草场：6000 亩 ---------- */
+  /* ---------- 草场：13,300 亩（自家 3,860 + 租赁 9,440） ---------- */
   grasslandTypes: [
-    { id:'GT1', name:'草甸草原（打草区）', icon:'🌿', color:'#0f766e', area:2000, species:'羊草 · 披碱草', use:'打草 + 轮牧', note:'打草场 1,500 亩所在' },
-    { id:'GT2', name:'典型草原（轮牧区）', icon:'🌱', color:'#14b8a6', area:2200, species:'针茅 · 冷蒿 · 冰草', use:'四季轮牧', note:'牛群放牧主体草场' },
-    { id:'GT3', name:'低湿地 / 河漫滩', icon:'💧', color:'#0891b2', area:800, species:'芦苇 · 苔草', use:'应急放牧', note:'补水草场' },
-    { id:'GT4', name:'退牧还草 / 补播改良区', icon:'🌾', color:'#f0b429', area:600, species:'改良草种混播', use:'禁牧围封', note:'恢复植被' },
-    { id:'GT5', name:'沙化治理区', icon:'🏜️', color:'#b3541e', area:300, species:'沙蒿 · 锦鸡儿', use:'封育治理', note:'防风固沙' },
-    { id:'GT6', name:'棚圈 / 活动区 / 道路', icon:'🛤️', color:'#64748b', area:100, species:'—', use:'生产设施用地', note:'大牛棚圈 · 犊牛舍 · 活动区 · 饲草区' }
+    { id:'GT1', name:'草甸草原（打草区）', icon:'🌿', color:'#0f766e', area:2500, species:'羊草 · 披碱草', use:'打草 + 轮牧', note:'打草场 1,500 亩所在' },
+    { id:'GT2', name:'典型草原（轮牧区 · 租赁）', icon:'🌱', color:'#14b8a6', area:7600, species:'针茅 · 冷蒿 · 冰草', use:'四季轮牧', note:'牛群放牧主体草场' },
+    { id:'GT3', name:'低湿地 / 河漫滩', icon:'💧', color:'#0891b2', area:1500, species:'芦苇 · 苔草', use:'应急放牧', note:'补水草场' },
+    { id:'GT4', name:'退牧还草 / 补播改良区', icon:'🌾', color:'#f0b429', area:1200, species:'改良草种混播', use:'禁牧围封', note:'恢复植被' },
+    { id:'GT5', name:'沙化治理区', icon:'🏜️', color:'#b3541e', area:500, species:'沙蒿 · 锦鸡儿', use:'封育治理', note:'防风固沙' },
+    { id:'GT6', name:'棚圈 / 活动区 / 道路', icon:'🛤️', color:'#64748b', area:0, species:'—', use:'生产设施用地', note:'大牛棚圈 · 犊牛舍 · 活动区 · 饲草区' }
   ],
   grassland: {
-    total:6000, grazing:4500, hay:1500,
-    balance:{ capacity:2000, actual:800, rate:40.0 },
+    total:13300, grazing:11800, hay:1500,
+    balance:{ capacity:6650, actual:1330, rate:20.0 },
     ndvi:{ value:0.72, level:'良好', trend:[0.41,0.53,0.64,0.72,0.77,0.74,0.72] },
     seasons: [
-      { name:'春营盘', months:'3-5月', area:1200, grass:'返青期', height:'5-8cm', status:'休牧 · 返青保护', color:'#5eead4', progress:30 },
-      { name:'夏营盘', months:'6-8月', area:1800, grass:'盛草期', height:'22-30cm', status:'轮牧中', color:'#14b8a6', progress:70 },
-      { name:'秋营盘', months:'9-10月', area:800, grass:'成熟期', height:'18-26cm', status:'计划 9/1 转入', color:'#f0b429', progress:45 },
-      { name:'冬营盘', months:'11-2月', area:2200, grass:'枯草期', height:'7cm', status:'放牧中 · 防风向阳', color:'#0891b2', progress:85 }
+      { name:'春营盘', months:'3-5月', area:2600, grass:'返青期', height:'5-8cm', status:'休牧 · 返青保护', color:'#5eead4', progress:30 },
+      { name:'夏营盘', months:'6-8月', area:3600, grass:'盛草期', height:'22-30cm', status:'轮牧中', color:'#14b8a6', progress:70 },
+      { name:'秋营盘', months:'9-10月', area:2200, grass:'成熟期', height:'18-26cm', status:'计划 9/1 转入', color:'#f0b429', progress:45 },
+      { name:'冬营盘', months:'11-2月', area:3400, grass:'枯草期', height:'7cm', status:'放牧中 · 防风向阳', color:'#0891b2', progress:85 }
     ],
     pastures: [
       { id:'PA1', name:'冬营盘 · 东区', type:'典型草原', usage:'放牧场', area:1200, su:400, height:'7cm', status:'放牧中', util:62 },
@@ -150,7 +150,7 @@ const DEFAULT_DATA = {
 
   /* ---------- 屠宰加工 ---------- */
   slaughterPlans: [
-    { id:'SP1', season:'秋冬季出栏（10-12月）', species:'牛', head:16, note:'育肥牛 16 头 · 检疫后定点屠宰' }
+    { id:'SP1', season:'秋冬季出栏（10-12月）', species:'牛', head:62, note:'计划出栏 62 头 · 检疫后定点屠宰' }
   ],
   slaughterRecords: [
     { id:'SL1', date:'2026-01-12', species:'牛', head:4, weight:'1.4吨', inspector:'旗动物检疫所', status:'检疫合格', note:'冷鲜牛肉 1.0 吨入库' },
@@ -167,9 +167,9 @@ const DEFAULT_DATA = {
     { id:'VP6', season:'全年', vaccine:'布病监测', species:'牛', rate:'每季抽检 20%' }
   ],
   vaccineRecords: [
-    { id:'VR1', date:'2025-10-08', species:'牛', group:'全群', vaccine:'口蹄疫 A 型', dose:'160 头份', operator:'旗疫控中心', status:'完成' },
-    { id:'VR2', date:'2026-03-20', species:'牛', group:'犊牛', vaccine:'犊牛腹泻疫苗', dose:'24 头份', operator:'旗疫控中心', status:'完成' },
-    { id:'VR3', date:'2026-04-10', species:'牛', group:'全群', vaccine:'炭疽', dose:'160 头份', operator:'旗疫控中心', status:'完成' }
+    { id:'VR1', date:'2025-10-08', species:'牛', group:'全群', vaccine:'口蹄疫 A 型', dose:'186 头份', operator:'旗疫控中心', status:'完成' },
+    { id:'VR2', date:'2026-03-20', species:'牛', group:'犊牛', vaccine:'犊牛腹泻疫苗', dose:'84 头份', operator:'旗疫控中心', status:'完成' },
+    { id:'VR3', date:'2026-04-10', species:'牛', group:'全群', vaccine:'炭疽', dose:'186 头份', operator:'旗疫控中心', status:'完成' }
   ],
   medicines: [
     { id:'MD1', date:'2026-03-20', species:'牛', group:'犊牛 12 头', drug:'土霉素（腹泻治疗）', withdrawal:28, operator:'吉日嘎拉', note:'出栏前 28 天停药' },
@@ -192,13 +192,13 @@ const DEFAULT_DATA = {
   ],
   deviceList: [
     { id:'DV1', name:'视频监控系统（6 路）', cat:'D1', model:'海康威视 · 6 路', count:6, where:'生活区 / 饲草区 / 设备区 / 犊牛舍 / 牛只活动区 / 牛舍内', state:'在线', protocol:'ONVIF / RTSP / GB28181 · rtsp://IP:554/Streaming/Channels/101', battery:'市电 + UPS', last:'刚刚' },
-    { id:'DV2', name:'耳标测温（电子耳标 + 测温）', cat:'D2', model:'RFID 读写器 + 测温耳标 200 个', count:200, where:'全场牛只（160 头 + 备件 40）', state:'在线', protocol:'RFID 134.2kHz + 测温 · TCP/IP / BLE', battery:'耳标电池 2-3 年', last:'刚刚' },
+    { id:'DV2', name:'耳标测温（电子耳标 + 测温）', cat:'D2', model:'RFID 读写器 + 测温耳标 200 个', count:200, where:'全场牛只 186 头（200 枚耳标含备件）', state:'在线', protocol:'RFID 134.2kHz + 测温 · TCP/IP / BLE', battery:'耳标电池 2-3 年', last:'刚刚' },
     { id:'DV3', name:'GPS/北斗定位项圈', cat:'D2', model:'AMG-TG5 · 5 个', count:5, where:'放牧牛群（头牛佩戴）', state:'在线', protocol:'北斗 / GPS · 4G · MQTT', battery:'78-92%', last:'刚刚' },
     { id:'DV4', name:'智能巡检机器狗', cat:'D3', model:'四足机器人（宇树 / 云深处）', count:1, where:'牛舍 / 活动区 / 饲草区 夜间巡检', state:'在线', protocol:'HTTP API + RTSP 回传 · 4G/5G / Wi-Fi · 视觉导航', battery:'82% · 续航约 3.5h', last:'5 分钟前' },
     { id:'DV5', name:'三分群全自动保定称', cat:'D4', model:'1 台 · 可对接 200 头过称分群', count:1, where:'大牛棚圈', state:'在线', protocol:'RS485 / Modbus RTU · 分群控制', battery:'市电', last:'刚刚' },
     { id:'DV6', name:'TMR 拌料机', cat:'D4', model:'9 立方 · 车载称重', count:1, where:'饲草区 / 饲料间', state:'在线', protocol:'ISOBUS / 车载称重 · RS485', battery:'柴油', last:'今天' },
     { id:'DV7', name:'撒料机', cat:'D4', model:'牵引式撒料车', count:1, where:'饲喂通道', state:'在线', protocol:'ISOBUS · 车载控制', battery:'柴油', last:'今天' },
-    { id:'DV8', name:'饲料粉碎机', cat:'D4', model:'锤片式粉碎机', count:1, where:'饲料间', state:'在线', protocol:'Modbus RTU / 变频器 RS485', battery:'市电', last:'今天' },
+    { id:'DV8', name:'饲料粉碎机', cat:'D4', model:'锤片式粉碎机', count:1, where:'饲料间', state:'检修', protocol:'Modbus RTU / 变频器 RS485', battery:'市电', last:'今天' },
     { id:'DV9', name:'智能农机作业终端', cat:'D5', model:'无人机 1 + 无人拖拉机 1 + 打草机 1', count:3, where:'草场 / 打草场', state:'在线', protocol:'RTK / 北斗作业监测 · 4G API', battery:'柴油 / 电池', last:'昨天' }
   ],
   /* 端口连接配置（可在后台填写协议后连接） */
@@ -291,7 +291,7 @@ const DEFAULT_DATA = {
   months: [
     { m:1, season:'冬', name:'冬营盘', tasks:['冬营盘放牧 + 深冬补饲（天然草）','犊牛舍保温 22℃ · 饮水防冻','冷鲜牛肉订单销售'] },
     { m:2, season:'冬', name:'冬营盘', tasks:['围产期母牛看护','寒潮预警响应 · 加料','设备端口巡检'] },
-    { m:3, season:'春', name:'春营盘', tasks:['产犊季（24 头）· 初乳管理','春季防疫（口蹄疫/炭疽）','犊牛舍恒温值守'] },
+    { m:3, season:'春', name:'春营盘', tasks:['产犊季（84 头）· 初乳管理','春季防疫（口蹄疫/炭疽）','犊牛舍恒温值守'] },
     { m:4, season:'春', name:'春营盘', tasks:['产犊收尾 · 犊牛建档耳标','春营盘返青休牧','打草场返青监测'] },
     { m:5, season:'夏', name:'夏营盘', tasks:['转场夏营盘','发情监测 + 配种计划','牧户游开季'] },
     { m:6, season:'夏', name:'夏营盘', tasks:['分区轮牧','打草场监测','奶食品加工'] },
@@ -313,7 +313,7 @@ const DEFAULT_DATA = {
     { icon:'🐂', text:'YL-0001 号母牛发情已确认，今日 14:00 配种', time:'09:30', level:'中' },
     { icon:'🧊', text:'天然草入库核验：900/1000 捆，冬储覆盖至 4 月', time:'08:40', level:'中' },
     { icon:'📡', text:'监控 / 耳标 / 农机端口联调：后台填写协议即可连接', time:'08:20', level:'中' },
-    { icon:'⚖️', text:'自动称重保定架：本周完成 24 头犊牛体重采集', time:'08:10', level:'低' }
+    { icon:'⚖️', text:'自动称重保定架：本周完成 84 头犊牛体重采集', time:'08:10', level:'低' }
   ],
 
   /* ---------- IoT 实时采集 ---------- */
@@ -332,6 +332,15 @@ const DEFAULT_DATA = {
     ]
   },
 
+  /* ---------- 数字人讲解词（后台可改） ---------- */
+  narration: [
+    { id:'NR1', text:'您好，我是伊拉特智慧牧场牧场主小伊。伊拉特智慧牧场位于内蒙古呼伦贝尔市新巴尔虎左旗吉布胡郎图苏木呼伦嘎查，2016 年建场，由牧民伊拉特经营，是一家以西门塔尔牛繁育为核心的家庭牧场。' },
+    { id:'NR2', text:'牧场草场共 13,300 亩，其中自家天然散养草场 3,860 亩，租赁草场 9,440 亩；现存栏牛 186 头，其中大牛 102 头、小牛 84 头，另有羊 300 只、马 20 匹。' },
+    { id:'NR3', text:'牧场建有两个棚圈：大牛棚圈养大牛 102 头，犊牛舍养小牛 84 头，并配套牛只活动区和饲草区；养殖方式是冬季圈养、夏季散养，草场按春夏秋冬四季营盘轮牧。' },
+    { id:'NR4', text:'装备方面，全场有 9 项智能设备：视频监控 6 路覆盖生活区、饲草区、设备区、犊牛舍、牛只活动区和牛舍内；耳标测温 200 个、北斗定位项圈 5 个；还有智能巡检机器狗、三分群全自动保定称、TMR 拌料机、撒料机、饲料粉碎机和农机作业终端。' },
+    { id:'NR5', text:'目前现状：本年度产犊 84 头，犊牛成活率 96%；计划出栏 62 头；天然草已入库 900 捆，目标 1,000 捆，冬储可覆盖到明年 4 月。' },
+    { id:'NR6', text:'所有设备都配有协议连接端口，包括监控、耳标、定位、机器狗、称重、饲喂、粉碎机和农机端口，后期提供协议地址即可直接对接。' }
+  ],
   agent: {
     quick: ['今天牧场整体情况怎么样？','现在存栏多少牛？','天然草够不够过冬？','有哪些预警要处理？','监控/耳标/农机怎么接？','犊牛怎么防冻？','设备端口怎么连接？','该不该转场了？']
   },
@@ -345,9 +354,9 @@ const DEFAULT_DATA = {
       { id:'GV4', name:'畜禽标识溯源系统', scope:'耳标备案 · 一畜一码', method:'API 对接', status:'已对接', freq:'实时', endpoint:'POST https://suyuan.gov-api.cn/v1/ear-tag/sync', note:'耳标发放 / 佩戴同步' }
     ],
     reports: [
-      { id:'GR1', time:'2026-03-20 09:32', target:'动物疫病防控直报系统', type:'免疫记录上报', biz:'犊牛腹泻疫苗 · 24 头份', code:'YB20260320001', status:'成功', cost:'0.8s' },
+      { id:'GR1', time:'2026-03-20 09:32', target:'动物疫病防控直报系统', type:'免疫记录上报', biz:'犊牛腹泻疫苗 · 84 头份', code:'YB20260320001', status:'成功', cost:'0.8s' },
       { id:'GR2', time:'2026-04-06 15:10', target:'动物检疫电子出证', type:'检疫出证', biz:'出栏牛 4 头 · 检疫合格', code:'QZ20260406018', status:'成功', cost:'1.2s' },
-      { id:'GR3', time:'2026-04-18 11:05', target:'畜禽标识溯源系统', type:'耳标备案同步', biz:'新增耳标测温 200 个', code:'EB20260418009', status:'成功', cost:'0.6s' },
+      { id:'GR3', time:'2026-04-18 11:05', target:'畜禽标识溯源系统', type:'耳标备案同步', biz:'新增耳标测温 200 个（全场 186 头牛）', code:'EB20260418009', status:'成功', cost:'0.6s' },
     ]
   },
 
@@ -373,7 +382,7 @@ const DEFAULT_DATA = {
   ],
   subsidies: [
     { icon:'🐄', name:'基础母牛扩群补贴', desc:'见犊补母 · 按政策标准执行', status:'可申报' },
-    { icon:'🌾', name:'草畜平衡奖励', desc:'按确权草场 6,000 亩发放', status:'待申报' },
+    { icon:'🌾', name:'草畜平衡奖励', desc:'按自有草场 3,860 亩 + 租赁 9,440 亩核算', status:'待申报' },
     { icon:'🛡️', name:'政策性牲畜保险', desc:'冻死/疫病可理赔 · 保费财政补贴', status:'已投保' }
   ],
   workers: [
@@ -405,7 +414,7 @@ const DEFAULT_DATA = {
 };
 
 /* ============ 持久化与通用 CRUD（支持 a.b 路径） ============ */
-const KEY = 'yilate-ranch-v7';
+const KEY = 'yilate-ranch-v14';
 let DB = loadDB();
 
 function loadDB(){

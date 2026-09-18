@@ -184,8 +184,9 @@
   function pageBigscreen(){
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const w = DB.weather;
+    const intro = `${DB.meta.name}位于${DB.meta.location.replace('内蒙古 · ','')}，由牧场主${DB.meta.owner}经营，现养西门塔尔牛${fmt(c.cattle)}头。`;
     const ticker = [
-      `牲畜存栏 ${fmt(c.totalAnimals)} 头只（西门塔尔牛 160 头）`,
+      `牲畜存栏 ${fmt(c.totalAnimals)} 头只（西门塔尔牛 ${fmt(c.cattle)} 头：大牛 102 · 小牛 84）`,
       `草场 ${fmt(DB.meta.area)} 亩 · 天然草 ${fmt(DB.forageInventory[0].stock)} 捆`,
       `联网终端 ${fmt(c.devTotal)} 台 · 在线率 ${c.devRate}%`,
       `监控 6 路（生活区/饲草/设备/犊牛舍/活动区/牛舍内）· 耳标测温 200 个 · 定位项圈 5 个 · 机器狗 1 台`,
@@ -194,7 +195,7 @@
       `犊牛舍恒温 22℃ · 饮水不冻`,
       `当前 ${monthName(demoMonth)} · ${m.season}季 · ${m.name}`
     ].join('　◆　');
-    const health = 98.7;
+    const health = c.devRate;
     return `
     <div class="bigscreen bs-v8">
       <div class="bs-sweeps"><i></i><i></i><i></i></div>
@@ -206,7 +207,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=6" alt="YILATE">
+          <img src="assets/logo.png?v=14" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -222,8 +223,8 @@
 
       <div class="bs-kpistrip">
         ${[
-          ['🐂 牲畜存栏', fmt(c.totalAnimals)+' 头只', '西门塔尔牛 160'],
-          ['🌾 草场面积', fmt(DB.meta.area)+' 亩', '放牧 4,500 / 打草 1,500'],
+          ['🐂 牲畜存栏', fmt(c.totalAnimals)+' 头只', `西门塔尔牛 ${fmt(c.cattle)}（大牛 102 / 小牛 84）`],
+          ['🌾 草场面积', fmt(DB.meta.area)+' 亩', '自有 3,860 + 租赁 9,440'],
           ['🧊 天然草储备', fmt(DB.forageInventory[0].stock)+' 捆', '目标 1,000 捆'],
           ['📡 设备在线率', c.devRate+'%', `在线 ${fmt(c.devOnline)} 台`],
           ['💰 今日经营', '¥'+(12680).toLocaleString('zh-CN'), `订单 ${c.todayOrders} 单`]
@@ -237,7 +238,7 @@
           <section class="bs-panel">
             <div class="bsp-title">🐂 牛群结构与存栏 <em>LIVESTOCK</em></div>
             <div class="bsp-big">${fmt(c.totalAnimals)}</div>
-            <div class="bsp-sub">成年牛 136 · 犊牛 24 · 羊 300 · 马 20</div>
+            <div class="bsp-sub">大牛 102 · 小牛 84 · 羊 300 · 马 20</div>
             <div id="bsStock" class="bs-chart"></div>
           </section>
           <section class="bs-panel">
@@ -267,16 +268,18 @@
             </div>
             <div class="bs-tasks">${m.tasks.slice(0,2).map(t=>`<div class="bs-task"><span>◆</span>${t}</div>`).join('')}</div>
           </section>
-          <section class="bs-panel">
-            <div class="bsp-title">📡 设备运行状态 <em>DEVICES</em></div>
-            <div class="bs-dev-row">
-              <div id="bsGauge" class="bs-chart center"></div>
-              <div class="bs-dev-list">
-                <div class="bs-row"><span>在线设备</span><b>${fmt(c.devOnline)} 台</b></div>
-                <div class="bs-row"><span>离线/检修</span><b>${fmt(c.devOffline)} 台</b></div>
-                <div class="bs-row"><span>端口已连接</span><b>${c.portsOn}/${(DB.ports||[]).length}</b></div>
-                <div class="bs-row"><span>耳标测温</span><b>200 个</b></div>
-              </div>
+          <section class="bs-panel bs-equip-panel">
+            <div class="bsp-title">📡 智能装备在线状态 <em>IOT DEVICES</em></div>
+            <div class="bs-equip-summary"><span><i class="ok"></i>在线 ${fmt(c.devOnline)} 台</span><span><i class="off"></i>离线/检修 ${fmt(c.devOffline)} 台</span><span>端口 ${c.portsOn}/${(DB.ports||[]).length}</span></div>
+            <div class="bs-equip-grid">
+              ${DB.deviceList.map(d=>{
+                const on = String(d.state).includes('在线');
+                return `<div class="bs-equip ${on?'is-online':'is-offline'}" title="${d.name} · ${d.state} · ${d.protocol}">
+                  ${devIcon(d.name, d.state)}
+                  <div class="bs-equip-meta"><b>${devShortName(d.name)}</b><small>${fmt(d.count)}台 · ${d.state}</small></div>
+                  <i class="bs-equip-dot"></i>
+                </div>`;
+              }).join('')}
             </div>
           </section>
         </div>
@@ -287,9 +290,9 @@
             <div class="bs-health">
               <div class="bs-health-num">${health}<small>%</small></div>
               <div class="bs-health-legend">
-                <span><i style="background:#3ddc97"></i>健康设备 <b>${fmt(c.devTotal-4)}</b></span>
-                <span><i style="background:#f0b429"></i>一般设备 <b>3</b></span>
-                <span><i style="background:#ef4444"></i>故障设备 <b>1</b></span>
+                <span><i style="background:#3ddc97"></i>在线设备 <b>${fmt(c.devOnline)}</b></span>
+                <span><i style="background:#f0b429"></i>端口待连 <b>${(DB.ports||[]).length-c.portsOn}</b></span>
+                <span><i style="background:#94a3b8"></i>离线/检修 <b>${fmt(c.devOffline)}</b></span>
               </div>
             </div>
           </section>
@@ -324,42 +327,59 @@
             ['今日增重','+86 kg','5 头采集'],
             ['今日饲喂','天然草 24 捆','TMR 2 次'],
             ['饮水温度','12℃','加热常开'],
-            ['出栏完成率','37.5%','6/16 头'],
+            ['出栏计划','62 头','秋冬季出栏'],
             ['疫病防控率','96.8%','应免尽免'],
-            ['端口在线','监控 · 耳标','农机待接入']
+            ['端口在线','9 个','协议可配置']
           ].map(([t,v,d])=>`<div class="bs-mini-item"><span>${t}</span><b>${v}</b><i>${d}</i></div>`).join('')}
         </div>
       </div>
 
-      <div class="bs-dh" id="dhBox" title="点击我听讲解">
+      <div class="bs-dh" id="dhBox" title="点击小伊或小牛听讲解">
         <div class="dh-bubble">
-          <div class="dh-hi">您好，伊拉特场主 👋</div>
-          <div class="dh-text" id="dhText">欢迎来到伊拉特智慧牧场数据驾驶舱，全场存栏 480 头只，其中西门塔尔牛 160 头。</div>
-          <div class="dh-tip">🔊 点我（小女孩）即可语音讲解</div>
+          <div class="dh-hi">伊拉特牧场主 · 小伊 👋</div>
+          <div class="dh-text" id="dhText">${intro}</div>
+          <div class="dh-codeflow"><span>YILATE · SMART RANCH · HULUNBUIR · 智慧牧场 · 数据感知 ·</span><span>YILATE · SMART RANCH · HULUNBUIR · 智慧牧场 · 数据感知 ·</span></div>
+          <div class="dh-tip">🔊 点击小伊或小牛听讲解</div>
         </div>
         <div class="dh-avatar">
-          <svg viewBox="0 0 140 200" class="dh-svg" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="70" cy="193" rx="38" ry="6" fill="rgba(0,0,0,.32)"/>
-            <path d="M48 168 h16 v14 q0 6 -8 6 h-10 q-6 0 -6 -6 v-4 q0 -5 4 -6 z" fill="#3b2417" stroke="#f0b429" stroke-width="1.2"/>
-            <path d="M76 168 h16 v14 q0 6 -8 6 h-10 q-6 0 -6 -6 v-4 q0 -5 4 -6 z" fill="#3b2417" stroke="#f0b429" stroke-width="1.2"/>
-            <path d="M44 96 q26 -10 52 0 l9 74 q-35 10 -70 0 z" fill="#c0392b" stroke="#f0b429" stroke-width="2"/>
-            <rect x="39" y="130" width="62" height="10" rx="5" fill="#f0b429"/>
-            <path d="M56 96 l14 34 l14 -34" fill="none" stroke="#f0b429" stroke-width="2"/>
-            <path d="M44 100 q-16 22 -12 46" stroke="#c0392b" stroke-width="13" fill="none" stroke-linecap="round"/>
-            <path class="dh-wave" d="M96 100 q20 12 18 32" stroke="#c0392b" stroke-width="13" fill="none" stroke-linecap="round"/>
-            <circle cx="31" cy="149" r="7" fill="#f7d7b5"/>
-            <circle class="dh-hand" cx="115" cy="134" r="7.5" fill="#f7d7b5"/>
-            <circle cx="70" cy="70" r="25" fill="#f7d7b5"/>
-            <path d="M44 66 q0 -27 26 -27 q26 0 26 27 q-9 -13 -26 -13 q-17 0 -26 13 z" fill="#2b2118"/>
-            <path d="M48 78 q-11 22 -7 40" stroke="#2b2118" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <path d="M92 78 q11 22 7 40" stroke="#2b2118" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <circle cx="41" cy="120" r="4.2" fill="#e74c3c"/><circle cx="99" cy="120" r="4.2" fill="#e74c3c"/>
-            <path d="M46 54 q24 -19 48 0 z" fill="#1b3a6b" stroke="#f0b429" stroke-width="2"/>
-            <rect x="43" y="52" width="54" height="7" rx="3.5" fill="#f0b429"/>
-            <circle cx="70" cy="35" r="4.6" fill="#e74c3c"/>
-            <g class="dh-eyes"><circle cx="61" cy="70" r="2.9" fill="#2b2118"/><circle cx="79" cy="70" r="2.9" fill="#2b2118"/></g>
-            <circle cx="52" cy="79" r="4" fill="#f2a1a1" opacity=".65"/><circle cx="88" cy="79" r="4" fill="#f2a1a1" opacity=".65"/>
-            <path d="M64 82 q6 5 12 0" stroke="#b33a3a" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <svg viewBox="0 0 180 220" class="dh-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="伊拉特牧场主小伊抱着小牛">
+            <defs>
+              <linearGradient id="robeG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient>
+              <linearGradient id="calfG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#d6b28b"/></linearGradient>
+              <filter id="calfGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <ellipse cx="90" cy="211" rx="54" ry="6" fill="rgba(0,0,0,.35)"/>
+            <path d="M57 177h20v22q0 7-8 7H55q-7 0-7-7v-9q0-8 9-13z" fill="#132b52" stroke="#5eead4" stroke-width="1.3"/>
+            <path d="M103 177h20v22q0 7-8 7h-14q-7 0-7-7v-9q0-8 9-13z" fill="#132b52" stroke="#5eead4" stroke-width="1.3"/>
+            <path d="M49 91q35-17 74 0l16 92q-53 20-106 0z" fill="url(#robeG)" stroke="#f0b429" stroke-width="2.2"/>
+            <path d="M62 95l20 42 20-42" fill="none" stroke="#f0b429" stroke-width="2.1"/>
+            <path d="M48 137h84" stroke="#f0b429" stroke-width="7" opacity=".85"/>
+            <path d="M42 103q-17 21-13 50" stroke="#0e7490" stroke-width="13" fill="none" stroke-linecap="round"/>
+            <path class="dh-wave" d="M137 103q20 17 15 43" stroke="#0e7490" stroke-width="13" fill="none" stroke-linecap="round"/>
+            <circle cx="29" cy="155" r="8" fill="#f7d7b5" stroke="#f0b429" stroke-width="1.3"/>
+            <circle class="dh-hand" cx="151" cy="147" r="8" fill="#f7d7b5" stroke="#f0b429" stroke-width="1.3"/>
+            <circle cx="90" cy="63" r="27" fill="#f7d7b5"/>
+            <path d="M61 60q0-30 29-30t29 30q-10-15-29-15T61 60z" fill="#2b2118"/>
+            <path d="M65 75q-9 23-5 45" stroke="#2b2118" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M115 75q9 23 5 45" stroke="#2b2118" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <circle cx="57" cy="117" r="4.5" fill="#e74c3c"/><circle cx="123" cy="117" r="4.5" fill="#e74c3c"/>
+            <path d="M63 49q27-22 54 0z" fill="#1e3a8a" stroke="#f0b429" stroke-width="2"/>
+            <rect x="60" y="47" width="60" height="7" rx="3.5" fill="#f0b429"/>
+            <circle cx="90" cy="30" r="4.8" fill="#e74c3c"/>
+            <g class="dh-eyes"><circle cx="80" cy="63" r="3" fill="#2b2118"/><circle cx="100" cy="63" r="3" fill="#2b2118"/></g>
+            <circle cx="70" cy="73" r="4" fill="#f2a1a1" opacity=".65"/><circle cx="110" cy="73" r="4" fill="#f2a1a1" opacity=".65"/>
+            <path d="M84 78q6 5 12 0" stroke="#b33a3a" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <g id="calfBox" class="dh-calf" role="button" aria-label="点击小牛听讲解">
+              <ellipse cx="90" cy="185" rx="39" ry="6" fill="rgba(0,0,0,.25)"/>
+              <path d="M59 151q18-15 42-8l24 9-7 28q-29 13-55 0z" fill="url(#calfG)" stroke="#8a5a32" stroke-width="2"/>
+              <path d="M61 156q-19-13-27 1q-5 11 13 14l20 1z" fill="#f7e7cf" stroke="#8a5a32" stroke-width="2"/>
+              <path d="M61 158l-10-9M61 163l-11 8" stroke="#8a5a32" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="48" cy="157" r="3.2" fill="#2b2118"/><circle cx="49" cy="164" r="2" fill="#8a5a32"/>
+              <path d="M78 141q10-12 21 0" fill="#fff7ed" stroke="#8a5a32" stroke-width="2"/>
+              <path d="M72 184v12M98 184v12M119 177v17" stroke="#8a5a32" stroke-width="4" stroke-linecap="round"/>
+              <path d="M74 163q16 9 34 0" fill="none" stroke="#c08457" stroke-width="3" stroke-linecap="round" filter="url(#calfGlow)"/>
+            </g>
+            <path d="M48 151q19 24 42 25q26-1 42-28" fill="none" stroke="#f7d7b5" stroke-width="10" stroke-linecap="round"/>
           </svg>
         </div>
       </div>
@@ -407,9 +427,6 @@
       series:[{ name:'载畜量利用率 %', color:'#38bdf8', values:[62,58,0,52,0,0] }],
       height:96, yFormat:v=>Math.round(v)+'%' });
 
-    /* ④ 设备在线率仪表盘 */
-    Charts.gauge($('#bsGauge'), { value: compute().devRate, label:'设备在线率', color:'#5eead4', size:112 });
-
     /* ⑤ 月份切换 */
     $('#content').querySelectorAll('.bs-yc .yc-cell').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
 
@@ -420,46 +437,36 @@
       else document.exitFullscreen && document.exitFullscreen();
     });
 
-    /* ⑦ 数字人讲解：轮播 + 语音朗读 */
-    const c = compute(), M = DB.meta, G = DB.groups;
-    const lines = [
-      `您好，我是伊拉特智慧牧场的数字讲解员。伊拉特智慧牧场位于内蒙古呼伦贝尔市新巴尔虎左旗吉布胡郎图苏木呼伦嘎查，${M.founded} 年建场，由牧民${M.owner}经营，是一家以西门塔尔牛繁育为核心的家庭牧场。`,
-      `牧场经营草场 ${fmt(M.area)} 亩，其中放牧场 ${fmt(M.grazingArea)} 亩、打草场 ${fmt(M.hayArea)} 亩；现存栏牲畜 ${fmt(c.totalAnimals)} 头只，包括西门塔尔牛 160 头、羊 300 只、马 20 匹，折合羊单位 ${fmt(c.sheepUnits)}。`,
-      `牧场建有两个棚圈：大牛棚圈饲养成年牛 ${G[0].count} 头，犊牛舍饲养犊牛 ${G[1].count} 头，另配套牛只活动区和饲草区。养殖方式为冬季圈养、夏季散养，草场按春、夏、秋、冬四季营盘轮牧。`,
-      `装备方面，全场共 ${DB.deviceList.length} 项智能设备，接入终端 ${fmt(c.devTotal)} 台：视频监控 6 路，覆盖生活区、饲草区、设备区、犊牛舍、牛只活动区和牛舍内；耳标测温 200 个、北斗定位项圈 5 个；还有智能巡检机器狗、三分群全自动保定称、TMR 拌料机、撒料机、饲料粉碎机，以及无人机、无人拖拉机和打草机，设备在线率 ${c.devRate}%。`,
-      `生产方面，本年度产犊 24 头，犊牛成活率 96%；犊牛舍恒温 22 摄氏度，饮水保持不冻；近期称重 5 头，平均日增重 0.75 公斤，增重平稳。`,
-      `饲草方面，天然草已入库 900 捆，目标 1,000 捆，另外储备青贮玉米 30 吨、精饲料 12 吨，按当前饲喂量可覆盖到明年 4 月，冬储基本有保障。`,
-      `经营方面，牧场已销售犊牛、冷鲜牛肉和奶食品，并开展牧户游接待：游客可以参观犊牛舍、体验牧牛喂犊、奶食品制作和骑马；今天有 ${c.todayOrders} 单预约、48 位游客。`,
-      `今日提醒：寒潮期间注意犊牛舍保温、饮水加热器常开；监控、耳标、定位、机器狗、称重、饲喂、粉碎机、农机共 9 个协议端口，都可以在后台填写地址后直接连接，后期提供协议地址即可接入。`
-    ];
+    /* ⑦ 数字人讲解：小伊（牧场主）轮播 + 语音朗读 */
+    const lines = (DB.narration || []).map(n=>n.text).filter(Boolean);
+    if (!lines.length) lines.push('您好，我是伊拉特智慧牧场牧场主小伊，欢迎来到伊拉特智慧牧场数据驾驶舱。');
 
     let li = 0, voiceOn = false;
-    const textEl = $('#dhText'), voiceBtn = $('#bsVoice'), dhBox = $('#dhBox');
+    const textEl = $('#dhText'), voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
     const speak = (txt)=>{
       if (!voiceOn || !window.speechSynthesis) return;
       try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'zh-CN'; u.rate = 1.03; u.pitch = 1.15; speechSynthesis.speak(u); } catch(e){}
     };
     const show = (speakIt)=>{
-      if (textEl){
-        textEl.style.opacity = 0;
-        setTimeout(()=>{
-          const txt = lines[li % lines.length];
-          textEl.textContent = txt;
-          textEl.style.opacity = 1;
-          if (speakIt !== false) speak(txt);
-          li++;
-        }, 300);
-      }
+      const txt = lines[li % lines.length];
+      if (textEl) textEl.style.opacity = 1;
+      if (speakIt !== false) speak(txt);
+      li++;
     };
     show(false);
-    const dhTimer = setInterval(()=>show(true), 12000);
-    /* 点击小女孩 → 语音讲解 */
-    if (dhBox) dhBox.addEventListener('click', ()=>{
+    const dhTimer = setInterval(()=>show(true), 14000);
+    const startNarration = (msg)=>{
       voiceOn = true;
       if (voiceBtn) voiceBtn.textContent = '🔇 关闭语音';
       const txt = lines[(li - 1 + lines.length) % lines.length];
       speak(txt);
-      toast('🔊 伊拉特数字人开始为您讲解');
+      toast(msg || '🔊 伊拉特牧场主小伊开始为您讲解');
+    };
+    /* 点击小伊或她抱着的小牛 → 语音讲解 */
+    if (dhBox) dhBox.addEventListener('click', ()=>startNarration('🔊 伊拉特牧场主小伊开始为您讲解'));
+    if (calfBox) calfBox.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      startNarration('🐮 小牛提示：正在为您介绍伊拉特智慧牧场');
     });
     if (voiceBtn) voiceBtn.addEventListener('click', (e)=>{
       e.stopPropagation();
@@ -692,7 +699,7 @@
       ${pageHeader('养殖管理', '四畜分群 · 电子档案 · 繁殖动态 · 智能监测', addBtn('登记牲畜个体'))}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'羊单位 '+fmt(c.sheepUnits), color:'#4f46e5', bg:'#eef2ff'})}
-        ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 160 头 + 备件 40 个', color:'#0ea5e9', bg:'#e0f2fe'})}
+        ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 186 头 · 200 枚含备件', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'🍼', label:'本年度繁殖', value:'产犊 120 · 羔羊 188', sub:'犊牛成活率 96.0% · 羔羊 98.0%', color:'#b3541e', bg:'#fbeee6'})}
         ${statCard({icon:'💉', label:'免疫率', value:'96.8%', sub:'春秋两防 · 应免尽免', color:'#475569', bg:'#f1f5f9'})}
       </div>
@@ -1145,8 +1152,22 @@
     if (/监控|摄像/.test(n)) return 'cam';
     return 'cam';
   }
-  function devIcon(name){
-    return `<span class="dev-ico">${DEV_ICONS[devIconKey(name)] || DEV_ICONS.cam}</span>`;
+  function devIcon(name, state='在线'){
+    const online = String(state).includes('在线');
+    return `<span class="dev-ico ${online?'is-online':'is-offline'}">${DEV_ICONS[devIconKey(name)] || DEV_ICONS.cam}</span>`;
+  }
+  function devShortName(name){
+    const n = String(name||'');
+    if (/视频监控/.test(n)) return '视频监控';
+    if (/耳标/.test(n)) return '耳标测温';
+    if (/定位项圈/.test(n)) return '北斗项圈';
+    if (/机器狗/.test(n)) return '巡检机器狗';
+    if (/保定称/.test(n)) return '保定称重';
+    if (/TMR/.test(n)) return 'TMR 拌料机';
+    if (/撒料/.test(n)) return '撒料机';
+    if (/粉碎/.test(n)) return '饲料粉碎机';
+    if (/农机/.test(n)) return '智能农机';
+    return n.replace(/（[^）]*）/g,'').slice(0,8);
   }
 
   /* ================= 农机写实插画（智能农机管理卡片用） ================= */
@@ -1287,7 +1308,7 @@
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'📡', label:'联网终端', value:fmt(c.devTotal)+' 台', sub:'含耳标/项圈/终端', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'🟢', label:'设备在线率', value:c.devRate+'%', sub:'在线 '+fmt(c.devOnline)+' 台', color:'#4f46e5', bg:'#eef2ff'})}
-        ${statCard({icon:'🔴', label:'离线/检修', value:fmt(c.devOffline)+' 台', sub:'电子哨兵 4 · 清粪机器人 2', color:'#d9534f', bg:'#fdeeee'})}
+        ${statCard({icon:'🔴', label:'离线/检修', value:fmt(c.devOffline)+' 台', sub:'饲料粉碎机检修 · 可回写状态', color:'#d9534f', bg:'#fdeeee'})}
         ${statCard({icon:'🔌', label:'成套装备', value:fmt(c.kit)+' 台套', sub:'6 大分类 · 农机/棚圈/无人设备', color:'#f59e0b', bg:'#fef3c7'})}
       </div>
       ${card('数据自动采集 · 智能硬件自动上报链路', `
@@ -1500,7 +1521,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=6" alt="AimuGo"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=14" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -1563,30 +1584,30 @@
 
 
   /* ================= 畜牧业智能体 ================= */
-  const agentMsgs = [ {role:'bot', text:'你好，我是「艾牧戈」畜牧业智能体 🤖\n我可以基于牧场实时数据回答：存栏、饲草、防疫、屠宰、产品、牧游、设备、转场、天气预警等问题，并给出寒冷地区饲养建议。试试下面的快捷问题，或直接打字问我。'} ];
+  const agentMsgs = [ {role:'bot', text:'您好，我是「伊拉特智慧牧场牧场主 · 小伊」👩‍🌾\n我可以基于牧场实时数据回答：存栏、饲草、防疫、屠宰、产品、牧游、设备、转场、天气预警等问题，也可以给寒冷地区养牛、保犊和越冬管理建议。'} ];
   const escTxt = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   function msgHtml(m){
-    return `<div class="am ${m.role==='user'?'user':'bot'}"><div class="am-ava">${m.role==='user'?'🧑':'🤖'}</div><div class="am-bubble">${escTxt(m.text).replace(/\n/g,'<br>')}</div></div>`;
+    return `<div class="am ${m.role==='user'?'user':'bot'}"><div class="am-ava">${m.role==='user'?'🧑':'👩‍🌾'}</div><div class="am-bubble">${escTxt(m.text).replace(/\n/g,'<br>')}</div></div>`;
   }
   function agentReply(q){
     const c = compute(), m = DB.months[demoMonth-1];
     const has = (...ks)=>ks.some(k=>q.includes(k));
     if (has('存栏','多少头','牲畜','有几','结构') && !has('转场')){
-      return `📊 当前存栏 ${fmt(c.totalAnimals)} 头只\n${DB.species.map(x=>x.emoji+' '+x.name+' '+fmt(x.count)).join(' · ')}\n西门塔尔牛为核心畜种，冬季圈养 136 头（大牛棚圈）+ 犊牛 24 头（犊牛舍）\n草场 ${fmt(DB.meta.area)} 亩 · 折合羊单位 ${fmt(c.sheepUnits)}\n本年度产犊 24 头，成活率 96.0%。`;
+      return `📊 当前存栏 ${fmt(c.totalAnimals)} 头只\n${DB.species.map(x=>x.emoji+' '+x.name+' '+fmt(x.count)).join(' · ')}\n西门塔尔牛为核心畜种，大牛 102 头（大牛棚圈）+ 小牛 84 头（犊牛舍）\n草场 ${fmt(DB.meta.area)} 亩 · 折合羊单位 ${fmt(c.sheepUnits)}\n本年度产犊 84 头，成活率 96.0%。`;
     }
     if (has('饲草','过冬','储备','干草','青贮','饲料')){
       const inv = DB.forageInventory.map(x=>`· ${x.name} ${x.stock}/${x.target}${x.unit}`).join('\n');
       return `🧊 饲草储备整体 ${c.foragePct}%\n${inv}\n❄️ 高寒牧区提示：天然草 900 捆（目标 1,000 捆），可覆盖至次年 4 月，建议打草季补足或提前采购。`;
     }
     if (has('设备','在线率','离线','装备','项圈','耳标','监控','无人机','机器人')){
-      return `📡 联网终端 ${fmt(c.devTotal)} 台，在线率 ${c.devRate}%（在线 ${fmt(c.devOnline)} 台）\n成套装备 ${fmt(c.kit)} 台套 · 离线/检修 ${fmt(c.devOffline)} 台（电子哨兵 4、清粪机器人 2）\n已派巡检工单，1 小时内响应。`;
+      return `📡 联网终端 ${fmt(c.devTotal)} 台，在线率 ${c.devRate}%（在线 ${fmt(c.devOnline)} 台）\n成套装备 ${fmt(c.kit)} 台套 · 离线/检修 ${fmt(c.devOffline)} 台（饲料粉碎机检修）\n已生成设备巡检工单，维修状态实时回写。`;
     }
     if (has('防疫','疫苗','口蹄疫','免疫','布病','驱虫','炭疽')){
       return `💉 年度免疫程序 ${DB.vaccinePlans.length} 项：春秋两防，含口蹄疫（O/A 型）、羊三联四防、小反刍兽疫、炭疽、布病监测。\n已完成记录 ${DB.vaccineRecords.filter(r=>r.status==='完成').length} 条，免疫率 96.8%。\n口蹄疫防控要点：新购牲畜隔离 21 天、圈舍每周消毒、发现口蹄水疱立即上报旗疫控中心。`;
     }
     if (has('屠宰','出栏','检疫','杀')){
       const sl = DB.slaughterRecords.reduce((a,r)=>a+r.head,0);
-      return `🍖 本季已屠宰 ${sl} 头只，检疫合格率 100%（旗动物检疫所出证）。\n秋冬季出栏计划：牛 60 · 羊 800 · 马 20 · 骆驼 5。\n流程：停用药物 14 天 → 产地检疫 → 定点屠宰 → 排酸 → 分割 → 溯源入库。`;
+      return `🍖 本季已屠宰 ${sl} 头只，检疫合格率 100%（旗动物检疫所出证）。\n秋冬季出栏计划：西门塔尔牛 62 头。\n流程：停用药物 14 天 → 产地检疫 → 定点屠宰 → 排酸 → 分割 → 溯源入库。`;
     }
     if (has('产品','销售','收入','多少钱','收益')){
       return `🛍️ 产品销售收入累计 ${money(c.saleAmount)}\n在售：冷鲜牛羊肉、奶豆腐/奶皮子、手工奶酪、羊绒制品、驼绒礼盒、草原文创。\n每件产品一品一码可溯源：批次 → 耳标 → 草场。`;
@@ -1600,7 +1621,7 @@
       return `🔄 当前 ${demoMonth} 月 · ${m.season}季（${m.name}）\n本季任务：${m.tasks.join('；')}\n下次转场：${next?`${next.season} ${next.route}（${next.distance} · ${next.time}）`:'暂无'}\n转场原则：春避返青、夏逐水草、秋储冬草、冬御风雪。`;
     }
     if (has('接羔','产犊','繁殖','产羔','小牛','小羊','产驹')){
-      return `🍼 本年度繁殖：产犊 24 头（西门塔尔），犊牛成活率 96.0%\n高寒牧区产犊要点：\n1）犊牛房恒温 22℃，出生后立即擦干保温\n2）初乳 2 小时内饲喂，必要时灌服\n3）饮水加热器保持常开（水温 12℃），防冰水应激。`;
+      return `🍼 本年度繁殖：产犊 84 头（西门塔尔），犊牛成活率 96.0%\n高寒牧区产犊要点：\n1）犊牛房恒温 22℃，出生后立即擦干保温\n2）初乳 2 小时内饲喂，必要时灌服\n3）饮水加热器保持常开（水温 12℃），防冰水应激。`;
     }
     if (has('天气','温度','降温','寒潮','冷','下雪','白灾','雪灾')){
       return `🌦️ ${DB.weather.place}：${DB.weather.icon} ${live.t}℃（体感 ${DB.weather.feels}℃）\n${DB.weather.wind} · ${DB.weather.snow}\n⚠️ ${DB.weather.alert}\n❄️ 今夜最低 ${DB.weather.low}℃，请确保犊羊暖棚加温、饮水槽防冻正常。`;
@@ -1616,10 +1637,10 @@
       return `📱 一畜一码全程溯源：出生 → 免疫 → 转场 → 出栏检疫 → 分割加工 → 销售，全链路可查。\n消费者扫码即可看到耳标号、草场、防疫记录，绿色畜产品认证基地。`;
     }
     if (has('帮助','你会','能干什么','功能','怎么用')){
-      return `🤖 我可以帮你：\n· 查存栏 / 草场 / 饲草 / 防疫 / 屠宰 / 产品 / 订单 / 设备\n· 给寒冷地区饲养建议（接羔、防寒、防疫、补饲）\n· 查预警与转场计划\n直接问我，或点下方快捷问题。`;
+      return `👩‍🌾 我可以帮你：\n· 查存栏 / 草场 / 饲草 / 防疫 / 屠宰 / 产品 / 订单 / 设备\n· 给寒冷地区饲养建议（接羔、防寒、防疫、补饲）\n· 查预警与转场计划\n直接问我，或点下方快捷问题。`;
     }
     if (has('你好','在吗','hi','嗨','哈喽')){
-      return `你好呀！我是艾牧戈畜牧业智能体 🤖\n想了解牧场的任何情况都可以问我，比如「饲草够不够过冬」「该不该转场了」。`;
+      return `你好呀！我是伊拉特智慧牧场牧场主 · 小伊 👩‍🌾\n想了解牧场的任何情况都可以问我，比如「饲草够不够过冬」「该不该转场了」。`;
     }
     if (has('整体','情况','总结','日报','今天','汇总','汇报','快报')){
       return `📋 今日牧场快报\n· 存栏 ${fmt(c.totalAnimals)} 头只 · 当前 ${monthName(demoMonth)} ${m.season}季（${m.name}）\n· 设备在线率 ${c.devRate}%（${fmt(live.online)} 台在线）\n· 饲草储备 ${c.foragePct}% · 产品收入 ${money(c.saleAmount)}\n· 牧游订单 ${c.todayOrders} 单 · 游客 ${live.visitors} 人\n· 高优先级预警 ${DB.tasks.filter(t=>t.level==='高').length} 项\n· 建议：今夜最低 -31℃，暖棚加温至 26℃，早晚巡圈。`;
@@ -1632,8 +1653,8 @@
     return `
     <div class="page agent-page">
       <div class="agent-head">
-        <div class="ah-avatar">🤖</div>
-        <div class="ah-txt"><b>畜牧业智能体</b><span>艾牧戈 · 牧场数据问答 · 寒冷地区饲养顾问</span></div>
+        <div class="ah-avatar">👩‍🌾</div>
+        <div class="ah-txt"><b>我是伊拉特智慧牧场牧场主小伊</b><span>伊拉特牧场数据问答 · 高寒牧区养殖顾问 · 智能体</span></div>
         <div class="ah-online">● 在线</div>
       </div>
       <div class="agent-brief" id="agentBrief">${brief}</div>
@@ -1656,7 +1677,7 @@
       push({role:'user', text:q}); input.value='';
       const typing = document.createElement('div');
       typing.className = 'am bot';
-      typing.innerHTML = '<div class="am-ava">🤖</div><div class="am-bubble typing"><i></i><i></i><i></i></div>';
+      typing.innerHTML = '<div class="am-ava">👩‍🌾</div><div class="am-bubble typing"><i></i><i></i><i></i></div>';
       chat.appendChild(typing); scroll();
       setTimeout(()=>{ typing.remove(); push({role:'bot', text:agentReply(q)}); }, 500+Math.random()*500);
     };
@@ -2028,7 +2049,7 @@
         ${statCard({icon:'🗂️', label:'数据表', value:'20+ 张', sub:'牲畜/草场/装备/账本/订单', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🧾', label:'记录总数', value:dbCount()+' 条', sub:'可增删改 · 本机保存', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'👥', label:'账号角色', value:'4 类', sub:'场主/兽医/牧工/客服', color:'#f59e0b', bg:'#fef3c7'})}
-        ${statCard({icon:'🕒', label:'系统版本', value:'v4.0', sub:'2026-09-16 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
+        ${statCard({icon:'🕒', label:'系统版本', value:'v14', sub:'2026-09-18 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
       </div>
       <div class="grid-3">
         <div class="col2">
@@ -2040,11 +2061,16 @@
               <button class="btn ghost" data-admin="reset">↺ 恢复出厂数据</button>
             </div>
             <div class="card-note">数据保存在本机浏览器；导出 JSON 可用于备份或迁移到其他设备。</div>`)}
-          ${card('账号与权限', tableHtml(['账号','角色','权限范围','状态'],
-            [['伊拉特','场主','全部数据 · 数据维护','<span class="pill ok">启用</span>'],
-             ['吉日嘎拉','兽医','防疫 / 用药 / 繁育记录','<span class="pill ok">启用</span>'],
-             ['巴特尔','牧工','日志 / 考勤 / 草场作业','<span class="pill ok">启用</span>'],
-             ['萨仁','客服','牧户游订单 / 接待','<span class="pill warn">旺季启用</span>']]))}
+          ${card('账号、角色权限与登录方式', tableHtml(['账号','角色','权限范围','推荐登录方式','状态'],
+            [['伊拉特','场主 / 管理员','全部数据 · 栏目配置 · 端口连接 · 数据导入导出','手机号 + 密码 + 短信二次验证','<span class="pill ok">启用</span>'],
+             ['吉日嘎拉','兽医','防疫 / 用药 / 繁育 / 犊牛看护','手机号验证码 + 微信小程序','<span class="pill ok">启用</span>'],
+             ['巴特尔','牧工','牧事日志 / 考勤 / 草场作业 / 设备报修','微信小程序一键登录','<span class="pill ok">启用</span>'],
+             ['萨仁','牧户游客服','订单 / 游客接待 / 房态 / 商品核销','微信小程序 + 手机号验证码','<span class="pill warn">旺季启用</span>']]))}
+          ${card('权限与登录优化说明', `
+            <div class="admin-actions">
+              <span class="pill ok">菜单权限</span><span class="pill info">按钮权限</span><span class="pill warn">数据范围</span><span class="pill">操作留痕</span>
+            </div>
+            <div class="card-note">场主登录后进入全量驾驶舱；兽医只看到防疫、用药、繁殖和预警；牧工只看到日志、考勤、草场作业和设备报修；客服只看到文旅订单与接待。手机端优先微信小程序验证码登录，避免牧民记账号密码；员工离场后可一键停用账号。</div>`)}
           ${card('系统日志（近 4 条）', tableHtml(['时间','操作','对象','结果'],
             [['09-16 09:12','登录系统','场主 伊拉特','成功'],
              ['09-16 09:20','新增繁殖记录','产犊 4 头','成功'],
@@ -2136,7 +2162,7 @@
   "batch": "YB20260320001",
   "vaccine": "犊牛腹泻疫苗",
   "species": "牛",
-  "dose": 24,
+  "dose": 84,
   "earTags": ["YL-0001","YL-0002"],
   "vet": "旗疫控中心",
   "time": "2026-03-20 09:32:00"
@@ -2226,10 +2252,10 @@
       openModal('新增对接系统', govSystemFields, v=>{ addRecord('gov.systems', v); toast('对接系统已新增'); render(current); });
     }));
     const defs = {
-      vaccine:    { target:'动物疫病防控直报系统', type:'免疫记录上报', biz:'犊牛腹泻疫苗 · 24 头份', prefix:'YB' },
+      vaccine:    { target:'动物疫病防控直报系统', type:'免疫记录上报', biz:'犊牛腹泻疫苗 · 84 头份', prefix:'YB' },
       quarantine: { target:'动物检疫电子出证', type:'检疫出证', biz:'出栏牛 4 头 · 检疫合格', prefix:'QZ' },
       slaughter:  { target:'定点屠宰监管平台', type:'屠宰批次上报', biz:'屠宰批次 · 冷鲜牛肉 1.4 吨', prefix:'TZ' },
-      tag:        { target:'畜禽标识溯源系统', type:'耳标备案同步', biz:'耳标 160 枚', prefix:'EB' }
+      tag:        { target:'畜禽标识溯源系统', type:'耳标备案同步', biz:'耳标 200 枚（覆盖全场 186 头牛）', prefix:'EB' }
     };
     $('#content').querySelectorAll('[data-gov]').forEach(b=>b.addEventListener('click', ()=>{
       const d = defs[b.dataset.gov]; if (!d) return;
@@ -2253,7 +2279,7 @@
     insurance:  { title:'保险理赔', render:pageInsurance, after:afterInsurance },
     admin:      { title:'后台管理', render:pageAdmin, after:afterAdmin },
     gallery:    { title:'牧场相册', render:pageGallery, after:afterGallery },
-    agent:      { title:'畜牧业智能体', render:pageAgent, after:afterAgent },
+    agent:      { title:'我是伊拉特智慧牧场牧场主小伊', render:pageAgent, after:afterAgent },
     cycle:      { title:'四季循环', render:pageCycle, after:afterCycle },
     livestock:  { title:'养殖管理', render:pageLivestock, after:afterLivestock },
     grassland:  { title:'草场分类', render:pageGrassland, after:afterGrassland },
