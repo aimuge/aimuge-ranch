@@ -352,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=57" alt="YILATE">
+          <img src="assets/logo.png?v=58" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1805,46 +1805,52 @@
   function pageTourism() {
     const t = DB.tourism;
     return `
-    <div class="page">
+    <div class="page tourism-page">
       ${pageHeader('文旅牧游', '牧户游 · 全季运营：蒙古包 / 研学 / 打草体验 / 冰雪牧游', addBtn('新增订单'))}
-      <div class="kpi-grid kpi-4">
+      <div class="kpi-grid kpi-4 tourism-kpis">
         ${statCard({icon:'🎫', label:'今日订单', value:t.orders.length+' 单', sub:'待接待 1 单', color:'#8b5cf6', bg:'#ede9fe'})}
         ${statCard({icon:'👨‍👩‍👧', label:'今日游客', value:'48 人', sub:'亲子 2 团 · 散客 5 组', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'💰', label:'近 7 日收入', value:'¥1.27 万', sub:'住宿 40% · 体验 35% · 餐饮 25%', color:'#f59e0b', bg:'#fef3c7'})}
         ${statCard({icon:'⭐', label:'游客评分', value:'4.9 分', sub:'近 30 天 128 条评价', color:'#0ea5e9', bg:'#e0f2fe'})}
       </div>
-      <div class="grid-3">
-        <div class="col2">${card('近 7 日牧游收入', `<div id="chRev" class="chart-box"></div>`)}</div>
-        <div class="col1">${card('蒙古包 / 毡房', `
+
+      <div class="tourism-top-grid">
+        ${card('近 7 日牧游收入', `<div id="chRev" class="chart-box"></div>`, 'tourism-revenue-card')}
+        ${card('蒙古包 / 毡房', `
           <div class="yurt-list">${t.yurts.map(y=>`<div class="yurt-item"><div class="yurt-top"><span>⛺ ${y.name}</span>${pill(y.status, y.status==='营业中'?'ok':'muted')}</div><div class="yurt-fac">${y.fac}</div></div>`).join('')}</div>
-          <div class="card-note">❄️ 冬季全屋地暖 + 火墙，室内恒温 22℃。</div>`)}</div>
+          <div class="card-note">❄️ 冬季全屋地暖 + 火墙，室内恒温 22℃。</div>`, 'tourism-yurt-card')}
       </div>
+
       ${card('旅游产品 · 全季运营', `
         <div class="prod-grid">${t.products.map(p=>`
           <div class="prod-card"><div class="prod-ico">${p.icon}</div><div class="prod-name">${p.name}</div>
-          <div class="prod-desc">${p.desc}</div><div class="prod-foot"><span class="prod-price">${p.price}</span><span class="prod-season">${p.season}</span></div></div>`).join('')}</div>`)}
-      ${card('民俗节庆日历 · 四季活动（可新增/编辑/删除）', tableHtml(['时间','活动','地点','类型','状态','说明','操作'],
+          <div class="prod-desc">${p.desc}</div><div class="prod-foot"><span class="prod-price">${p.price}</span><span class="prod-season">${p.season}</span></div></div>`).join('')}</div>`, 'tourism-products-card')}
+
+      ${card('民俗节庆日历 · 四季活动', tableHtml(
+        ['时间','活动','地点','类型','状态','说明','操作'],
         DB.hulunbuir.events.map(e=>[e.date, `<b>${e.name}</b>`, e.place,
           pill(e.type, e.type==='那达慕'?'danger':e.type==='冰雪'?'info':'warn'),
           pill(e.status, e.status==='筹备'?'warn':'muted'), e.note,
-          editBtn('hulunbuir.events', e.id) + delBtn('hulunbuir.events', e.id)])) + `
-        <div style="margin-top:12px">${addBtn('新增节庆活动','hulunbuir.events')}</div>`)}
-      <div class="grid-3">
-        <div class="col2">${card('订单管理（可新增/删除）', tableHtml(['订单号','项目','游客','时间','金额','状态','操作'],
-          t.orders.map(o=>[`<code>${o.id}</code>`, o.item, o.guest, o.date, o.amount,
-            pill(o.status, o.status==='已付款'?'ok':o.status==='已确认'?'info':'warn'), delBtn('tourism.orders', o.id)])))}
-          <div style="margin-top:12px">${addBtn('新增订单')}</div>
-        </div>
-        <div class="col1">
-          ${card('安全保障', `<div class="cold-list"><div class="cold-item">🛡️ ${t.safety}</div>
-            <div class="cold-item">🚑 与镇卫生院 18km 急救联动 · 救援车 2 台</div>
-            <div class="cold-item">🧭 全部向导持证 · 骑乘线路投保</div></div>`)}
-          ${card('四季旅游路线', `
-            <div class="season-list">
-              ${[['春','草原苏醒 · 产犊研学','4-5月'],['夏','绿海深处 · 深度游牧','6-8月'],['秋','金色草原 · 打草体验','9-10月'],['冬','雪原秘境 · 冰雪那达慕','11-2月']].map(x=>`
-                <div class="sl-row" style="--sl:${SEASON_COLOR[x[0]]}"><span class="sl-m">${x[0]}</span><span class="sl-t">${x[1]}（${x[2]}）</span></div>`).join('')}
-            </div>`)}
-        </div>
+          editBtn('hulunbuir.events', e.id) + delBtn('hulunbuir.events', e.id)]),
+        'tourism-events-tbl'
+      ) + `<div class="card-actions">${addBtn('新增节庆活动','hulunbuir.events')}</div>`, 'tourism-events-card')}
+
+      ${card('订单管理', tableHtml(
+        ['订单号','项目','游客','时间','金额','状态','操作'],
+        t.orders.map(o=>[`<code>${o.id}</code>`, o.item, o.guest, o.date, o.amount,
+          pill(o.status, o.status==='已付款'?'ok':o.status==='已确认'?'info':'warn'), delBtn('tourism.orders', o.id)]),
+        'tourism-orders-tbl'
+      ) + `<div class="card-actions">${addBtn('新增订单')}</div>`, 'tourism-orders-card')}
+
+      <div class="tourism-bottom-grid">
+        ${card('安全保障', `<div class="cold-list"><div class="cold-item">🛡️ ${t.safety}</div>
+          <div class="cold-item">🚑 与镇卫生院 18km 急救联动 · 救援车 2 台</div>
+          <div class="cold-item">🧭 全部向导持证 · 骑乘线路投保</div></div>`, 'tourism-safety-card')}
+        ${card('四季旅游路线', `
+          <div class="season-list">
+            ${[['春','草原苏醒 · 产犊研学','4-5月'],['夏','绿海深处 · 深度游牧','6-8月'],['秋','金色草原 · 打草体验','9-10月'],['冬','雪原秘境 · 冰雪那达慕','11-2月']].map(x=>`
+              <div class="sl-row" style="--sl:${SEASON_COLOR[x[0]]}"><span class="sl-m">${x[0]}</span><span class="sl-t">${x[1]}（${x[2]}）</span></div>`).join('')}
+          </div>`, 'tourism-routes-card')}
       </div>
     </div>`;
   }
@@ -1883,7 +1889,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=57" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=58" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

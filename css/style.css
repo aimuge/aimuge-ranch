@@ -2889,3 +2889,70 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .animal-archive-card .animal-archive-tbl{min-width:0!important}
   .animal-archive-tbl .pill,.livestock-birth-tbl .pill{white-space:nowrap}
 }
+
+
+/* ============ v58 文旅牧游排版与字号统一 ============ */
+.tourism-page{max-width:1500px}
+.tourism-page .kpi-grid{margin-bottom:18px}
+.tourism-top-grid{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(300px,.78fr);gap:18px;align-items:stretch;margin-bottom:18px}
+.tourism-top-grid .card{margin-bottom:0;display:flex;flex-direction:column}
+.tourism-top-grid .card-body{flex:1;display:flex;flex-direction:column}
+.tourism-revenue-card .chart-box{flex:1;min-height:210px}
+.tourism-yurt-card .yurt-list{gap:8px}
+.tourism-yurt-card .yurt-item{padding:10px 12px}
+.tourism-yurt-card .yurt-top{font-size:13.5px;line-height:1.35}
+.tourism-yurt-card .yurt-fac{font-size:12.5px}
+.tourism-yurt-card .card-note{margin-top:auto}
+.tourism-products-card .prod-grid{gap:12px}
+.tourism-products-card .prod-card{
+  display:grid;grid-template-columns:44px minmax(0,1fr);grid-template-rows:auto 1fr auto;
+  column-gap:10px;min-height:160px;padding:14px;border-radius:12px
+}
+.tourism-products-card .prod-ico{
+  grid-row:1/3;width:42px;height:42px;margin:0;display:flex;align-items:center;justify-content:center;
+  font-size:22px;line-height:1;border-radius:12px;background:linear-gradient(135deg,#eef7f6,#e8f2ff);border:1px solid #dcebea
+}
+.tourism-products-card .prod-name{
+  grid-column:2;display:flex;align-items:flex-start;min-height:38px;margin:0;
+  font-size:14px;line-height:1.35;letter-spacing:.1px
+}
+.tourism-products-card .prod-desc{grid-column:2;margin-top:4px;font-size:12px;line-height:1.5;color:#6b7a72}
+.tourism-products-card .prod-foot{
+  grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-top:12px;padding-top:10px;border-top:1px dashed #e1ebe5
+}
+.tourism-products-card .prod-price{font-size:14px;line-height:1.2;color:#d97706}
+.tourism-products-card .prod-season{font-size:11px;line-height:1.2;padding:3px 7px}
+.tourism-events-card,.tourism-orders-card{margin-bottom:18px}
+.tourism-bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tourism-bottom-grid .card{margin-bottom:0;height:100%}
+
+@media (max-width:980px){
+  .tourism-top-grid{grid-template-columns:1fr}
+  .tourism-bottom-grid{grid-template-columns:1fr}
+}
+@media (max-width:700px){
+  .tourism-page .kpi-grid{margin-bottom:12px}
+  .tourism-top-grid{gap:12px;margin-bottom:12px}
+  .tourism-products-card .prod-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .tourism-products-card .prod-card{grid-template-columns:36px minmax(0,1fr);min-height:174px;padding:11px;column-gap:8px}
+  .tourism-products-card .prod-ico{width:34px;height:34px;font-size:19px;border-radius:10px}
+  .tourism-products-card .prod-name{min-height:35px;font-size:13px}
+  .tourism-products-card .prod-desc{font-size:11.5px}
+  .tourism-products-card .prod-price{font-size:13px}
+  .tourism-products-card .prod-season{font-size:10.5px;padding:2px 6px}
+  .tourism-bottom-grid{gap:12px}
+  /* 手机端节庆与订单表改成信息卡 */
+  .tourism-events-card .table-wrap,.tourism-orders-card .table-wrap{overflow:visible!important;border:0!important;background:transparent!important}
+  .tourism-events-tbl,.tourism-orders-tbl{min-width:0!important;width:100%!important}
+  .tourism-events-tbl thead,.tourism-orders-tbl thead{display:none!important}
+  .tourism-events-tbl tbody,.tourism-orders-tbl tbody{display:grid;gap:10px}
+  .tourism-events-tbl tr,.tourism-orders-tbl tr{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fbfdfd}
+  .tourism-events-tbl td,.tourism-orders-tbl td{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0;border:0;white-space:normal;text-align:right}
+  .tourism-events-tbl td::before,.tourism-orders-tbl td::before{content:attr(data-label);flex:none;color:var(--muted);font-size:10.5px;text-align:left}
+  .tourism-events-tbl td:first-child,.tourism-orders-tbl td:first-child{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px;font-weight:700}
+  .tourism-events-tbl td:first-child::before,.tourism-orders-tbl td:first-child::before{color:#0f766e;font-weight:700}
+  .tourism-events-tbl td:last-child,.tourism-orders-tbl td:last-child{grid-column:1/-1;justify-content:flex-end;border-top:1px solid var(--line);padding-top:6px;margin-top:2px}
+  .tourism-events-tbl td:last-child::before,.tourism-orders-tbl td:last-child::before{display:none}
+}
+@media (max-width:360px){.tourism-products-card .prod-grid{grid-template-columns:1fr}}
