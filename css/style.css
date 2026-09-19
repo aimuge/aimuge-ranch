@@ -2555,3 +2555,22 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:270px!important}
 }
 @media (prefers-reduced-motion: reduce){.human-photo,.human-light-scan,.human-photo-wrap::before{animation:none}}
+
+/* ============ v36 满版排版与数据密度增强 ============ */
+.bs-v8 .bs-col{justify-content:flex-start;gap:11px}
+.bs-v8 .bs-col>.bs-panel:not(.bs-map-panel){flex:1 1 auto;min-height:96px}
+.bs-v8 .bs-map-panel{flex:0 0 440px!important}
+.bs-v8 .bs-col>.bs-panel:not(.bs-map-panel)::before{box-shadow:0 0 14px var(--acc,#22d3ee)}
+.bs-v8 .bs-col>.bs-panel:not(.bs-map-panel){background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px),radial-gradient(circle at 100% 0,color-mix(in srgb,var(--acc) 20%,transparent),transparent 54%),linear-gradient(145deg,color-mix(in srgb,var(--acc) 12%,#142a4b),#071326 78%)}
+
+/* 牛只体况分级 */
+.bs-condition-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.bs-condition-grid>div{position:relative;padding:5px 6px;border-radius:8px;background:rgba(255,255,255,.035);border:1px solid color-mix(in srgb,var(--cc) 30%,transparent)}
+.bs-condition-grid span{font-size:8px;color:#8fb1d2}.bs-condition-grid b{float:right;font-size:10px;color:var(--cc)}
+.bs-condition-grid>div>i{display:block;height:4px;margin-top:5px;border-radius:99px;background:rgba(74,124,247,.16);overflow:hidden}.bs-condition-grid em{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--cc),#fff);box-shadow:0 0 8px var(--cc);animation:bsDayBar 3s ease-in-out infinite}
+.bs-condition-wave{display:flex;align-items:flex-end;gap:2px;height:36px;margin-top:7px;padding:3px 5px;border-radius:7px;background:rgba(5,18,36,.48);overflow:hidden}.bs-condition-wave i{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(180deg,#5eead4,#3b82f6);opacity:.72;animation:bsSparkPulse 2.4s ease-in-out infinite;animation-delay:calc(var(--i) * -.08s)}.bs-condition-wave i:nth-child(3n){background:linear-gradient(180deg,#a78bfa,#6366f1)}.bs-condition-wave i:nth-child(4n){background:linear-gradient(180deg,#f0b429,#fb7185)}
+
+/* 能源与环境 */
+.bs-energy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.bs-energy-grid>div{padding:6px;border-radius:8px;background:linear-gradient(145deg,rgba(34,211,238,.10),rgba(99,102,241,.05));border:1px solid rgba(34,211,238,.18)}.bs-energy-grid>div:nth-child(2){border-color:rgba(52,211,153,.22)}.bs-energy-grid>div:nth-child(3){border-color:rgba(240,180,41,.22)}.bs-energy-grid>div:nth-child(4){border-color:rgba(244,114,182,.22)}.bs-energy-grid span{display:block;font-size:7.5px;color:#7f9fc0}.bs-energy-grid b{display:block;margin-top:3px;font-size:12px;color:#e5f7ff}.bs-energy-bars{display:flex;align-items:flex-end;gap:2px;height:32px;margin-top:7px;padding:3px 5px;border-radius:7px;background:rgba(5,18,36,.48);overflow:hidden}.bs-energy-bars i{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(180deg,#5eead4,#38bdf8);opacity:.72;animation:bsSparkPulse 2.8s ease-in-out infinite;animation-delay:calc(var(--i) * -.09s)}.bs-energy-bars i:nth-child(4n){background:linear-gradient(180deg,#f0b429,#fb7185)}.bs-energy-bars i:nth-child(5n){background:linear-gradient(180deg,#a78bfa,#6366f1)}
+
+@media (max-width:1200px){.bs-v8 .bs-map-panel{flex:0 0 420px!important}.bs-v8 .bs-col>.bs-panel:not(.bs-map-panel){flex:0 0 auto}}

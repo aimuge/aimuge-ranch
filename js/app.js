@@ -316,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=35" alt="YILATE">
+          <img src="assets/logo.png?v=36" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -379,6 +379,13 @@
             <div class="bs-balance-split"><span>自家 ${fmt(DB.meta.areaSelf)} 亩</span><span>租赁 ${fmt(DB.meta.areaRented)} 亩</span></div>
             <div class="bs-balance-bar"><i style="width:${Math.min(100,DB.grassland.balance.rate)}%"></i></div>
             <div class="bs-balance-note">标准家畜单位 ${fmt(DB.grassland.balance.actual)} / 承载上限 ${fmt(DB.grassland.balance.capacity)}</div>
+          </section>
+          <section class="bs-panel bs-condition-panel">
+            <div class="bsp-title">📊 牛只体况分级 <em>BODY CONDITION</em></div>
+            <div class="bs-condition-grid">
+              ${[['特级',18,'#5eead4'],['一级',44,'#7dd3fc'],['二级',28,'#a78bfa'],['三级',10,'#f59e0b']].map(x=>`<div style="--cc:${x[2]}"><span>${x[0]}</span><b>${x[1]}%</b><i><em style="width:${x[1]}%"></em></i></div>`).join('')}
+            </div>
+            <div class="bs-condition-wave">${Array.from({length:18},(_,i)=>`<i style="height:${28+((i*17)%58)}%;--i:${i}"></i>`).join('')}</div>
           </section>
         </div>
 
@@ -508,6 +515,16 @@
             <div class="bsp-title">🏛️ 政府数据接口 <em>GOV DATA</em></div>
             <div class="bs-gov-metrics"><div><b>${(DB.gov.systems||[]).length}</b><span>已对接系统</span></div><div><b>${(DB.gov.reports||[]).length}</b><span>上报记录</span></div><div><b>100%</b><span>成功率</span></div></div>
             <div class="bs-gov-list">${(DB.gov.systems||[]).slice(0,2).map(g=>`<span><i></i>${g.name.replace('动物','')}<b>${g.status}</b></span>`).join('')}</div>
+          </section>
+          <section class="bs-panel bs-energy-panel">
+            <div class="bsp-title">⚡ 能源与环境 <em>ENERGY</em></div>
+            <div class="bs-energy-grid">
+              <div><span>光伏发电</span><b>4.8 kW</b></div>
+              <div><span>水源余量</span><b>82%</b></div>
+              <div><span>饲料间湿度</span><b>58%</b></div>
+              <div><span>网络信号</span><b>5G/北斗</b></div>
+            </div>
+            <div class="bs-energy-bars">${Array.from({length:16},(_,i)=>`<i style="height:${25+((i*23)%65)}%;--i:${i}"></i>`).join('')}</div>
           </section>
         </div>
       </div>
@@ -1779,7 +1796,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=35" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=36" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
