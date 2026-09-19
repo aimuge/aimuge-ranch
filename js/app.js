@@ -305,7 +305,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=24" alt="YILATE">
+          <img src="assets/logo.png?v=25" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -330,6 +330,9 @@
       </div>
 
       <div class="bs-ticker"><div class="bst-track">${ticker}　◆　${ticker}</div></div>
+      <div class="bs-protocol-strip">
+        ${['AI VISION','BEIDOU / GNSS','5G IOT','RTK CONTROL','MQTT GATEWAY','OPEN API'].map((x,i)=>`<span style="--pc:${['#5eead4','#7dd3fc','#a78bfa','#f0b429','#fb7185','#34d399'][i]}"><i></i>${x}</span>`).join('')}
+      </div>
 
       <div class="bs-body">
         <div class="bs-col">
@@ -348,6 +351,22 @@
             <div class="bsp-title">🌾 草场载畜利用 <em>GRASSLAND</em></div>
             <div id="bsPasture" class="bs-chart"></div>
             <div class="bsp-sub">自有 3,850 亩 · 租赁 9,440 亩 · 打草 1,500 亩</div>
+          </section>
+          <section class="bs-panel bs-breed-panel">
+            <div class="bsp-title">🍼 繁育与产犊 <em>BREEDING</em></div>
+            <div class="bs-mini-metrics">
+              <div><b>84</b><span>年度产犊</span></div>
+              <div><b>96%</b><span>犊牛成活率</span></div>
+              <div><b>3</b><span>待产母牛</span></div>
+            </div>
+            <div class="bs-line-progress"><div><span>年度繁育进度</span><b>84 / 120 头</b></div><i><b style="width:70%"></b></i></div>
+          </section>
+          <section class="bs-panel bs-balance-panel">
+            <div class="bsp-title">⚖️ 草畜平衡与权属 <em>BALANCE</em></div>
+            <div class="bs-balance-top"><b>${fmt(DB.grassland.balance.rate)}%</b><span>载畜量使用率 · 安全线 90%</span></div>
+            <div class="bs-balance-split"><span>自家 ${fmt(DB.meta.areaSelf)} 亩</span><span>租赁 ${fmt(DB.meta.areaRented)} 亩</span></div>
+            <div class="bs-balance-bar"><i style="width:${Math.min(100,DB.grassland.balance.rate)}%"></i></div>
+            <div class="bs-balance-note">标准家畜单位 ${fmt(DB.grassland.balance.actual)} / 承载上限 ${fmt(DB.grassland.balance.capacity)}</div>
           </section>
         </div>
 
@@ -380,6 +399,13 @@
                 </div>`;
               }).join('')}
             </div>
+          </section>
+          <section class="bs-panel bs-shed-panel">
+            <div class="bsp-title">🏠 棚圈环境与设施 <em>FACILITY</em></div>
+            <div class="bs-shed-grid">
+              ${(DB.meta.facilities||[]).slice(0,2).map((f,i)=>`<div><span>${f.icon}</span><div><b>${f.name}</b><em>${i===0?'102 头 · 保温正常':'84 头 · 恒温 22℃'}</em></div></div>`).join('')}
+            </div>
+            <div class="bs-shed-env"><span>🌡️ 犊牛舍 22℃</span><span>💧 饮水 12℃</span><span>🌬️ 通风正常</span></div>
           </section>
         </div>
 
@@ -423,6 +449,11 @@
             <div class="bs-biz-stock">
               ${DB.productInventory.slice(0,3).map(x=>`<span><i>${x.name.includes('牛肉')?'🥩':x.name.includes('犊牛')?'🐮':'🥛'}</i>${x.name} <b>${x.stock}${x.unit}</b></span>`).join('')}
             </div>
+          </section>
+          <section class="bs-panel bs-gov-panel">
+            <div class="bsp-title">🏛️ 政府数据接口 <em>GOV DATA</em></div>
+            <div class="bs-gov-metrics"><div><b>${(DB.gov.systems||[]).length}</b><span>已对接系统</span></div><div><b>${(DB.gov.reports||[]).length}</b><span>上报记录</span></div><div><b>100%</b><span>成功率</span></div></div>
+            <div class="bs-gov-list">${(DB.gov.systems||[]).slice(0,2).map(g=>`<span><i></i>${g.name.replace('动物','')}<b>${g.status}</b></span>`).join('')}</div>
           </section>
         </div>
       </div>
@@ -1725,7 +1756,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=24" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=25" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
