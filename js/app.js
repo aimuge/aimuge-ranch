@@ -319,7 +319,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=42" alt="YILATE">
+          <img src="assets/logo.png?v=43" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -404,7 +404,7 @@
                     <img class="human-photo barga-base" src="assets/photos/barga-human-base.png" alt="巴尔虎服饰真人数字人讲解员">
                     <img class="human-hand hand-a" src="assets/photos/barga-human-hand-a.png" alt="">
                     <img class="human-hand hand-b" src="assets/photos/barga-human-hand-b.png" alt="">
-                    <span class="human-face-dynamics"><i class="eye-blink left-eye"></i><i class="eye-blink right-eye"></i><i class="smile-line"></i></span>
+                    <span class="human-face-dynamics"><i class="eye-pupil left-pupil"></i><i class="eye-pupil right-pupil"></i><i class="eye-blink left-eye"></i><i class="eye-blink right-eye"></i><i class="smile-line"></i><i class="mouth-talk"></i></span>
                     <i class="human-light-scan"></i>
                   </div>
                 </div>
@@ -680,6 +680,18 @@
     pickNewsVoice();
     if (window.speechSynthesis) speechSynthesis.onvoiceschanged = pickNewsVoice;
     const resetVoiceButton = ()=>{ if (voiceBtn) voiceBtn.textContent = '🔊 语音讲解'; };
+    const humanRoot = document.querySelector('.dh-human');
+    let talkTimer = null;
+    const stopTalkMotion = ()=>{
+      if (talkTimer){ clearInterval(talkTimer); talkTimer = null; }
+      if (humanRoot){ humanRoot.classList.remove('is-speaking'); humanRoot.dataset.talk = '0'; }
+    };
+    const startTalkMotion = ()=>{
+      if (!humanRoot) return;
+      humanRoot.classList.add('is-speaking');
+      let phase = 0;
+      talkTimer = setInterval(()=>{ humanRoot.dataset.talk = String(phase++ % 3); }, 220);
+    };
     const speak = (txt = profileIntro)=>{
       if (!window.speechSynthesis) return;
       if (speechSynthesis.speaking) return;
@@ -690,10 +702,12 @@
         u.pitch = 0.96;
         u.volume = 1;
         if (newsVoice) u.voice = newsVoice;
-        u.onend = ()=>{ voiceOn = false; resetVoiceButton(); };
-        u.onerror = ()=>{ voiceOn = false; resetVoiceButton(); };
+        u.onstart = startTalkMotion;
+        u.onboundary = e=>{ if (humanRoot) humanRoot.dataset.talk = String((e.charIndex || 0) % 3); };
+        u.onend = ()=>{ voiceOn = false; resetVoiceButton(); stopTalkMotion(); };
+        u.onerror = ()=>{ voiceOn = false; resetVoiceButton(); stopTalkMotion(); };
         speechSynthesis.speak(u);
-      } catch(e){ voiceOn = false; resetVoiceButton(); }
+      } catch(e){ voiceOn = false; resetVoiceButton(); stopTalkMotion(); }
     };
     const startNarration = (msg)=>{
       voiceOn = true;
@@ -734,12 +748,12 @@
       voiceOn = !voiceOn;
       voiceBtn.textContent = voiceOn ? '🔇 关闭语音' : '🔊 语音讲解';
       if (voiceOn) speak();
-      else if (window.speechSynthesis) { try { speechSynthesis.cancel(); } catch(err){} }
+      else if (window.speechSynthesis) { try { speechSynthesis.cancel(); } catch(err){} stopTalkMotion(); }
       toast(voiceOn ? '小伊开始完整讲解牧场简介' : '已关闭语音讲解');
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stopTalkMotion(); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
@@ -1804,7 +1818,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=42" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=43" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

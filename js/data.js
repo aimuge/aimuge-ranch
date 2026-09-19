@@ -406,7 +406,7 @@ const DEFAULT_DATA = {
 };
 
 /* ============ 持久化与通用 CRUD（支持 a.b 路径） ============ */
-const KEY = 'yilate-ranch-v42';
+const KEY = 'yilate-ranch-v43';
 let DB = loadDB();
 
 function loadDB(){
