@@ -33,6 +33,8 @@ const DEFAULT_DATA = {
     source:'Open-Meteo', updated:'2026-09-19 09:30'
   },
 
+  pageSettings: {},
+
   nav: [
     { key:'profile',    icon:'🏡', title:'牧场档案' },
     { key:'bigscreen',  icon:'🖥️', title:'数据大屏' },

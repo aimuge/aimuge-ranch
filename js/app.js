@@ -6,6 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
+  const APP_VERSION = 'v59';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -246,6 +247,7 @@
       });
     });
   }
+  const pageSetting = key => (DB.pageSettings && DB.pageSettings[key]) || {};
   const pill = (text, cls='ok') => `<span class="pill ${cls}">${text}</span>`;
   const statCard = o => `
     <div class="stat-card">
@@ -258,8 +260,13 @@
     <div class="table-wrap ${cls?cls+'-wrap':''}"><table class="tbl ${cls}"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
     <tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td data-label="${headers[i]||''}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   const addBtn = (label, path) => `<button class="btn solid sm" data-add="${path||label}">＋ ${label}</button>`;
-  const pageHeader = (title, sub, actions='') => `
-    <div class="page-head"><div><h2>${title}</h2><p>${sub}</p></div><div class="page-actions">${actions}</div></div>`;
+  const pageHeader = (title, sub, actions='') => {
+    const saved = pageSetting(current);
+    const finalTitle = saved.title || title;
+    const finalSub = saved.subtitle || sub;
+    return `
+    <div class="page-head"><div><h2>${finalTitle}</h2><p>${finalSub}</p></div><div class="page-actions"><button class="btn ghost sm page-edit-btn" data-page-edit>✏️ 编辑本页</button>${actions}</div></div>`;
+  };
   const weatherHtml = () => {
     const w = DB.weather;
     const fc = (w.forecast||[]).map(f=>`<div class="w-fc"><span>${f.day}</span><b>${f.icon} ${f.high}℃</b><i>${f.low}℃</i></div>`).join('');
@@ -302,6 +309,7 @@
 
   /* ================= 数据大屏 ================= */
   function pageBigscreen(){
+    const ps = pageSetting('bigscreen');
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const w = DB.weather;
     const intro = `${DB.meta.name}位于${DB.meta.location.replace('内蒙古 · ','')}，由牧场主${DB.meta.owner}经营，现养西门塔尔牛${fmt(c.cattle)}头。`;
@@ -352,12 +360,12 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=58" alt="YILATE">
+          <img src="assets/logo.png?v=59" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
-          <div class="bs-title">智慧牧场数据驾驶舱</div>
-          <div class="bs-title-en">SMART RANCH DATA COMMAND CENTER</div>
+          <div class="bs-title">${ps.title || '智慧牧场数据驾驶舱'}</div>
+          <div class="bs-title-en">${ps.subtitle || 'SMART RANCH DATA COMMAND CENTER'}</div>
         </div>
         <div class="bs-tools">
           <button class="btn ghost sm bs-voice" id="bsVoice">🔊 语音讲解</button>
@@ -826,13 +834,14 @@
   /* ================= 数据总览 ================= */
   function pageDashboard() {
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
+    const ps = pageSetting('dashboard');
     const vaccineDone = DB.vaccineRecords.filter(r=>r.status==='完成').length;
     return `
     <div class="page">
       <div class="hero-banner">
         <div class="hero-txt">
-          <h2>${monthName(demoMonth)} · ${m.season}季（${m.name}）</h2>
-          <p>${DB.meta.slogan}</p>
+          <h2>${ps.title || (monthName(demoMonth)+' · '+m.season+'季（'+m.name+'）')}</h2>
+          <p>${ps.subtitle || DB.meta.slogan}</p>
         </div>
         <div class="hero-badges">
           <div class="hero-badge">今日值班：吉日嘎拉 · 兽医</div>
@@ -1885,13 +1894,14 @@
   /* ================= 牧场档案 ================= */
   function pageProfile() {
     const r = DB.meta;
+    const ps = pageSetting('profile');
     return `
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=58" alt="YILATE Smart Ranch"></div>
-          <div class="rh-name">${r.name}</div>
-          <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
+          <div class="rh-logo"><img src="assets/logo.png?v=59" alt="YILATE Smart Ranch"></div>
+          <div class="rh-name">${ps.title || r.name}</div>
+          <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
           <div class="rh-chips">${['🐄 养殖','🌾 草场','📡 智慧装备','🍖 屠宰加工','🧀 产品中心','🏕️ 牧户游'].map(x=>`<span>${x}</span>`).join('')}</div>
         </div>
@@ -2017,12 +2027,13 @@
   }
   function pageAgent(){
     const c = compute(), m = DB.months[demoMonth-1];
+    const ps = pageSetting('agent');
     const brief = `📋 ${monthName(demoMonth)} · ${m.season}季快报　存栏 ${fmt(c.totalAnimals)} · 设备在线 ${c.devRate}% · 饲草 ${c.foragePct}% · 游客 ${live.visitors} 人`;
     return `
     <div class="page agent-page">
       <div class="agent-head">
         <div class="ah-avatar">👩‍🌾</div>
-        <div class="ah-txt"><b>智能服务小伊</b><span>伊拉特牧场数据问答 · 高寒牧区养殖顾问</span></div>
+        <div class="ah-txt"><b>${ps.title || '智能服务小伊'}</b><span>${ps.subtitle || '伊拉特牧场数据问答 · 高寒牧区养殖顾问'}</span></div>
         <div class="ah-online">● 在线</div>
       </div>
       <div class="agent-brief" id="agentBrief">${brief}</div>
@@ -2417,7 +2428,7 @@
         ${statCard({icon:'🗂️', label:'数据表', value:'20+ 张', sub:'牲畜/草场/装备/账本/订单', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🧾', label:'记录总数', value:dbCount()+' 条', sub:'可增删改 · 本机保存', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'👥', label:'账号角色', value:'4 类', sub:'场主/兽医/牧工/客服', color:'#f59e0b', bg:'#fef3c7'})}
-        ${statCard({icon:'🕒', label:'系统版本', value:'v14', sub:'2026-09-18 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
+        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-19 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
       </div>
       <div class="grid-3">
         <div class="col2">
@@ -2660,14 +2671,41 @@
     tourism:    { title:'文旅牧游', render:pageTourism, after:afterTourism },
     profile:    { title:'牧场档案', render:pageProfile, after:afterProfile }
   };
+  function bindPageSettings(){
+    let btn = document.querySelector('[data-page-edit]');
+    if (!btn){
+      const host = current === 'bigscreen' ? document.querySelector('.bs-tools') : content.firstElementChild;
+      if (!host) return;
+      host.insertAdjacentHTML(current === 'bigscreen' ? 'afterbegin' : 'beforeend', '<button class="btn ghost sm page-edit-btn" data-page-edit>✏️ 编辑本页</button>');
+      btn = document.querySelector('[data-page-edit]');
+    }
+    if (!btn || btn.dataset.bound === '1') return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', e=>{
+      e.preventDefault(); e.stopPropagation();
+      const meta = pages[current] || { title: crumb.textContent || '栏目' };
+      const saved = pageSetting(current);
+      const sub = saved.subtitle || document.querySelector('.page-head p')?.textContent || document.querySelector('.bs-title-en')?.textContent || '';
+      openModal('编辑本页 · '+meta.title, [
+        {name:'title', label:'栏目标题', type:'text', value:saved.title || meta.title, required:true},
+        {name:'subtitle', label:'栏目副标题 / 英文名', type:'text', value:sub}
+      ], v=>{
+        DB.pageSettings = DB.pageSettings || {};
+        DB.pageSettings[current] = { title:(v.title||'').trim() || meta.title, subtitle:(v.subtitle||'').trim() };
+        saveDB(); toast('本页标题与说明已更新'); render(current);
+      });
+    });
+  }
   function render(name){
     current = name;
     const p = pages[name];
-    crumb.textContent = p.title;
+    const ps = pageSetting(name);
+    crumb.textContent = ps.title || p.title;
     content.classList.remove('fade-in');
     content.innerHTML = p.render();
     requestAnimationFrame(()=>content.classList.add('fade-in'));
     if (p.after) p.after();
+    bindPageSettings();
     renderNav();
     $('#sidebar').classList.remove('open'); $('#mask').classList.remove('show');
     window.scrollTo(0,0);

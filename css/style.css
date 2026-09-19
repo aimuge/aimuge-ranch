@@ -2956,3 +2956,96 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .tourism-events-tbl td:last-child::before,.tourism-orders-tbl td:last-child::before{display:none}
 }
 @media (max-width:360px){.tourism-products-card .prod-grid{grid-template-columns:1fr}}
+
+
+/* ============ v59 全站统一排版与字号规范 ============ */
+:root{
+  --font-page-title:22px;
+  --font-card-title:15px;
+  --font-body:13px;
+  --font-small:12px;
+  --font-label:11.5px;
+  --line-soft:rgba(13,148,136,.16);
+}
+.page{position:relative;max-width:1500px;margin:0 auto}
+.page-head h2{font-size:var(--font-page-title)!important;line-height:1.25}
+.page-head p{font-size:var(--font-small)!important;line-height:1.55}
+.card-head h3{font-size:var(--font-card-title)!important;line-height:1.35}
+.card{padding:16px 18px;border-radius:14px;margin-bottom:16px;border-width:1px!important}
+.card-head{margin-bottom:12px}
+.stat-card{min-height:104px}
+.stat-value{font-size:20px!important}
+.stat-label{font-size:var(--font-small)}
+.stat-sub{font-size:var(--font-label)}
+.card-note{font-size:var(--font-label)!important;line-height:1.65}
+.pill{font-size:11px!important;line-height:1.35;padding:3px 9px}
+.btn.sm,.btn{font-size:12px}
+.tbl{font-size:12.5px;min-width:520px}
+.tbl th{font-size:12px;padding:9px 11px}
+.tbl td{padding:9px 11px;font-size:12.5px}
+.table-wrap{border-width:1px}
+.card::before,.card::after{width:10px;height:10px;opacity:.45}
+.card::before{top:6px;left:6px;border-top-width:1px;border-left-width:1px}
+.card::after{bottom:6px;right:6px;border-bottom-width:1px;border-right-width:1px}
+.card-head::after{height:8px;opacity:.35;background-size:40px 8px}
+.topbar::after{height:2px!important;opacity:.65}
+.sc-bar{height:6px!important;margin-bottom:6px}
+.hbar-track{height:7px!important}
+.hero-txt h2{font-size:20px}
+.hero-txt p{font-size:13px}
+
+/* 统一降低过大的数字、图标和装饰字 */
+.cycle-month{font-size:42px!important}
+.bsp-big{font-size:30px!important}
+.bs-v7 .bsp-big{font-size:34px!important}
+.bs-v8 .bsp-big{font-size:28px!important}
+.bs-health-num{font-size:30px!important}
+.bs-season-name,.bs-v8 .bs-season-name{font-size:26px!important;letter-spacing:2px!important}
+.bs-w-main,.bs-w-main b{font-size:24px!important}
+.bs-kpi b,.bs-v8 .bs-kpi b{font-size:19px!important}
+.bs-balance-top b,.bs-forage-head b{font-size:22px!important}
+.bs-title,.bs-v8 .bs-title{font-size:22px!important;letter-spacing:4px!important}
+.w-ico{font-size:34px!important}
+.w-temp{font-size:30px!important}
+.sp-count{font-size:20px!important}
+.sp-emoji{font-size:28px!important}
+.rh-name{font-size:27px!important}
+.rh-logo{font-size:30px!important}
+.hh-title{font-size:24px!important}
+.c-donut-val{font-size:22px!important}
+.c-gauge-val{font-size:24px!important}
+
+/* 本页编辑入口 */
+.page-actions .page-edit-btn{order:2}
+.page-edit-btn{white-space:nowrap}
+.page>.page-edit-btn{position:absolute;top:12px;right:12px;z-index:25}
+.bigscreen .page-edit-btn{margin-right:2px}
+
+/* 手机端导航与头像旁边文字 */
+.mnav .mn-item,.mnav .mn-item b{writing-mode:horizontal-tb!important;word-break:keep-all!important;white-space:nowrap!important}
+@media (max-width:980px){
+  .user-info{display:none!important}
+  .user{gap:0}
+}
+
+/* 全站手机端表格自动转信息卡 */
+@media (max-width:700px){
+  .table-wrap{overflow:visible!important;border:0!important;background:transparent!important}
+  .table-wrap>.tbl{min-width:0!important;width:100%!important}
+  .table-wrap>.tbl>thead{display:none!important}
+  .table-wrap>.tbl>tbody{display:grid;gap:9px}
+  .table-wrap>.tbl>tbody>tr{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  .table-wrap>.tbl>tbody>tr>td{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0;border:0;white-space:normal;text-align:right;color:inherit}
+  .table-wrap>.tbl>tbody>tr>td::before{content:attr(data-label);flex:none;color:var(--muted);font-size:10.5px;text-align:left}
+  .table-wrap>.tbl>tbody>tr>td:first-child{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:1px;font-weight:700}
+  .table-wrap>.tbl>tbody>tr>td:first-child::before{color:#0f766e;font-weight:700}
+  .table-wrap>.tbl>tbody>tr>td:last-child{grid-column:1/-1;justify-content:flex-end;border-top:1px solid var(--line);padding-top:6px;margin-top:1px}
+  .table-wrap>.tbl>tbody>tr>td:last-child::before{display:none}
+  .table-wrap>.tbl>tbody>tr>td:empty{display:none}
+  .page>.page-edit-btn{top:8px;right:8px;font-size:11px;padding:6px 9px}
+}
+
+/* v59 表格统一：桌面端自动换行，避免栏目内横向滚动 */
+.page .tbl{min-width:0!important;table-layout:auto}
+.page .tbl th,.page .tbl td{white-space:normal!important;word-break:break-word;vertical-align:top}
+.page .tbl th{line-height:1.35}
