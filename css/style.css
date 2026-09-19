@@ -2451,3 +2451,26 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .bs-v8 .bs-dh .dh-bubble.dh-square{width:92px!important;max-width:92px!important;height:92px!important;align-self:flex-end;margin-left:auto}
 }
 @media (prefers-reduced-motion: reduce){.dh-square-flow span{animation:none}}
+
+/* ============ v29 单行循环数据带 ============ */
+.bs-metric-stream{position:relative;z-index:4;height:32px;margin:6px 0 8px;padding:0 10px;border-radius:9px;overflow:hidden;
+  background:linear-gradient(100deg,rgba(15,49,116,.95),rgba(5,21,64,.98),rgba(10,42,105,.95));border:1px solid rgba(73,158,255,.38);
+  box-shadow:inset 0 0 22px rgba(34,119,255,.10),0 0 20px -13px #2f8cff}
+.bs-metric-stream::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(94,234,212,.22),transparent);background-size:34% 100%;background-repeat:no-repeat;animation:bsMetricScan 6s linear infinite}
+@keyframes bsMetricScan{0%{background-position:-40% 0}100%{background-position:140% 0}}
+.bs-metric-track{display:flex;width:max-content;height:30px;align-items:center;white-space:nowrap;animation:bsMetricMove 52s linear infinite}
+.bs-metric-track span{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.7px;color:#9ed4ff;animation:bsMetricLetter 2.7s ease-in-out infinite;animation-delay:calc(var(--i) * -.035s)}
+.bs-metric-track span:nth-child(7n+2){color:#5eead4}.bs-metric-track span:nth-child(7n+4){color:#a78bfa}.bs-metric-track span:nth-child(7n+6){color:#f0b429}
+@keyframes bsMetricMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes bsMetricLetter{0%,100%{opacity:.56;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px);text-shadow:0 0 9px currentColor}}
+
+/* 讲解员单行字母框 */
+.bs-v8 .bs-dh .dh-bubble.dh-line{width:190px!important;max-width:190px!important;height:25px!important;padding:0 8px!important;border-radius:7px!important;display:flex;align-items:center;overflow:hidden!important;
+  background:linear-gradient(90deg,rgba(4,16,48,.98),rgba(8,38,88,.98),rgba(4,16,48,.98))!important;border:1px solid rgba(94,234,212,.52)!important;
+  box-shadow:0 0 14px -7px rgba(94,234,212,.9),inset 0 0 12px rgba(34,211,238,.08)!important}
+.dh-line .dh-text{display:none!important}
+.dh-line-flow{display:flex;gap:20px;width:max-content;white-space:nowrap;animation:dhLineRun 10s linear infinite}
+.dh-line-flow span{display:block;font-size:8px;letter-spacing:1.25px;color:#7fe8df;text-shadow:0 0 8px rgba(94,234,212,.55)}
+@keyframes dhLineRun{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@media (max-width:980px){.bs-v8 .bs-dh .dh-bubble.dh-line{width:190px!important;max-width:190px!important;height:25px!important;align-self:flex-end;margin-left:auto}.bs-metric-track span{font-size:10px}}
+@media (prefers-reduced-motion: reduce){.bs-metric-track,.bs-metric-track span,.dh-line-flow{animation:none}}

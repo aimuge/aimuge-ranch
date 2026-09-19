@@ -282,6 +282,17 @@
     const equipList = DB.deviceList.filter(d=>d.id!=='DV1');
     const equipOnline = equipList.filter(d=>String(d.state).includes('在线')).reduce((a,d)=>a+d.count,0);
     const equipOffline = equipList.reduce((a,d)=>a+d.count,0) - equipOnline;
+    const metricStream = [
+      `存栏 ${fmt(c.totalAnimals)} 头`,
+      `大牛 ${fmt(DB.groups[0].count)} 头`,
+      `小牛 ${fmt(DB.groups[1].count)} 头`,
+      `自有草场 ${fmt(DB.meta.areaSelf)} 亩`,
+      `租赁草场 ${fmt(DB.meta.areaRented)} 亩`,
+      `草场合计 ${fmt(DB.meta.area)} 亩`,
+      `监控 6 路`,
+      `智能装备 ${equipList.length} 项`,
+      `设备在线 ${fmt(equipOnline)} 台`
+    ].join('   ◆   ');
     const railText = [
       'LIVESTOCK 186 HEAD', 'GRASSLAND 13,290 MU', 'OWNED 3,850 MU', 'LEASED 9,440 MU', 'NATIVE HAY 900 BUNDLES',
       'SMART DEVICES 7/8 ONLINE', 'CALVES 84', 'COWS 102', 'WINTER MODE ACTIVE',
@@ -305,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=28" alt="YILATE">
+          <img src="assets/logo.png?v=29" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -329,7 +340,7 @@
         ].map(([t,v,d])=>`<div class="bs-kpi"><span>${t}</span><b>${v}</b><i>${d}</i></div>`).join('')}
       </div>
 
-      <div class="bs-ticker"><div class="bst-track">${ticker}　◆　${ticker}</div></div>
+      <div class="bs-metric-stream"><div class="bs-metric-track">${letterize(metricStream + '   ◆   ' + metricStream)}</div></div>
       <div class="bs-protocol-strip">
         ${['AI VISION','BEIDOU / GNSS','5G IOT','RTK CONTROL','MQTT GATEWAY','OPEN API'].map((x,i)=>`<span style="--pc:${['#5eead4','#7dd3fc','#a78bfa','#f0b429','#fb7185','#34d399'][i]}"><i></i>${x}</span>`).join('')}
       </div>
@@ -495,11 +506,10 @@
       </div>
 
       <div class="bs-dh" id="dhBox" title="点击小伊或小牛听讲解">
-        <div class="dh-bubble dh-square">
-          <div class="dh-hi">小伊</div>
-          <div class="dh-square-flow">
-            <span>YILATE · SMART RANCH · 牧场简介 · 伊拉特智慧牧场 · 西门塔尔牛 ·</span>
-            <span>YILATE · SMART RANCH · 牧场简介 · 伊拉特智慧牧场 · 西门塔尔牛 ·</span>
+        <div class="dh-bubble dh-line">
+          <div class="dh-line-flow">
+            <span>YILATE SMART RANCH · 小伊 · 牧场简介 · 伊拉特智慧牧场 ·</span>
+            <span>YILATE SMART RANCH · 小伊 · 牧场简介 · 伊拉特智慧牧场 ·</span>
           </div>
           <div class="dh-text" id="dhText">牧场简介</div>
         </div>
@@ -1775,7 +1785,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=28" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=29" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
