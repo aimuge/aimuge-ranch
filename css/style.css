@@ -2606,3 +2606,42 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 @keyframes bargaBlinkSmooth{0%,38%,44%,100%{opacity:0;transform:translateY(-1px) scaleY(.18)}40%{opacity:.92;transform:translateY(0) scaleY(1)}41.2%{opacity:.90;transform:translateY(0) scaleY(.32)}}
 @keyframes bargaSmileSmooth{0%,100%{opacity:.48;transform:scaleX(.88) translateY(1px)}45%{opacity:.92;transform:scaleX(1.08) translateY(0)}70%{opacity:.76;transform:scaleX(1) translateY(0)}}
 @media (prefers-reduced-motion: reduce){.human-hand,.eye-blink,.smile-line,.human-face-dynamics::after{animation:none}}
+
+/* ============ v40 手机端双排横向导航 ============ */
+@media (max-width:980px){
+  .mnav{
+    display:grid!important;
+    grid-auto-flow:column;
+    grid-template-rows:repeat(2,34px);
+    grid-auto-columns:max-content;
+    align-items:center;
+    gap:6px 7px;
+    padding:8px 10px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(244,249,252,.98));
+    box-shadow:0 8px 20px -18px rgba(0,0,0,.6);
+  }
+  .mn-item{
+    display:inline-flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    writing-mode:horizontal-tb!important;
+    white-space:nowrap!important;
+    min-width:max-content;
+    height:33px;
+    padding:0 10px!important;
+    font-size:11.5px!important;
+    line-height:1;
+    border-radius:8px!important;
+  }
+  .mn-item b{display:inline-block!important;writing-mode:horizontal-tb!important;white-space:nowrap!important;font-size:11.5px!important;line-height:1!important}
+  .mn-item span{font-size:13px!important;line-height:1}
+  .mn-item.active{background:linear-gradient(135deg,#0d9488,#06b6d4)!important;color:#fff!important}
+}
+@media (max-width:390px){
+  .mnav{grid-template-rows:repeat(2,32px);gap:5px 6px;padding:7px 8px}
+  .mn-item{height:31px;padding:0 8px!important;font-size:10.5px!important}
+  .mn-item b{font-size:10.5px!important}
+}

@@ -250,10 +250,13 @@
     navBox.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click', ()=>render(n.dataset.page)));
     const mnav = $('#mnav');
     if (mnav){
-      mnav.innerHTML = DB.nav.map(n=>`
-        <button class="mn-item ${n.key===current?'active':''}" data-page="${n.key}">
-          <span>${n.icon}</span><b>${n.title}</b>
-        </button>`).join('');
+      mnav.innerHTML = DB.nav.map(n=>{
+        const mt = n.key==='agent' ? '智能服务小伊' : n.title;
+        return `
+        <button class="mn-item ${n.key===current?'active':''}" data-page="${n.key}" title="${n.title}">
+          <span>${n.icon}</span><b>${mt}</b>
+        </button>`;
+      }).join('');
       mnav.querySelectorAll('.mn-item').forEach(b=>b.addEventListener('click', ()=>render(b.dataset.page)));
     }
   }
@@ -316,7 +319,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=39" alt="YILATE">
+          <img src="assets/logo.png?v=40" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1802,7 +1805,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=39" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=40" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
