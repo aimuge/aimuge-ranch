@@ -254,9 +254,9 @@
     </div>`;
   const card = (title, body, cls='') => `
     <div class="card ${cls}">${title?`<div class="card-head"><h3>${title}</h3></div>`:''}<div class="card-body">${body}</div></div>`;
-  const tableHtml = (headers, rows) => `
-    <div class="table-wrap"><table class="tbl"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-    <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const tableHtml = (headers, rows, cls='') => `
+    <div class="table-wrap ${cls?cls+'-wrap':''}"><table class="tbl ${cls}"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td data-label="${headers[i]||''}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   const addBtn = (label, path) => `<button class="btn solid sm" data-add="${path||label}">＋ ${label}</button>`;
   const pageHeader = (title, sub, actions='') => `
     <div class="page-head"><div><h2>${title}</h2><p>${sub}</p></div><div class="page-actions">${actions}</div></div>`;
@@ -352,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=56" alt="YILATE">
+          <img src="assets/logo.png?v=57" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1024,45 +1024,56 @@
   function pageLivestock() {
     const c = compute();
     return `
-    <div class="page">
+    <div class="page livestock-page">
       ${pageHeader('养殖管理', '西门塔尔牛分群 · 电子档案 · 繁殖动态 · 智能监测', addBtn('登记牲畜个体'))}
-      <div class="kpi-grid kpi-4">
-        ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'标准家畜单位 '+fmt(c.sheepUnits), color:'#4f46e5', bg:'#eef2ff'})}
-        ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 186 头 · 200 枚含备件', color:'#0ea5e9', bg:'#e0f2fe'})}
-        ${statCard({icon:'🍼', label:'本年度繁殖', value:'产犊 84 头', sub:'犊牛成活率 96.0%', color:'#b3541e', bg:'#fbeee6'})}
-        ${statCard({icon:'💉', label:'免疫率', value:'96.8%', sub:'春秋两防 · 应免尽免', color:'#475569', bg:'#f1f5f9'})}
+      <div class="kpi-grid kpi-4 livestock-kpis">
+        ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'标准家畜单位 '+fmt(c.sheepUnits), color:'#0f766e', bg:'#e7f7f3'})}
+        ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 186 头 · 200 枚含备件', color:'#0891b2', bg:'#e0f7fb'})}
+        ${statCard({icon:'🍼', label:'本年度繁殖', value:'产犊 84 头', sub:'犊牛成活率 96.0%', color:'#d97706', bg:'#fff7e6'})}
+        ${statCard({icon:'💉', label:'免疫率', value:'96.8%', sub:'春秋两防 · 应免尽免', color:'#2563eb', bg:'#eaf1ff'})}
       </div>
-      <div class="card">
-        <div class="card-head split"><h3>畜群分类</h3>
-          <div class="tabs" id="speciesTabs">
-            <button class="tab active" data-key="all">全部</button>
-            ${DB.species.map(x=>`<button class="tab" data-key="${x.key}">${x.emoji} ${x.name}</button>`).join('')}
+
+      <div class="livestock-top">
+        <div class="card livestock-species-card">
+          <div class="card-head split">
+            <div>
+              <h3>牛群结构与分类</h3>
+              <p class="livestock-card-sub">西门塔尔牛 · 大牛 102 头 · 犊牛 84 头</p>
+            </div>
+            <div class="tabs" id="speciesTabs">
+              <button class="tab active" data-key="all">全部</button>
+              ${DB.species.map(x=>`<button class="tab" data-key="${x.key}">${x.emoji} ${x.name}</button>`).join('')}
+            </div>
           </div>
+          <div class="card-body"><div class="species-grid" id="speciesGrid"></div></div>
         </div>
-        <div class="species-grid" id="speciesGrid"></div>
-      </div>
-      ${card('增重分析 · 三分群全自动保定称自动采集', growthHtml())}
-      <div class="grid-3">
-        <div class="col2">
-          ${card('繁殖与产犊记录', tableHtml(['日期','畜种','事项','成活率','负责人','备注'],
-            DB.birthRecords.map(r=>[r.date, r.species, r.item, r.survival, r.operator, r.note])) + `
-            <div style="margin-top:12px"><button class="btn solid sm" data-modal="birth">＋ 新增繁殖记录</button></div>`)}
-          ${card('个体档案（可登记/删除）', tableHtml(['耳标号','畜种','品种','性别','年龄','体重','健康','位置','体温','设备','操作'],
-            DB.animals.map(a=>[`<code>${a.id}</code>`, a.species, a.breed, a.sex, a.age, a.weight,
-              pill(a.health, a.health==='健康'?'ok':a.health==='发情预警'?'danger':'warn'),
-              a.location, a.temp, `<span class="dev-on">${a.device}</span>`, delBtn('animals', a.id)])))}
-          <div style="margin-top:12px">${addBtn('登记牲畜个体')}</div>
-        </div>
-        <div class="col1">
-          ${card('分群管理', tableHtml(['畜群','存栏','状态'], DB.groups.map(g=>[`<b>${g.name}</b>`, fmt(g.count)+' 头只', pill(g.status, g.status==='正常'?'ok':'warn')])))}
+
+        <div class="livestock-side">
           ${card('今日繁殖关注', `
-            <div class="mini-alerts">
+            <div class="mini-alerts livestock-alerts">
               <div class="ma-item"><span>🐂</span><div><b>1 头发情预警</b><p>AN-10234 · 今日 14:00 配种</p></div></div>
               <div class="ma-item"><span>🐄</span><div><b>3 头母牛待产</b><p>犊牛舍恒温值守 · 预产期临近</p></div></div>
-              <div class="ma-item"><span>🐮</span><div><b>犊牛建档 84 头</b><p>电子耳标 ・ 健康观察中</p></div></div>
+              <div class="ma-item"><span>🐮</span><div><b>犊牛建档 84 头</b><p>电子耳标 · 健康观察中</p></div></div>
             </div>`)}
+          ${card('分群管理', tableHtml(['畜群','存栏','状态'], DB.groups.map(g=>[`<b>${g.name}</b>`, fmt(g.count)+' 头只', pill(g.status, g.status==='正常'?'ok':'warn')]), 'livestock-group-tbl'))}
         </div>
       </div>
+
+      ${card('增重分析与出栏预测 · 三分群全自动保定称自动采集', growthHtml(), 'livestock-growth-card')}
+
+      ${card('繁殖与产犊记录', tableHtml(
+        ['日期','畜种','事项','成活率','负责人','备注'],
+        DB.birthRecords.map(r=>[r.date, r.species, r.item, r.survival, r.operator, r.note]),
+        'livestock-birth-tbl'
+      ) + `<div class="card-actions"><button class="btn solid sm" data-modal="birth">＋ 新增繁殖记录</button></div>`, 'livestock-birth-card')}
+
+      ${card('个体档案（可登记/删除）', tableHtml(
+        ['耳标号','畜种','品种','性别','年龄','体重','健康','位置','体温','设备','操作'],
+        DB.animals.map(a=>[`<code>${a.id}</code>`, a.species, a.breed, a.sex, a.age, a.weight,
+          pill(a.health, a.health==='健康'?'ok':a.health==='发情预警'?'danger':'warn'),
+          a.location, a.temp, `<span class="dev-on">${a.device}</span>`, delBtn('animals', a.id)]),
+        'animal-archive-tbl'
+      ) + `<div class="card-actions">${addBtn('登记牲畜个体')}</div>`, 'animal-archive-card')}
     </div>`;
   }
   function renderSpeciesGrid(){
@@ -1116,20 +1127,20 @@
         <div class="gk ${st.slow.length?'warn':''}"><span>掉膘预警</span><b>${st.slow.length} 头</b><i>${st.slow.map(a=>a.tag).join(' · ')||'无'}</i></div>
       </div>
       <div id="chGain" class="chart-box"></div>
-      <div class="table-wrap" style="margin-top:12px">
-        <table class="tbl">
+      <div class="table-wrap growth-tbl-wrap" style="margin-top:12px">
+        <table class="tbl growth-tbl">
           <thead><tr>${['耳标号','阶段','初重','当前体重','饲养天数','日增重','增重加速度','预计达标出栏','状态'].map(h=>`<th>${h}</th>`).join('')}</tr></thead>
           <tbody>
             ${st.list.map(a=>{
               const ac = st.accelOf(a), f = st.forecast(a);
               const good = a.dailyGain>=st.g.targetGain, warn = a.stage==='育肥' && a.dailyGain<0.6;
               return `<tr>
-                <td><code>${a.tag}</code></td><td>${a.stage}</td><td>${a.start} kg</td>
-                <td><b>${a.current} kg</b></td><td>${a.days[a.days.length-1]} 天</td>
-                <td><b style="color:${good?'#0d9488':warn?'#ef4444':'#f0b429'}">${a.dailyGain} kg/天</b></td>
-                <td>${ac>=0?'+':''}${ac.toFixed(3)} kg/天²</td>
-                <td>${a.stage==='育肥'?`${f.date}（约 ${f.days} 天）`:'—'}</td>
-                <td>${warn?pill('掉膘预警','danger'):good?pill('优秀','ok'):pill('正常','warn')}</td>
+                <td data-label="耳标号"><code>${a.tag}</code></td><td data-label="阶段">${a.stage}</td><td data-label="初重">${a.start} kg</td>
+                <td data-label="当前体重"><b>${a.current} kg</b></td><td data-label="饲养天数">${a.days[a.days.length-1]} 天</td>
+                <td data-label="日增重"><b style="color:${good?'#0d9488':warn?'#ef4444':'#f0b429'}">${a.dailyGain} kg/天</b></td>
+                <td data-label="增重加速度">${ac>=0?'+':''}${ac.toFixed(3)} kg/天²</td>
+                <td data-label="预计达标出栏">${a.stage==='育肥'?`${f.date}（约 ${f.days} 天）`:'—'}</td>
+                <td data-label="状态">${warn?pill('掉膘预警','danger'):good?pill('优秀','ok'):pill('正常','warn')}</td>
               </tr>`;
             }).join('')}
           </tbody>
@@ -1151,7 +1162,7 @@
           color: ['#0d9488','#06b6d4','#0891b2','#f0b429','#ef4444'][i%5],
           values: a.weights
         })),
-        height: 240,
+        height: 190,
         yFormat: v=>Math.round(v)+'kg',
         unit: 'kg'
       });
@@ -1872,7 +1883,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=56" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=57" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

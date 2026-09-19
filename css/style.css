@@ -2806,3 +2806,86 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .bs-v8 .bs-dh-center .dh-human{width:330px!important;height:186px!important}
 .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:192px!important}
 @media (max-width:700px){.bs-v8 .bs-dh-center .dh-human{width:270px!important;height:152px!important}.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:158px!important}}
+
+
+/* ============ v57 养殖管理重新排版 ============ */
+.livestock-page{max-width:1500px}
+.livestock-page .kpi-grid{margin-bottom:18px}
+.livestock-top{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,.74fr);gap:18px;align-items:stretch;margin-bottom:18px}
+.livestock-top>*{min-width:0}
+.livestock-species-card{margin-bottom:0;display:flex;flex-direction:column}
+.livestock-species-card .card-head{align-items:flex-start}
+.livestock-card-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.livestock-species-card .card-body{flex:1;display:flex}
+.livestock-species-card .species-grid{grid-template-columns:1fr;gap:0;flex:1}
+.livestock-species-card .species-card{
+  border-top-width:0;border-left:4px solid var(--sp);border-radius:12px;
+  padding:14px 16px;display:flex;flex-direction:column;height:100%;box-shadow:none
+}
+.livestock-species-card .sp-head{margin-bottom:8px}
+.livestock-species-card .sp-structure{margin-bottom:8px}
+.livestock-species-card .sp-meta{margin-bottom:6px}
+.livestock-species-card .sp-chart{height:190px;min-height:190px}
+.livestock-side{display:flex;flex-direction:column;gap:18px;min-width:0}
+.livestock-side .card{margin-bottom:0}
+.livestock-group-tbl{min-width:0!important;width:100%!important;table-layout:fixed}
+.livestock-group-tbl th,.livestock-group-tbl td{padding:9px 5px;font-size:11.5px;white-space:normal}
+.livestock-group-tbl th:nth-child(2),.livestock-group-tbl td:nth-child(2),.livestock-group-tbl th:nth-child(3),.livestock-group-tbl td:nth-child(3){text-align:center}
+.livestock-alerts{gap:9px}
+.livestock-alerts .ma-item{padding:9px 10px;align-items:flex-start}
+.livestock-alerts .ma-item span{font-size:19px}
+.livestock-alerts .ma-item b{font-size:12.5px}
+.livestock-alerts .ma-item p{font-size:11.5px;line-height:1.45}
+.livestock-growth-card,.livestock-birth-card,.animal-archive-card{margin-bottom:18px}
+.livestock-growth-card .gain-kpis{gap:10px}
+.livestock-growth-card .gk{padding:10px 12px}
+.livestock-growth-card .gk b{font-size:17px}
+.card-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.livestock-birth-card .table-wrap,.animal-archive-card .table-wrap{width:100%}
+.animal-archive-card .tbl{min-width:820px}
+
+@media (max-width:980px){
+  .livestock-top{grid-template-columns:1fr}
+  .livestock-species-card .sp-chart{height:165px;min-height:165px}
+}
+@media (max-width:700px){
+  .livestock-page .kpi-grid{margin-bottom:12px}
+  .livestock-top{gap:12px;margin-bottom:12px}
+  .livestock-side{gap:12px}
+  .livestock-species-card .card-head.split{flex-direction:column;align-items:stretch;gap:8px}
+  .livestock-species-card .tabs{width:100%}
+  .livestock-species-card .sp-chart{height:135px;min-height:135px}
+  .livestock-alerts{gap:7px}
+  .livestock-alerts .ma-item{padding:8px 9px}
+  .card-actions{justify-content:stretch}
+  .card-actions .btn{width:100%}
+  .growth-tbl{min-width:0}
+  .growth-tbl th,.growth-tbl td{padding:7px 6px;font-size:10.5px}
+  .growth-tbl th:nth-child(3),.growth-tbl td:nth-child(3),
+  .growth-tbl th:nth-child(5),.growth-tbl td:nth-child(5),
+  .growth-tbl th:nth-child(7),.growth-tbl td:nth-child(7){display:none}
+  .animal-archive-tbl th:nth-child(3),.animal-archive-tbl td:nth-child(3),
+  .animal-archive-tbl th:nth-child(4),.animal-archive-tbl td:nth-child(4),
+  .animal-archive-tbl th:nth-child(5),.animal-archive-tbl td:nth-child(5),
+  .animal-archive-tbl th:nth-child(9),.animal-archive-tbl td:nth-child(9){display:none}
+  .animal-archive-tbl{min-width:0}
+  .animal-archive-tbl th,.animal-archive-tbl td{padding:7px 6px;font-size:10.5px}
+  .livestock-birth-tbl th:nth-child(5),.livestock-birth-tbl td:nth-child(5){display:none}
+  .livestock-birth-tbl{min-width:0}
+  .livestock-birth-tbl th,.livestock-birth-tbl td{padding:7px 6px;font-size:10.5px}
+
+  /* 手机端数据表转信息卡，避免横向拖动 */
+  .livestock-growth-card .table-wrap,.livestock-birth-card .table-wrap,.animal-archive-card .table-wrap{overflow:visible!important;border:0!important;background:transparent!important}
+  .growth-tbl,.livestock-birth-tbl,.animal-archive-tbl{min-width:0!important;width:100%!important}
+  .growth-tbl thead,.livestock-birth-tbl thead,.animal-archive-tbl thead{display:none!important}
+  .growth-tbl tbody,.livestock-birth-tbl tbody,.animal-archive-tbl tbody{display:grid;gap:10px}
+  .growth-tbl tr,.livestock-birth-tbl tr,.animal-archive-tbl tr{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fbfdfd}
+  .growth-tbl td,.livestock-birth-tbl td,.animal-archive-tbl td{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0;border:0;white-space:normal;text-align:right}
+  .growth-tbl td::before,.livestock-birth-tbl td::before,.animal-archive-tbl td::before{content:attr(data-label);flex:none;color:var(--muted);font-size:10.5px;text-align:left}
+  .growth-tbl td:first-child,.livestock-birth-tbl td:first-child,.animal-archive-tbl td:first-child{grid-column:1/-1;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px;font-weight:700}
+  .growth-tbl td:first-child::before,.livestock-birth-tbl td:first-child::before,.animal-archive-tbl td:first-child::before{color:#0f766e;font-weight:700}
+  .livestock-birth-tbl td:last-child,.animal-archive-tbl td:last-child{grid-column:1/-1;justify-content:flex-end;border-top:1px solid var(--line);padding-top:6px;margin-top:2px}
+  .livestock-birth-tbl td:last-child::before,.animal-archive-tbl td:last-child::before{display:none}
+  .animal-archive-card .animal-archive-tbl{min-width:0!important}
+  .animal-archive-tbl .pill,.livestock-birth-tbl .pill{white-space:nowrap}
+}
