@@ -288,6 +288,7 @@
       'YILATE SMART RANCH · HULUNBUIR'
     ].join('  ///  ');
     const letterize = text => [...text].map((ch,i)=>`<span style="--i:${i}">${ch===' '?'&nbsp;':ch}</span>`).join('');
+    const particles = Array.from({length:32},(_,i)=>`<i style="--x:${(i*7.3+4)%96}%;--d:${(5+(i%7)*1.1).toFixed(1)}s;--dl:-${(i*.47).toFixed(2)}s;--s:${2+(i%4)}px;--c:${['#5eead4','#7dd3fc','#a78bfa','#f0b429','#fb7185'][i%5]}"></i>`).join('');
     return `
     <div class="bigscreen bs-v8">
       <div class="bs-sweeps"><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -296,11 +297,14 @@
       </div>
       <div class="bs-radar"><i></i><i></i><i></i><b></b></div>
       <div class="bs-colorwash"><i></i><i></i><i></i></div>
+      <div class="bs-globe"><i></i><i></i><i></i><b></b></div>
+      <div class="bs-shapefield"><i class="shape-ring"></i><i class="shape-diamond"></i><i class="shape-tri"></i><i class="shape-bars"></i></div>
+      <div class="bs-particles">${particles}</div>
       <div class="bs-bits">01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101 01010011 01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101</div>
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=22" alt="YILATE">
+          <img src="assets/logo.png?v=23" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -508,6 +512,9 @@
     countUp(document.querySelector('.bsp-big'), compute().totalAnimals, 1400);
     renderWeatherPanel();
     refreshRealWeather();
+    const bsRoot = document.querySelector('.bs-v8');
+    let paletteNo = 0;
+    const paletteTimer = setInterval(()=>{ if (bsRoot && document.body.contains(bsRoot)) bsRoot.dataset.palette = String(++paletteNo % 4); }, 4200);
     const wRefresh = $('#bsWeatherRefresh');
     if (wRefresh) wRefresh.addEventListener('click', ()=>{ toast('正在获取牧场实时天气…'); refreshRealWeather(); });
 
@@ -599,7 +606,7 @@
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(dhTimer); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(dhTimer); clearInterval(paletteTimer); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
@@ -1664,7 +1671,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=22" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=23" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
