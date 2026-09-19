@@ -352,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=52" alt="YILATE">
+          <img src="assets/logo.png?v=53" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -698,7 +698,7 @@
       else document.exitFullscreen && document.exitFullscreen();
     });
 
-    /* ⑦ 数字人讲解：小伊（牧场主）轮播 + 语音朗读 */
+    /* ⑦ AI机器人数字讲解：牧场简介 + 新闻主播式语音播报 */
     const profileIntro = (DB.narration && DB.narration[0] && DB.narration[0].text) || intro;
     let voiceOn = false, newsVoice = null;
     const voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
@@ -759,7 +759,7 @@
       voiceOn = true;
       if (voiceBtn) voiceBtn.textContent = '🔇 关闭语音';
       speak();
-      toast(msg || '🔊 小伊正在完整讲解牧场简介');
+      toast(msg || '🔊 AI机器人正在完整讲解牧场简介');
     };
     /* 点击小伊或她抱着的小牛 → 完整播报牧场简介 */
     const chatPanel = $('#robotChatPanel'), chatBody = $('#robotChatBody'), chatInput = $('#robotChatInput');
@@ -795,7 +795,7 @@
       voiceBtn.textContent = voiceOn ? '🔇 关闭语音' : '🔊 语音讲解';
       if (voiceOn) speak();
       else if (window.speechSynthesis) { try { speechSynthesis.cancel(); } catch(err){} stopTalkMotion(); }
-      toast(voiceOn ? '小伊开始完整讲解牧场简介' : '已关闭语音讲解');
+      toast(voiceOn ? 'AI机器人开始完整讲解牧场简介' : '已关闭语音讲解');
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
@@ -1864,7 +1864,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=52" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=53" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
