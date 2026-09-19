@@ -2350,3 +2350,44 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 
 @media (max-width:1200px){.bs-protocol-strip{grid-template-columns:repeat(3,1fr)}.bs-protocol-strip span:nth-child(n+4){display:none}}
 @media (max-width:700px){.bs-protocol-strip{grid-template-columns:repeat(2,1fr)}.bs-protocol-strip span:nth-child(n+3){display:none}.bs-shed-grid{grid-template-columns:1fr}.bs-shed-env{flex-wrap:wrap}}
+
+/* ============ v26 鲜色满版数据舱 + 牛只健康监测 ============ */
+.bs-v8 .bs-body,.bs-v8 .bs-col{height:100%}
+.bs-v8 .bs-col{justify-content:space-between}
+.bs-v8 .bs-col .bs-panel:nth-child(1){--acc:#22d3ee}
+.bs-v8 .bs-col .bs-panel:nth-child(2){--acc:#a78bfa}
+.bs-v8 .bs-col .bs-panel:nth-child(3){--acc:#34d399}
+.bs-v8 .bs-col .bs-panel:nth-child(4){--acc:#fb923c}
+.bs-v8 .bs-col .bs-panel:nth-child(5){--acc:#f472b6}
+.bs-v8 .bs-col>.bs-panel{
+  background:
+    radial-gradient(circle at 0 0,color-mix(in srgb,var(--acc) 25%,transparent),transparent 55%),
+    radial-gradient(circle at 100% 100%,color-mix(in srgb,var(--acc) 12%,transparent),transparent 52%),
+    linear-gradient(145deg,color-mix(in srgb,var(--acc) 12%,#142a4b),#071326 78%);
+  border-color:color-mix(in srgb,var(--acc) 48%,transparent);
+}
+.bs-v8 .bs-kpi:nth-child(1){--kacc:#22d3ee}.bs-v8 .bs-kpi:nth-child(2){--kacc:#a3e635}.bs-v8 .bs-kpi:nth-child(3){--kacc:#a78bfa}.bs-v8 .bs-kpi:nth-child(4){--kacc:#fb923c}.bs-v8 .bs-kpi:nth-child(5){--kacc:#f472b6}
+.bs-v8 .bs-kpi{background:radial-gradient(circle at 100% 0,color-mix(in srgb,var(--kacc) 30%,transparent),transparent 58%),linear-gradient(145deg,color-mix(in srgb,var(--kacc) 13%,#203b66),#09172d 82%)}
+.bs-v8 .bs-kpi span{color:#a9c8e6}.bs-v8 .bs-kpi b{filter:saturate(1.25)}
+
+/* 繁育环形数据形状 */
+.bs-ring-mini{position:relative;width:72px;height:72px;margin:9px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:conic-gradient(#5eead4 0 calc(var(--p)*1%),rgba(74,124,247,.14) calc(var(--p)*1%) 100%);box-shadow:0 0 22px -8px rgba(94,234,212,.7);animation:bsRingSpin 7s linear infinite}
+.bs-ring-mini::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#0b1a33;border:1px solid rgba(94,234,212,.18)}
+.bs-ring-mini b,.bs-ring-mini span{position:relative;z-index:1;display:block;text-align:center}.bs-ring-mini b{font-size:15px;color:#e9fffd}.bs-ring-mini span{position:absolute;top:40px;font-size:7px;color:#81a8c8}
+@keyframes bsRingSpin{0%{filter:hue-rotate(0) saturate(1)}50%{filter:hue-rotate(22deg) saturate(1.4)}100%{filter:hue-rotate(0) saturate(1)}}
+
+/* 牛只健康监测 */
+.bs-cow-health-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:1px 0 6px}
+.bs-cow-health-grid>div{padding:6px 3px;border-radius:8px;text-align:center;background:linear-gradient(145deg,rgba(94,234,212,.13),rgba(34,211,238,.04));border:1px solid rgba(94,234,212,.20)}
+.bs-cow-health-grid>div:nth-child(2){background:linear-gradient(145deg,rgba(244,114,182,.13),rgba(236,72,153,.04));border-color:rgba(244,114,182,.22)}
+.bs-cow-health-grid>div:nth-child(3){background:linear-gradient(145deg,rgba(251,146,60,.13),rgba(245,158,11,.04));border-color:rgba(251,146,60,.22)}
+.bs-cow-health-grid>div:nth-child(4){background:linear-gradient(145deg,rgba(167,139,250,.13),rgba(99,102,241,.04));border-color:rgba(167,139,250,.22)}
+.bs-cow-health-grid b{display:block;font-size:13px;line-height:1;color:#f4fbff}.bs-cow-health-grid span{display:block;margin-top:3px;font-size:7.5px;color:#8aaaca}
+.bs-health-spark{display:flex;align-items:flex-end;gap:2px;height:28px;padding:3px 4px;border-radius:7px;background:rgba(5,18,36,.52);border:1px solid rgba(94,234,212,.14);overflow:hidden}
+.bs-health-spark i{flex:1;min-width:2px;border-radius:2px 2px 0 0;background:linear-gradient(180deg,#5eead4,#38bdf8);box-shadow:0 0 6px rgba(94,234,212,.45);animation:bsSparkPulse 2.4s ease-in-out infinite;animation-delay:calc(var(--i) * -.09s)}
+.bs-health-spark i:nth-child(3n){background:linear-gradient(180deg,#f472b6,#a78bfa)}.bs-health-spark i:nth-child(4n){background:linear-gradient(180deg,#facc15,#fb923c)}
+@keyframes bsSparkPulse{0%,100%{transform:scaleY(.72);opacity:.62}50%{transform:scaleY(1.08);opacity:1}}
+.bs-health-foot{display:flex;justify-content:space-between;margin-top:5px;font-size:8px;color:#789bbe}.bs-health-foot b{color:#5eead4}
+
+@media (max-width:700px){.bs-cow-health-grid{grid-template-columns:repeat(2,1fr)}.bs-ring-mini{width:62px;height:62px}.bs-ring-mini span{top:35px}}

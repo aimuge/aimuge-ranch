@@ -305,7 +305,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=25" alt="YILATE">
+          <img src="assets/logo.png?v=26" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -360,6 +360,7 @@
               <div><b>3</b><span>待产母牛</span></div>
             </div>
             <div class="bs-line-progress"><div><span>年度繁育进度</span><b>84 / 120 头</b></div><i><b style="width:70%"></b></i></div>
+            <div class="bs-ring-mini" style="--p:96"><b>96%</b><span>成活率</span></div>
           </section>
           <section class="bs-panel bs-balance-panel">
             <div class="bsp-title">⚖️ 草畜平衡与权属 <em>BALANCE</em></div>
@@ -374,7 +375,7 @@
           <section class="bs-panel">
             <div class="bsp-title">🎥 监控画面（6 路） <em>LIVE</em></div>
             <div class="bs-cams">
-              ${['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map(x=>`<div class="bs-cam"><span>●</span>${x}<i>LIVE</i></div>`).join('')}
+              ${['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map(x=>`<div class="bs-cam"><span>●</span>${x}<i>实时</i></div>`).join('')}
             </div>
           </section>
           <section class="bs-panel bs-season">
@@ -407,11 +408,22 @@
             </div>
             <div class="bs-shed-env"><span>🌡️ 犊牛舍 22℃</span><span>💧 饮水 12℃</span><span>🌬️ 通风正常</span></div>
           </section>
+          <section class="bs-panel bs-cow-health">
+            <div class="bsp-title">❤️ 牛只健康监测 <em>HERD HEALTH</em></div>
+            <div class="bs-cow-health-grid">
+              <div><b>38.6℃</b><span>平均体温</span></div>
+              <div><b>2</b><span>发情预警</span></div>
+              <div><b>3</b><span>待产母牛</span></div>
+              <div><b>98%</b><span>活动正常</span></div>
+            </div>
+            <div class="bs-health-spark">${Array.from({length:24},(_,i)=>`<i style="--i:${i};height:${32+((i*17)%58)}%"></i>`).join('')}</div>
+            <div class="bs-health-foot"><span>耳标测温在线</span><b>186 / 186 头</b></div>
+          </section>
         </div>
 
         <div class="bs-col">
           <section class="bs-panel bs-weather">
-            <div class="bsp-title">🌦️ ${w.place} <em>LIVE WEATHER</em><button class="bs-weather-refresh" id="bsWeatherRefresh" title="刷新真实天气">↻</button></div>
+            <div class="bsp-title">🌦️ ${w.place} <em>实时天气</em><button class="bs-weather-refresh" id="bsWeatherRefresh" title="刷新真实天气">↻</button></div>
             <div class="bs-w-main"><span id="bsWeatherIcon">${w.icon}</span><b id="bsWeatherTemp">${w.temp}℃</b></div>
             <div class="bs-w-info" id="bsWeatherInfo">${w.text} · ${w.wind} · ${w.snow}</div>
             <div class="bs-w-fc" id="bsWeatherForecast">
@@ -460,7 +472,7 @@
 
       <div class="bs-bottom bs-bottom-v18">
         <div class="bs-data-rail">
-          <div class="bs-rail-label"><i></i><b>LIVE DATA</b><small>实时数据流</small></div>
+          <div class="bs-rail-label"><i></i><b>实时数据</b><small>数据自动更新</small></div>
           <div class="bs-rail-marquee"><div class="bs-rail-track">${letterize(railText + '  ///  ' + railText)}</div></div>
           <div class="bs-rail-tag">YILATE / HULUNBUIR</div>
         </div>
@@ -1756,7 +1768,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=25" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=26" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
