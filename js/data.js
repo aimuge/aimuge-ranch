@@ -5,7 +5,7 @@ const DEFAULT_DATA = {
     owner:'伊拉特',
     location:'内蒙古 · 呼伦贝尔市 · 新巴尔虎左旗 · 吉布胡郎图苏木呼伦嘎查',
     gps:'约 48.0°N, 118.1°E（场部）',
-    area:13300, areaSelf:3860, areaRented:9440, grazingArea:11800, hayArea:1500,
+    area:13290, areaSelf:3850, areaRented:9440, grazingArea:11790, hayArea:1500,
     founded:2016, smartSince:2026,
     climate:'寒温带大陆性季风气候 · 极端低温 -45℃ · 积雪期约 140 天',
     slogan:'高寒牧区西门塔尔牛智慧养殖：可视 · 可测 · 可控 · 可预警',
@@ -90,24 +90,24 @@ const DEFAULT_DATA = {
     ]
   },
 
-  /* ---------- 草场：13,300 亩（自家 3,860 + 租赁 9,440） ---------- */
+  /* ---------- 草场：13,290 亩（自家 3,850 + 租赁 9,440） ---------- */
   grasslandTypes: [
     { id:'GT1', name:'草甸草原（打草区）', icon:'🌿', color:'#0f766e', area:2500, species:'披碱草 · 冰草', use:'打草 + 轮牧', note:'打草场 1,500 亩所在' },
     { id:'GT2', name:'典型草原（轮牧区 · 租赁）', icon:'🌱', color:'#14b8a6', area:7600, species:'针茅 · 冷蒿 · 冰草', use:'四季轮牧', note:'牛群放牧主体草场' },
-    { id:'GT3', name:'低湿地 / 河漫滩', icon:'💧', color:'#0891b2', area:1500, species:'芦苇 · 苔草', use:'应急放牧', note:'补水草场' },
+    { id:'GT3', name:'低湿地 / 河漫滩', icon:'💧', color:'#0891b2', area:1490, species:'芦苇 · 苔草', use:'应急放牧', note:'补水草场' },
     { id:'GT4', name:'退牧还草 / 补播改良区', icon:'🌾', color:'#f0b429', area:1200, species:'改良草种混播', use:'禁牧围封', note:'恢复植被' },
     { id:'GT5', name:'沙化治理区', icon:'🏜️', color:'#b3541e', area:500, species:'沙蒿 · 锦鸡儿', use:'封育治理', note:'防风固沙' },
     { id:'GT6', name:'棚圈 / 活动区 / 道路', icon:'🛤️', color:'#64748b', area:0, species:'—', use:'生产设施用地', note:'大牛棚圈 · 犊牛舍 · 活动区 · 饲草区' }
   ],
   grassland: {
-    total:13300, grazing:11800, hay:1500,
+    total:13290, grazing:11790, hay:1500,
     balance:{ capacity:6650, actual:1330, rate:20.0 },
     ndvi:{ value:0.72, level:'良好', trend:[0.41,0.53,0.64,0.72,0.77,0.74,0.72] },
     seasons: [
       { name:'春营盘', months:'3-5月', area:2600, grass:'返青期', height:'5-8cm', status:'休牧 · 返青保护', color:'#5eead4', progress:30 },
       { name:'夏营盘', months:'6-8月', area:3600, grass:'盛草期', height:'22-30cm', status:'轮牧中', color:'#14b8a6', progress:70 },
       { name:'秋营盘', months:'9-10月', area:2200, grass:'成熟期', height:'18-26cm', status:'计划 9/1 转入', color:'#f0b429', progress:45 },
-      { name:'冬营盘', months:'11-2月', area:3400, grass:'枯草期', height:'7cm', status:'放牧中 · 防风向阳', color:'#0891b2', progress:85 }
+      { name:'冬营盘', months:'11-2月', area:3390, grass:'枯草期', height:'7cm', status:'放牧中 · 防风向阳', color:'#0891b2', progress:85 }
     ],
     pastures: [
       { id:'PA1', name:'冬营盘 · 东区', type:'典型草原', usage:'放牧场', area:1200, su:400, height:'7cm', status:'放牧中', util:62 },
@@ -327,7 +327,7 @@ const DEFAULT_DATA = {
   /* ---------- 数字人讲解词（后台可改） ---------- */
   narration: [
     { id:'NR1', text:'您好，我是伊拉特智慧牧场牧场主小伊。伊拉特智慧牧场位于内蒙古呼伦贝尔市新巴尔虎左旗吉布胡郎图苏木呼伦嘎查，2016 年建场，由牧民伊拉特经营，是一家以西门塔尔牛繁育为核心的家庭牧场。' },
-    { id:'NR2', text:'牧场草场共 13,300 亩，其中自家天然散养草场 3,860 亩，租赁草场 9,440 亩；现存栏牛 186 头，其中大牛 102 头、小牛 84 头。' },
+    { id:'NR2', text:'牧场草场共 13,290 亩，其中自家天然散养草场 3,850 亩，租赁草场 9,440 亩；现存栏牛 186 头，其中大牛 102 头、小牛 84 头。' },
     { id:'NR3', text:'牧场建有两个棚圈：大牛棚圈养大牛 102 头，犊牛舍养小牛 84 头，并配套牛只活动区和饲草区；养殖方式是冬季圈养、夏季散养，草场按春夏秋冬四季营盘轮牧。' },
     { id:'NR4', text:'装备方面，全场有 9 项智能设备：视频监控 6 路覆盖生活区、饲草区、设备区、犊牛舍、牛只活动区和牛舍内；耳标测温 200 个、北斗定位项圈 5 个；还有智能巡检机器狗、三分群全自动保定称、TMR 拌料机、撒料机、饲料粉碎机和农机作业终端。' },
     { id:'NR5', text:'目前现状：本年度产犊 84 头，犊牛成活率 96%；计划出栏 62 头；天然草已入库 900 捆，目标 1,000 捆，冬储可覆盖到明年 4 月。' },
@@ -374,7 +374,7 @@ const DEFAULT_DATA = {
   ],
   subsidies: [
     { icon:'🐄', name:'基础母牛扩群补贴', desc:'见犊补母 · 按政策标准执行', status:'可申报' },
-    { icon:'🌾', name:'草畜平衡奖励', desc:'按自有草场 3,860 亩 + 租赁 9,440 亩核算', status:'待申报' },
+    { icon:'🌾', name:'草畜平衡奖励', desc:'按自有草场 3,850 亩 + 租赁 9,440 亩核算', status:'待申报' },
     { icon:'🛡️', name:'政策性牲畜保险', desc:'冻死/疫病可理赔 · 保费财政补贴', status:'已投保' }
   ],
   workers: [
@@ -405,7 +405,7 @@ const DEFAULT_DATA = {
 };
 
 /* ============ 持久化与通用 CRUD（支持 a.b 路径） ============ */
-const KEY = 'yilate-ranch-v17';
+const KEY = 'yilate-ranch-v19';
 let DB = loadDB();
 
 function loadDB(){

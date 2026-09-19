@@ -186,7 +186,7 @@
     const intro = `${DB.meta.name}位于${DB.meta.location.replace('内蒙古 · ','')}，由牧场主${DB.meta.owner}经营，现养西门塔尔牛${fmt(c.cattle)}头。`;
     const ticker = [
       `牲畜存栏 ${fmt(c.totalAnimals)} 头只（西门塔尔牛 ${fmt(c.cattle)} 头：大牛 102 · 小牛 84）`,
-      `草场 ${fmt(DB.meta.area)} 亩 · 天然草 ${fmt(DB.forageInventory[0].stock)} 捆`,
+      `草场 ${fmt(DB.meta.area)} 亩（自有 ${fmt(DB.meta.areaSelf)} · 租赁 ${fmt(DB.meta.areaRented)}）· 天然草 ${fmt(DB.forageInventory[0].stock)} 捆`,
       `联网终端 ${fmt(c.devTotal)} 台 · 在线率 ${c.devRate}%`,
       `监控 6 路（生活区/饲草/设备/犊牛舍/活动区/牛舍内）· 耳标测温 200 个 · 定位项圈 5 个 · 机器狗 1 台`,
       `端口对接 ${c.portsOn}/${(DB.ports||[]).length} · 监控 / 耳标 / 农机`,
@@ -199,7 +199,7 @@
     const equipOnline = equipList.filter(d=>String(d.state).includes('在线')).reduce((a,d)=>a+d.count,0);
     const equipOffline = equipList.reduce((a,d)=>a+d.count,0) - equipOnline;
     const railText = [
-      'LIVESTOCK 186 HEAD', 'GRASSLAND 13,300 MU', 'NATIVE HAY 900 BUNDLES',
+      'LIVESTOCK 186 HEAD', 'GRASSLAND 13,290 MU', 'OWNED 3,850 MU', 'LEASED 9,440 MU', 'NATIVE HAY 900 BUNDLES',
       'SMART DEVICES 7/8 ONLINE', 'CALVES 84', 'COWS 102', 'WINTER MODE ACTIVE',
       'YILATE SMART RANCH · HULUNBUIR'
     ].join('  ///  ');
@@ -215,7 +215,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=18" alt="YILATE">
+          <img src="assets/logo.png?v=19" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -232,7 +232,7 @@
       <div class="bs-kpistrip">
         ${[
           ['🐂 牲畜存栏', fmt(c.totalAnimals)+' 头只', `西门塔尔牛 ${fmt(c.cattle)}（大牛 102 / 小牛 84）`],
-          ['🌾 草场面积', fmt(DB.meta.area)+' 亩', '自有 3,860 + 租赁 9,440'],
+          ['🌾 草场面积', fmt(DB.meta.area)+' 亩', '自有 3,850 + 租赁 9,440'],
           ['🧊 天然草储备', fmt(DB.forageInventory[0].stock)+' 捆', '目标 1,000 捆'],
           ['📡 设备在线率', c.devRate+'%', `在线 ${fmt(c.devOnline)} 台`],
           ['💰 今日经营', '¥'+(12680).toLocaleString('zh-CN'), `订单 ${c.todayOrders} 单`]
@@ -257,6 +257,7 @@
           <section class="bs-panel">
             <div class="bsp-title">🌾 草场载畜利用 <em>GRASSLAND</em></div>
             <div id="bsPasture" class="bs-chart"></div>
+            <div class="bsp-sub">自有 3,850 亩 · 租赁 9,440 亩 · 打草 1,500 亩</div>
           </section>
         </div>
 
@@ -898,9 +899,9 @@
       ${pageHeader('草场分类 · 生态类型台账', '草甸草原 / 典型草原 / 低湿地 / 改良区 / 沙化治理 · 以类定用、以草定畜', addBtn('新增地块', 'grassland.pastures'))}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🌾', label:'草场总面积', value:fmt(g.total)+' 亩', sub:'放牧 '+fmt(g.grazing)+' · 打草 '+fmt(g.hay), color:'#4f46e5', bg:'#eef2ff'})}
-        ${statCard({icon:'🧭', label:'生态类型', value:gt.length+' 类', sub:'分类经营 · 精准管护', color:'#0ea5e9', bg:'#e0f2fe'})}
+        ${statCard({icon:'🏡', label:'自家草场', value:fmt(DB.meta.areaSelf)+' 亩', sub:'自有天然散养草场 · 确权经营', color:'#0d9488', bg:'#ccfbf1'})}
+        ${statCard({icon:'📄', label:'租赁草场', value:fmt(DB.meta.areaRented)+' 亩', sub:'纳入四季轮牧 · 租赁经营', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'⚖️', label:'载畜量使用率', value:g.balance.rate+'%', sub:'标准家畜单位 '+fmt(g.balance.actual)+' / '+fmt(g.balance.capacity), color:'#b3541e', bg:'#fbeee6'})}
-        ${statCard({icon:'🛡️', label:'休牧/禁牧地块', value:g.pastures.filter(p=>p.util===0&&p.usage==='放牧场').length+' 块', sub:'返青保护 + 留茬休牧', color:'#475569', bg:'#f1f5f9'})}
       </div>
       ${card('生态类型分类', `
         <div class="gt-grid">
@@ -1567,7 +1568,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=18" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=19" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
