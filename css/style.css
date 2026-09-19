@@ -2795,3 +2795,8 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .rc-input input{border-color:rgba(56,189,248,.55)!important;background:rgba(2,11,33,.90)!important}
 .rc-input input:focus{border-color:#22d3ee!important;box-shadow:0 0 14px -4px #22d3ee!important}
 .rc-input button{background:linear-gradient(135deg,#0891b2,#2563eb)!important;border-color:rgba(103,232,249,.65)!important;box-shadow:0 0 14px -7px #22d3ee}
+
+
+/* ============ v51 犊牛舍靠近大牛棚圈 ============ */
+.bs-v8 .bs-map.bs-map-robot .map-zone.z2{left:29%!important;top:6%!important}
+@media (max-width:700px){.bs-v8 .bs-map.bs-map-robot .map-zone.z2{left:27%!important;top:5%!important}}
