@@ -352,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=49" alt="YILATE">
+          <img src="assets/logo.png?v=50" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -431,7 +431,7 @@
             <div class="bs-map bs-map-robot">
               ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🏘️','生活区','z4'],['🔧','设备存放区','z5'],['🧊','饲草区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f472b6','#a78bfa','#f59e0b'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
               <svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
-              <div class="bs-dh bs-dh-center" id="dhBox" title="点击机器人听牧场简介">
+              <div class="bs-dh bs-dh-center" id="dhBox" title="点击AI机器人听牧场简介">
                 <div class="dh-avatar dh-human">
                   <div class="human-photo-wrap video-wrap">
                     <div class="narrator-motion" id="narratorMotion" role="img" aria-label="透明背景巴尔虎服饰讲解员动态"></div>
@@ -441,15 +441,15 @@
                 </div>
                 <div class="dh-bubble dh-line">
                   <div class="dh-line-flow">
-                    <span>YILATE SMART RANCH · 机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
-                    <span>YILATE SMART RANCH · 机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
+                    <span>YILATE SMART RANCH · AI机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
+                    <span>YILATE SMART RANCH · AI机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
                   </div>
                   <div class="dh-text" id="dhText">牧场简介</div>
                 </div>
               </div>
               <div class="robot-chat-panel" id="robotChatPanel" aria-hidden="true">
-                <div class="rc-head"><b>人形机器人 · 牧场问答</b><button id="robotChatClose" title="关闭">×</button></div>
-                <div class="rc-body" id="robotChatBody"><div class="rc-msg bot">您好，我是伊拉特智慧牧场人形机器人。您可以问我存栏、草场、饲草、防疫、设备和经营情况。</div></div>
+                <div class="rc-head"><b>AI机器人 · 牧场问答</b><button id="robotChatClose" title="关闭">×</button></div>
+                <div class="rc-body" id="robotChatBody"><div class="rc-msg bot">您好，我是伊拉特智慧牧场AI机器人。您可以问我存栏、草场、饲草、防疫、设备和经营情况。</div></div>
                 <div class="rc-quick">
                   <button data-rcq="今天牧场整体情况怎么样？">今日快报</button>
                   <button data-rcq="现在存栏多少牛？">存栏数据</button>
@@ -775,7 +775,7 @@
     };
     if (dhBox) dhBox.addEventListener('click', ()=>{
       if (chatPanel){ chatPanel.classList.add('open'); chatPanel.setAttribute('aria-hidden','false'); setTimeout(()=>chatInput && chatInput.focus(),120); }
-      startNarration('🔊 人形机器人已启动讲解，欢迎提问');
+      startNarration('🔊 AI机器人已启动讲解，欢迎提问');
     });
     if (calfBox) calfBox.addEventListener('click', (e)=>{
       e.stopPropagation();
@@ -1864,7 +1864,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=49" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=50" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
