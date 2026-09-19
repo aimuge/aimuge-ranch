@@ -300,11 +300,12 @@
       <div class="bs-globe"><i></i><i></i><i></i><b></b></div>
       <div class="bs-shapefield"><i class="shape-ring"></i><i class="shape-diamond"></i><i class="shape-tri"></i><i class="shape-bars"></i></div>
       <div class="bs-particles">${particles}</div>
+      <canvas class="bs-fx-canvas" id="bsFxCanvas"></canvas>
       <div class="bs-bits">01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101 01010011 01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101</div>
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=23" alt="YILATE">
+          <img src="assets/logo.png?v=24" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -496,6 +497,57 @@
       </div>
     </div>`;
   }
+  function startBigscreenCanvas(){
+    const canvas = document.getElementById('bsFxCanvas');
+    if (!canvas || !canvas.getContext) return ()=>{};
+    const ctx = canvas.getContext('2d');
+    let raf = 0, w = 0, h = 0, dpr = 1;
+    const nodes = Array.from({length:64}, (_,i)=>({
+      x:Math.random(), y:Math.random(), vx:(Math.random()-.5)*.00028, vy:(Math.random()-.5)*.00028,
+      r:1 + (i%5)*.34, c:['#5eead4','#7dd3fc','#a78bfa','#f0b429','#fb7185'][i%5]
+    }));
+    const resize = ()=>{
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = Math.max(1, Math.round(rect.width)); h = Math.max(1, Math.round(rect.height));
+      canvas.width = Math.round(w*dpr); canvas.height = Math.round(h*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    };
+    const draw = (now)=>{
+      if (!document.body.contains(canvas)) return;
+      ctx.clearRect(0,0,w,h);
+      const t = now/1000;
+      for (let k=0;k<3;k++){
+        ctx.beginPath();
+        const amp = 10 + k*5, base = h*(0.22 + k*0.28);
+        for (let x=0;x<=w;x+=12){
+          const y = base + Math.sin(x/120 + t*(0.45+k*0.14)) * amp + Math.cos(x/310 - t*.3) * 8;
+          x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        }
+        ctx.strokeStyle = ['rgba(94,234,212,.18)','rgba(125,211,252,.17)','rgba(167,139,250,.15)'][k];
+        ctx.lineWidth = 1.1;
+        ctx.shadowColor = ['#5eead4','#7dd3fc','#a78bfa'][k]; ctx.shadowBlur = 14; ctx.stroke();
+      }
+      nodes.forEach(n=>{ n.x += n.vx; n.y += n.vy; if(n.x<0||n.x>1)n.vx*=-1; if(n.y<0||n.y>1)n.vy*=-1; });
+      ctx.shadowBlur = 0;
+      for(let i=0;i<nodes.length;i++){
+        const a=nodes[i], ax=a.x*w, ay=a.y*h;
+        for(let j=i+1;j<nodes.length;j++){
+          const b=nodes[j], bx=b.x*w, by=b.y*h, dx=ax-bx, dy=ay-by, d=Math.hypot(dx,dy);
+          if(d<125){
+            ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by);
+            ctx.strokeStyle = `rgba(125,211,252,${(1-d/125)*.20})`; ctx.lineWidth=.8; ctx.stroke();
+          }
+        }
+        ctx.beginPath(); ctx.arc(ax,ay,a.r,0,Math.PI*2);
+        ctx.fillStyle=a.c; ctx.globalAlpha=.62 + .28*Math.sin(t*2+i); ctx.fill(); ctx.globalAlpha=1;
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    resize(); window.addEventListener('resize', resize); raf = requestAnimationFrame(draw);
+    return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', resize); ctx.clearRect(0,0,w,h); };
+  }
+
   function countUp(el, target, dur=1200, suffix=''){
     if (!el) return;
     const start = performance.now(), from = 0;
@@ -508,6 +560,8 @@
     requestAnimationFrame(step);
   }
   function afterBigscreen(){
+    /* 数据科技动态层 */
+    const stopBigscreenCanvas = startBigscreenCanvas();
     /* 数字计数 */
     countUp(document.querySelector('.bsp-big'), compute().totalAnimals, 1400);
     renderWeatherPanel();
@@ -606,7 +660,7 @@
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(dhTimer); clearInterval(paletteTimer); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(dhTimer); clearInterval(paletteTimer); stopBigscreenCanvas(); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
@@ -1671,7 +1725,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=23" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=24" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

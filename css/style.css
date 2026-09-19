@@ -2303,3 +2303,19 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 
 @media (max-width:1200px){.bs-globe{display:none}.bs-shapefield{opacity:.38}}
 @media (prefers-reduced-motion: reduce){.bs-globe i,.bs-globe b,.bs-shapefield i,.bs-particles i,.bs-v8 .bs-col > .bs-panel,.bs-v8 .bs-kpi{animation:none}.bs-particles{display:none}}
+
+/* ============ v24 实时粒子网络 + 数据图形生长动画 ============ */
+.bs-fx-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;opacity:.38;mix-blend-mode:screen}
+.bs-v8 .chart-svg path[stroke]{stroke-dasharray:1600;stroke-dashoffset:1600;animation:bsChartDraw 2.4s cubic-bezier(.2,.8,.2,1) both,bsChartGlow 3.2s ease-in-out 2.5s infinite}
+.bs-v8 .chart-svg path[fill]:not([stroke]){animation:bsAreaPulse 4.6s ease-in-out infinite}
+.bs-v8 .chart-svg rect{transform-box:fill-box;transform-origin:center bottom;animation:bsBarGrow 1.15s cubic-bezier(.2,.8,.2,1) both}
+.bs-v8 .chart-svg circle[stroke]{animation:bsRingPulse 3.4s ease-in-out infinite}
+.bs-v8 .bs-panel .chart-svg{filter:drop-shadow(0 0 8px rgba(34,211,238,.18))}
+@keyframes bsChartDraw{0%{stroke-dashoffset:1600;opacity:.2}25%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes bsChartGlow{0%,100%{filter:drop-shadow(0 0 3px rgba(94,234,212,.22))}50%{filter:drop-shadow(0 0 9px rgba(94,234,212,.72))}}
+@keyframes bsAreaPulse{0%,100%{opacity:.10}50%{opacity:.27}}
+@keyframes bsBarGrow{0%{transform:scaleY(.02);opacity:.2}70%{transform:scaleY(1.08)}100%{transform:scaleY(1);opacity:.95}}
+@keyframes bsRingPulse{0%,100%{filter:drop-shadow(0 0 2px rgba(94,234,212,.3))}50%{filter:drop-shadow(0 0 9px rgba(94,234,212,.78))}}
+
+@media (max-width:640px){.bs-fx-canvas{opacity:.22}}
+@media (prefers-reduced-motion: reduce){.bs-fx-canvas{display:none}.bs-v8 .chart-svg path[stroke],.bs-v8 .chart-svg rect,.bs-v8 .chart-svg circle[stroke],.bs-v8 .chart-svg path[fill]{animation:none;stroke-dashoffset:0}}
