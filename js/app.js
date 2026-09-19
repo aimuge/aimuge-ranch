@@ -195,6 +195,15 @@
       `当前 ${monthName(demoMonth)} · ${m.season}季 · ${m.name}`
     ].join('　◆　');
     const health = c.devRate;
+    const equipList = DB.deviceList.filter(d=>d.id!=='DV1');
+    const equipOnline = equipList.filter(d=>String(d.state).includes('在线')).reduce((a,d)=>a+d.count,0);
+    const equipOffline = equipList.reduce((a,d)=>a+d.count,0) - equipOnline;
+    const railText = [
+      'LIVESTOCK 186 HEAD', 'GRASSLAND 13,300 MU', 'NATIVE HAY 900 BUNDLES',
+      'SMART DEVICES 7/8 ONLINE', 'CALVES 84', 'COWS 102', 'WINTER MODE ACTIVE',
+      'YILATE SMART RANCH · HULUNBUIR'
+    ].join('  ///  ');
+    const letterize = text => [...text].map((ch,i)=>`<span style="--i:${i}">${ch===' '?'&nbsp;':ch}</span>`).join('');
     return `
     <div class="bigscreen bs-v8">
       <div class="bs-sweeps"><i></i><i></i><i></i></div>
@@ -206,7 +215,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=17" alt="YILATE">
+          <img src="assets/logo.png?v=18" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -268,13 +277,13 @@
             <div class="bs-tasks">${m.tasks.slice(0,2).map(t=>`<div class="bs-task"><span>◆</span>${t}</div>`).join('')}</div>
           </section>
           <section class="bs-panel bs-equip-panel">
-            <div class="bsp-title">📡 智能装备在线状态 <em>IOT DEVICES</em></div>
-            <div class="bs-equip-summary"><span><i class="ok"></i>在线 ${fmt(c.devOnline)} 台</span><span><i class="off"></i>离线/检修 ${fmt(c.devOffline)} 台</span><span>端口 ${c.portsOn}/${(DB.ports||[]).length}</span></div>
+            <div class="bsp-title">📡 智能装备在线状态 <em>SMART EQUIPMENT</em></div>
+            <div class="bs-equip-summary"><span><i class="ok"></i>在线 ${fmt(equipOnline)} 台</span><span><i class="off"></i>离线/检修 ${fmt(equipOffline)} 台</span><span>监控已在监控墙 · 端口 ${c.portsOn}/${(DB.ports||[]).length}</span></div>
             <div class="bs-equip-grid">
-              ${DB.deviceList.map(d=>{
+              ${equipList.map(d=>{
                 const on = String(d.state).includes('在线');
                 return `<div class="bs-equip ${on?'is-online':'is-offline'}" title="${d.name} · ${d.state} · ${d.protocol}">
-                  ${devIcon(d.name, d.state)}
+                  ${bigDeviceArt(d.name)}
                   <div class="bs-equip-meta"><b>${devShortName(d.name)}</b><small>${fmt(d.count)}台 · ${d.state}</small></div>
                   <i class="bs-equip-dot"></i>
                 </div>`;
@@ -320,31 +329,26 @@
         </div>
       </div>
 
-      <div class="bs-bottom">
-        <div class="bs-mini">
-          ${[
-            ['今日增重','+86 kg','5 头采集'],
-            ['今日饲喂','天然草 24 捆','TMR 2 次'],
-            ['饮水温度','12℃','加热常开'],
-            ['出栏计划','62 头','秋冬季出栏'],
-            ['疫病防控率','96.8%','应免尽免'],
-            ['端口在线','9 个','协议可配置']
-          ].map(([t,v,d])=>`<div class="bs-mini-item"><span>${t}</span><b>${v}</b><i>${d}</i></div>`).join('')}
+      <div class="bs-bottom bs-bottom-v18">
+        <div class="bs-data-rail">
+          <div class="bs-rail-label"><i></i><b>LIVE DATA</b><small>实时数据流</small></div>
+          <div class="bs-rail-marquee"><div class="bs-rail-track">${letterize(railText + '  ///  ' + railText)}</div></div>
+          <div class="bs-rail-tag">YILATE / HULUNBUIR</div>
         </div>
       </div>
 
       <div class="bs-dh" id="dhBox" title="点击小伊或小牛听讲解">
         <div class="dh-bubble">
-          <div class="dh-hi">小伊 · 牧场简介</div>
+          <div class="dh-hi">小伊 · 3D 数字讲解员</div>
           <div class="dh-text" id="dhText">${DB.meta.name} · 牧场档案</div>
           <div class="dh-codeflow">
             <span>YILATE SMART RANCH · 呼伦贝尔 · 新巴尔虎左旗 · 吉布胡郎图苏木 · 呼伦嘎查 ·</span>
             <span>YILATE SMART RANCH · 呼伦贝尔 · 新巴尔虎左旗 · 吉布胡郎图苏木 · 呼伦嘎查 ·</span>
           </div>
-          <div class="dh-tip">🔊 点头像或小牛听简介</div>
+          <div class="dh-tip">🔊 点击头像 / 小牛 · 新闻主播语音</div>
         </div>
         <div class="dh-avatar">
-          <svg viewBox="0 0 180 220" class="dh-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="伊拉特牧场主小伊抱着小牛">
+          <svg viewBox="0 0 180 220" class="dh-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3D数字讲解员小伊抱着小牛">
             <defs>
               <linearGradient id="robeG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient>
               <linearGradient id="calfG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#d6b28b"/></linearGradient>
@@ -383,6 +387,7 @@
             </g>
             <path d="M48 151q19 24 42 25q26-1 42-28" fill="none" stroke="#f7d7b5" stroke-width="10" stroke-linecap="round"/>
           </svg>
+          <div class="dh3d-badge">3D · AI</div>
         </div>
       </div>
 
@@ -443,11 +448,28 @@
     const profileIntro = (DB.narration && DB.narration[0] && DB.narration[0].text) || intro;
     const lines = [profileIntro];
 
-    let li = 0, voiceOn = false;
+    let li = 0, voiceOn = false, newsVoice = null;
     const textEl = $('#dhText'), voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
+    const pickNewsVoice = ()=>{
+      if (!window.speechSynthesis) return;
+      const voices = speechSynthesis.getVoices() || [];
+      const zh = voices.filter(v=>/^zh|Chinese|中文|普通话/i.test((v.lang||'')+' '+(v.name||'')));
+      newsVoice = zh.find(v=>/Xiaoxiao|Yunxi|Xiaoyi|Yunjian|Natural|Online/i.test(v.name)) || zh.find(v=>/Ting-Ting|Meijia|Sinji|Li-mu|Chinese/i.test(v.name)) || zh[0] || null;
+    };
+    pickNewsVoice();
+    if (window.speechSynthesis) speechSynthesis.onvoiceschanged = pickNewsVoice;
     const speak = (txt)=>{
       if (!voiceOn || !window.speechSynthesis) return;
-      try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'zh-CN'; u.rate = 1.03; u.pitch = 1.15; speechSynthesis.speak(u); } catch(e){}
+      try {
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'zh-CN';
+        u.rate = 0.92;
+        u.pitch = 0.96;
+        u.volume = 1;
+        if (newsVoice) u.voice = newsVoice;
+        speechSynthesis.speak(u);
+      } catch(e){}
     };
     const show = (speakIt)=>{
       const txt = lines[li % lines.length];
@@ -1275,7 +1297,29 @@
       <path d="M63 17q4.5 7 0 14" stroke="#0ea5e9" stroke-width="1.4" fill="none" opacity=".85"/>
       <path d="M66.5 14q6.5 10 0 20" stroke="#0ea5e9" stroke-width="1.2" fill="none" opacity=".5"/>
     </svg>`;
+  MACHINE_ART.tag = `<svg viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="tag3d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset=".5" stop-color="#f0b429"/><stop offset="1" stop-color="#b45309"/></linearGradient></defs>
+    <ellipse cx="36" cy="44" rx="23" ry="3" fill="rgba(0,0,0,.18)"/>
+    <path d="M18 15h29l10 9-10 9H18a6 6 0 0 1-6-6v-6a6 6 0 0 1 6-6z" fill="url(#tag3d)" stroke="#78350f" stroke-width="1.2"/>
+    <circle cx="49" cy="24" r="4.8" fill="#1e293b" stroke="#fef3c7" stroke-width="1"/>
+    <rect x="19" y="21" width="20" height="6" rx="2" fill="#fff7ed" opacity=".9"/>
+    <path d="M22 23h12M22 26h8" stroke="#64748b" stroke-width=".8"/>
+    <path d="M58 18q5 6 0 12" stroke="#5eead4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </svg>`;
+  MACHINE_ART.collar = `<svg viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="col3d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0ea5e9"/><stop offset=".55" stop-color="#0f766e"/><stop offset="1" stop-color="#134e4a"/></linearGradient></defs>
+    <ellipse cx="36" cy="44" rx="25" ry="3" fill="rgba(0,0,0,.18)"/>
+    <path d="M15 16q21-13 42 0l-5 9q-16-9-32 0z" fill="url(#col3d)" stroke="#0f172a" stroke-width="1.1"/>
+    <rect x="29" y="22" width="15" height="11" rx="3" fill="#334155" stroke="#0f172a" stroke-width="1"/>
+    <rect x="32" y="25" width="9" height="4" rx="1.2" fill="#5eead4"/>
+    <circle cx="47" cy="28" r="2" fill="#0ea5e9"/>
+    <path d="M52 13q5 8 0 16M56 9q8 13 0 26" stroke="#5eead4" stroke-width="1.5" fill="none" opacity=".9"/>
+  </svg>`;
 
+  function bigDeviceArt(name){
+    const k = devIconKey(name);
+    return `<span class="bs-equip-art">${MACHINE_ART[k] || MACHINE_ART.tractor}</span>`;
+  }
   function machineArt(name){
     const n = String(name||'');
     let k = 'tractor';
@@ -1523,7 +1567,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=17" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=18" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
