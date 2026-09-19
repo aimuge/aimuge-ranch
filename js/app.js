@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v62';
+  const APP_VERSION = 'v63';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -360,7 +360,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=62" alt="YILATE">
+          <img src="assets/logo.png?v=63" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1758,7 +1758,7 @@
         ${statCard({icon:'🔴', label:'离线/检修', value:fmt(c.devOffline)+' 台', sub:'饲料粉碎机检修 · 可回写状态', color:'#d9534f', bg:'#fdeeee'})}
         ${statCard({icon:'🔌', label:'成套装备', value:fmt(c.kit)+' 台套', sub:'6 大分类 · 农机/棚圈/无人设备', color:'#f59e0b', bg:'#fef3c7'})}
       </div>
-      ${card('设备采购接入中心 · 买完即可连接', `
+      ${card('设备采购接入中心', `
         <div class="onboard-steps">
           <div class="onboard-step"><span>1</span><div><b>扫码 / 输入编号</b><p>扫描设备二维码或输入序列号</p></div></div>
           <i>→</i>
@@ -2010,7 +2010,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=62" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=63" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
