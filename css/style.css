@@ -3056,3 +3056,32 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .topbar-right{gap:6px!important}
   .topbar{overflow:hidden}
 }
+
+
+/* ============ v61 智能装备买完即接入 ============ */
+.device-onboard-card{overflow:hidden}
+.onboard-steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px}
+.onboard-steps>i{color:#0ea5e9;font-style:normal;font-size:18px;font-weight:800}
+.onboard-step{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,rgba(14,165,233,.08),rgba(13,148,136,.04))}
+.onboard-step>span{width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#0d9488);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.onboard-step b{font-size:13px;color:#0f172a}
+.onboard-step p{font-size:11px;color:var(--muted);line-height:1.5;margin-top:2px}
+.onboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px}
+.onboard-card{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);min-width:0}
+.onboard-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;font-size:21px;background:linear-gradient(135deg,#e0f2fe,#e7f7f3);border:1px solid rgba(14,165,233,.18)}
+.onboard-copy{min-width:0;flex:1}
+.onboard-name{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:750;color:#0f172a;line-height:1.35}
+.onboard-name .pill{font-size:10px!important;padding:2px 6px!important}
+.onboard-meta{font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.onboard-proto{font-size:10.5px;color:#0d9488;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.onboard-card>.btn{flex:none}
+body[data-theme="dark"] .onboard-card,body[data-theme="dark"] .onboard-step{background:rgba(11,23,45,.9);border-color:rgba(56,189,248,.2)}
+body[data-theme="dark"] .onboard-step b,body[data-theme="dark"] .onboard-name{color:#e7f7ff}
+
+@media (max-width:700px){
+  .onboard-steps{grid-template-columns:1fr;gap:7px}
+  .onboard-steps>i{text-align:center;transform:rotate(90deg);line-height:1}
+  .onboard-grid{grid-template-columns:1fr}
+  .onboard-card{align-items:flex-start;flex-wrap:wrap}
+  .onboard-card>.btn{width:100%;margin-top:2px}
+}

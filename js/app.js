@@ -360,7 +360,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=60" alt="YILATE">
+          <img src="assets/logo.png?v=61" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1664,6 +1664,7 @@
     {name:'name', label:'设备名称', type:'text', required:true},
     {name:'cat', label:'装备分类', type:'select', options: DB.deviceCats.map(c=>({v:c.id, t:c.name}))},
     {name:'model', label:'品牌/型号', type:'text'},
+    {name:'serial', label:'设备编号/序列号', type:'text'},
     {name:'count', label:'数量', type:'number'},
     {name:'where', label:'安装位置', type:'text'},
     {name:'state', label:'运行状态', type:'select', options:[{v:'在线'},{v:'离线'},{v:'检修'}]},
@@ -1671,17 +1672,115 @@
     {name:'battery', label:'供电/电量', type:'text'},
     {name:'last', label:'最近上报', type:'text'}
   ];
+  const DEVICE_ONBOARD_PRESETS = [
+    {key:'camera', name:'监控摄像头', icon:'🎥', cat:'D1', portKind:'监控端口', brands:['海康威视','大华','宇视','天地伟业'], protocols:['ONVIF','RTSP','GB28181'], protocol:'ONVIF / RTSP / GB28181', endpoint:'rtsp://设备IP:554/Streaming/Channels/101', where:'生活区 / 饲草区 / 设备区 / 犊牛舍 / 活动区 / 牛舍内', battery:'市电 + UPS', prefixes:['CAM','HK','DH','YS']},
+    {key:'earTag', name:'耳标测温（读写器+耳标）', icon:'🏷️', cat:'D2', portKind:'耳标端口', brands:['RFID 134.2kHz','BLE 测温耳标'], protocols:['RFID 134.2kHz','BLE','TCP/IP','MQTT'], protocol:'RFID 134.2kHz + 测温 · TCP/IP / BLE', endpoint:'tcp://读写器IP:8000', where:'全场牛只', battery:'耳标电池 2-3 年', prefixes:['EB','RFID','TAG']},
+    {key:'collar', name:'北斗/GPS 定位项圈', icon:'🛰️', cat:'D2', portKind:'定位端口', brands:['北斗定位项圈','4G 定位终端'], protocols:['MQTT','4G','北斗短报文'], protocol:'北斗 / GPS · 4G · MQTT', endpoint:'mqtt://iot.example.cn:1883/ranch/collar', where:'放牧牛群 / 头牛佩戴', battery:'电池 78-92%', prefixes:['GN','BD','COL']},
+    {key:'robotDog', name:'智能巡检机器狗', icon:'🤖', cat:'D3', portKind:'机器狗端口', brands:['宇树','云深处','巡检机器人'], protocols:['HTTP API','RTSP','4G/5G'], protocol:'HTTP API + RTSP 回传 · 4G/5G / Wi-Fi', endpoint:'http://设备IP:8080/api/robot', where:'牛舍 / 活动区 / 饲草区', battery:'充电桩 / 电池', prefixes:['DOG','ROBOT']},
+    {key:'scale', name:'自动称重保定架', icon:'⚖️', cat:'D4', portKind:'称重端口', brands:['三分群保定称','自动称重分群'], protocols:['RS485','Modbus RTU','Modbus TCP'], protocol:'RS485 / Modbus RTU · 分群控制', endpoint:'modbus://设备IP:502', where:'大牛棚圈', battery:'市电', prefixes:['WG','SCALE']},
+    {key:'feeder', name:'TMR / 撒料机 / 饲喂设备', icon:'🚜', cat:'D4', portKind:'饲喂端口', brands:['TMR 拌料机','撒料机','推料机器人'], protocols:['ISOBUS','Modbus','车载称重'], protocol:'ISOBUS / Modbus / 车载称重', endpoint:'isobus://设备IP:9000', where:'饲草区 / 饲喂通道', battery:'柴油 / 市电', prefixes:['TMR','FEED']},
+    {key:'climate', name:'棚圈温控 / 门禁', icon:'🏠', cat:'D4', portKind:'棚圈控制端口', brands:['温控器','自动院墙门','环境传感器'], protocols:['Modbus','MQTT','4G 控制'], protocol:'Modbus / MQTT / 4G 控制', endpoint:'mqtt://iot.example.cn:1883/ranch/barn', where:'犊牛舍 / 大牛棚圈 / 院墙门', battery:'市电 / 太阳能', prefixes:['CL','GATE','ENV']},
+    {key:'machine', name:'农机 / 无人机作业终端', icon:'🛰️', cat:'D5', portKind:'农机端口', brands:['北斗农机终端','RTK 监测终端','无人机'], protocols:['RTK','北斗','ISOBUS','4G API'], protocol:'RTK / 北斗作业监测 · 4G API', endpoint:'https://api.example.cn/v1/machine/task', where:'草场 / 打草场', battery:'柴油 / 电池', prefixes:['AG','RTK','UAV']}
+  ];
+  function inferDevicePreset(code, selectedKey){
+    const preset = DEVICE_ONBOARD_PRESETS.find(x=>x.key===selectedKey);
+    if (preset) return preset;
+    const c = String(code||'').trim().toUpperCase();
+    return DEVICE_ONBOARD_PRESETS.find(p=>p.prefixes.some(x=>c.startsWith(x))) || null;
+  }
+  function openDeviceOnboardModal(selectedKey='', mode=''){
+    const selected = DEVICE_ONBOARD_PRESETS.find(x=>x.key===selectedKey) || null;
+    const discoveredCode = mode==='discover' ? 'AUTO-'+Date.now().toString().slice(-8) : '';
+    openModal('设备购买后接入 · 自动识别协议', [
+      {name:'preset', label:'设备类型（可自动识别）', type:'select', options:[{v:'',t:'请选择或由编号自动识别'}].concat(DEVICE_ONBOARD_PRESETS.map(p=>({v:p.key,t:p.name}))), value:selected?selected.key:''},
+      {name:'brand', label:'品牌', type:'text', value:selected?selected.brands[0]:'', placeholder:'例：海康威视 / 大华 / RFID 读写器'},
+      {name:'model', label:'型号', type:'text', value:selected?selected.protocols[0]:'', placeholder:'例：DS-2CD / AMG-TG5'},
+      {name:'serial', label:'设备编号 / 二维码内容', type:'text', value:discoveredCode, required:true, placeholder:'扫码枪扫描，或输入设备序列号'},
+      {name:'count', label:'数量', type:'number', value:selected&&selected.key==='earTag'?'1':'1'},
+      {name:'where', label:'安装位置', type:'text', value:selected?selected.where:''},
+      {name:'protocol', label:'自动识别的连接协议', type:'text', value:selected?selected.protocol:''},
+      {name:'endpoint', label:'连接地址 / 网关地址', type:'text', value:selected?selected.endpoint:'', placeholder:'例：rtsp://IP:554 / tcp://IP:8000 / mqtt://...'},
+      {name:'account', label:'账号 / 设备密钥', type:'text', placeholder:'没有可留空'}
+    ], async v=>{
+      const p = inferDevicePreset(v.serial, v.preset);
+      if (!p){ toast('暂时无法识别该设备，请选择设备类型后重试','warn'); return; }
+      const serial = String(v.serial||'').trim() || (p.key.toUpperCase()+'-'+uid('DEV').slice(-6));
+      if ((DB.deviceList||[]).some(d=>d.serial && d.serial===serial)){ toast('该设备编号已经在系统中','warn'); return; }
+      const payload = {
+        adapterKey:p.key, serial, name:p.name, cat:p.cat,
+        model:(v.brand||p.brands[0])+' '+(v.model||''), count:+v.count||1,
+        where:v.where||p.where, protocol:v.protocol||p.protocol,
+        endpoint:v.endpoint||p.endpoint, account:v.account||'—'
+      };
+      let cloudResult = null;
+      if (/^https?:/.test(location.protocol)){
+        try {
+          const r = await fetch('/api/devices/register', {
+            method:'POST', credentials:'include',
+            headers:{'content-type':'application/json','accept':'application/json'},
+            body:JSON.stringify(payload)
+          });
+          if (r.ok) cloudResult = await r.json();
+          else if ([400,409].includes(r.status)){
+            const e = await r.json().catch(()=>({}));
+            toast(e.error||'设备接入失败','warn'); return;
+          }
+        } catch(e){}
+      }
+      DB.deviceList = DB.deviceList || [];
+      DB.ports = DB.ports || [];
+      const device = cloudResult?.device || {
+        id:uid('DV'), name:p.name, cat:p.cat, model:payload.model, serial,
+        count:payload.count, where:payload.where, state:'在线', protocol:payload.protocol,
+        battery:p.battery, last:'刚刚'
+      };
+      const port = cloudResult?.port || {
+        id:uid('PT'), kind:p.portKind, name:p.name+' · '+serial,
+        protocol:payload.protocol, endpoint:payload.endpoint,
+        account:payload.account||'—', status:'已连接',
+        last:new Date().toLocaleString('zh-CN',{hour12:false})
+      };
+      DB.deviceList.push(device);
+      DB.ports.push(port);
+      saveDB();
+      toast(cloudResult ? `✅ ${p.name} 已接入云端并开始上报` : `✅ ${p.name} 已在当前系统接入`);
+      render(current);
+    });
+  }
   function pageDevices() {
     const c = compute();
     return `
     <div class="page">
-      ${pageHeader('智慧装备 · 全系统一张网', 'AI 识别 · 电子标识 · 无人设备 · 农机机械 · 棚圈设施 · 网关供电，全部接入一个系统', addBtn('新增装备', 'deviceList'))}
+      ${pageHeader('智慧装备 · 全系统一张网', '买完即可接入：扫码/编号 → 自动识别协议 → 绑定端口 → 数据进入系统', `<button class="btn solid sm" data-device-scan>＋ 扫码 / 编号接入</button><button class="btn ghost sm" data-device-discover>⌁ 自动发现设备</button>`)}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'📡', label:'联网终端', value:fmt(c.devTotal)+' 台', sub:'含耳标/项圈/终端', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'🟢', label:'设备在线率', value:c.devRate+'%', sub:'在线 '+fmt(c.devOnline)+' 台', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🔴', label:'离线/检修', value:fmt(c.devOffline)+' 台', sub:'饲料粉碎机检修 · 可回写状态', color:'#d9534f', bg:'#fdeeee'})}
         ${statCard({icon:'🔌', label:'成套装备', value:fmt(c.kit)+' 台套', sub:'6 大分类 · 农机/棚圈/无人设备', color:'#f59e0b', bg:'#fef3c7'})}
       </div>
+      ${card('设备采购接入中心 · 买完即可连接', `
+        <div class="onboard-steps">
+          <div class="onboard-step"><span>1</span><div><b>扫码 / 输入编号</b><p>扫描设备二维码或输入序列号</p></div></div>
+          <i>→</i>
+          <div class="onboard-step"><span>2</span><div><b>自动识别协议</b><p>识别品牌、类型、ONVIF / RTSP / MQTT / Modbus 等端口</p></div></div>
+          <i>→</i>
+          <div class="onboard-step"><span>3</span><div><b>一键接入系统</b><p>绑定后自动进入装备台账、监控、大屏和手机端</p></div></div>
+        </div>
+        <div class="onboard-grid">
+          ${DEVICE_ONBOARD_PRESETS.map(p=>`
+            <div class="onboard-card">
+              <div class="onboard-icon">${p.icon}</div>
+              <div class="onboard-copy">
+                <div class="onboard-name">${p.name}${pill('已适配','ok')}</div>
+                <div class="onboard-meta">${p.brands.slice(0,2).join(' · ')}</div>
+                <div class="onboard-proto">${p.protocols.join(' / ')}</div>
+              </div>
+              <button class="btn solid sm" data-onboard="${p.key}">一键接入</button>
+            </div>`).join('')}
+        </div>
+        <div class="card-actions"><button class="btn ghost sm" data-device-scan>📷 扫码 / 输入设备编号</button><button class="btn ghost sm" data-device-discover>🔄 自动发现局域网设备</button></div>
+        <div class="card-note">🔌 监控、耳标、项圈、机器狗、称重、饲喂、棚圈温控和农机终端均适配标准协议。购买符合协议的设备后，录入编号与连接地址即可接入，后续可继续在「后台管理 → 端口连接配置」修改真实协议地址。</div>
+      `, 'device-onboard-card')}
       ${card('数据自动采集 · 智能硬件自动上报链路', `
         <div class="iot-pipe">
           ${[['📡','感知层','传感器/摄像头/项圈/耳标'],['📶','传输层','LoRa · 4G · 北斗短报文'],['🧠','平台层','AI 解析 · 清洗 · 规则引擎'],['📺','应用层','大屏 · 手机 · 预警中心']].map((x,i)=>`
@@ -1743,20 +1842,32 @@
             </div>`;
           }).join('')}
         </div>`)}
-      ${card('装备台账（可新增/编辑/删除）', tableHtml(['设备名称','分类','品牌/型号','数量','位置','状态','对接协议','供电','操作'],
+      ${card('装备台账（可新增/编辑/删除）', tableHtml(['设备名称','分类','品牌/型号','设备编号','数量','位置','状态','对接协议','供电','操作'],
         DB.deviceList.map(d=>[
           `<span class="dev-cell">${devIcon(d.name)}<b>${d.name}</b></span>`,
           `<span class="cat-tag" style="--cc:${(DB.deviceCats.find(x=>x.id===d.cat)||{}).color||'#8a9a5b'}">${(DB.deviceCats.find(x=>x.id===d.cat)||{}).name||d.cat}</span>`,
-          `<code>${d.model}</code>`, fmt(d.count)+' 台', d.where,
+          `<code>${d.model}</code>`, `<code>${d.serial||'待录入'}</code>`, fmt(d.count)+' 台', d.where,
           pill(d.state, d.state==='在线'?'ok':d.state==='离线'?'danger':'warn'),
           `<span class="proto-mini">${d.protocol}</span>`, d.battery,
-          editBtn('deviceList', d.id) + delBtn('deviceList', d.id)
+          `<button class="btn ghost sm" data-device-connect="${d.id}">${d.state==='在线'?'查看链路':'连接'}</button>` + editBtn('deviceList', d.id) + delBtn('deviceList', d.id)
         ])))}
     </div>`;
   }
   function afterDevices(){
     bindDel($('#content'));
     bindEdit($('#content'), { 'deviceList': { title:'编辑装备', fields: deviceFields } });
+    $('#content').querySelectorAll('[data-onboard]').forEach(b=>b.addEventListener('click', ()=>openDeviceOnboardModal(b.dataset.onboard)));
+    $('#content').querySelectorAll('[data-device-scan]').forEach(b=>b.addEventListener('click', ()=>openDeviceOnboardModal('')));
+    $('#content').querySelectorAll('[data-device-discover]').forEach(b=>b.addEventListener('click', ()=>{
+      toast('正在扫描同一局域网内的设备…');
+      setTimeout(()=>openDeviceOnboardModal('camera','discover'),700);
+    }));
+    $('#content').querySelectorAll('[data-device-connect]').forEach(b=>b.addEventListener('click', ()=>{
+      const d=(DB.deviceList||[]).find(x=>x.id===b.dataset.deviceConnect); if(!d)return;
+      updateRecord('deviceList', d.id, { state:'在线', last:'刚刚' });
+      toast(`${d.name} 数据链路已连接，正在实时上报`);
+      render(current);
+    }));
     $('#content').querySelectorAll('[data-add="deviceList"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('新增装备（端口对接）', deviceFields, v=>{
         addRecord('deviceList', {...v, count:+v.count||1});
@@ -1899,7 +2010,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=60" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=61" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -2474,6 +2585,7 @@
                   </div>
                 </div>`).join('')}
             </div>
+            <div class="card-actions"><button class="btn solid sm" data-device-scan>＋ 添加设备并自动识别</button></div>
             <div class="card-note">🔌 直接填写设备的连接协议与地址（如监控 RTSP 地址、耳标读写器 TCP 地址、农机 ISOBUS/Modbus 地址），点「连接」即完成端口对接；正式接入时替换为设备真实地址即可。</div>`)}
           ${card('牧场信息', `
             <div class="info-table">
@@ -2485,6 +2597,7 @@
   }
   function afterAdmin(){
     // 端口连接配置
+    $('#content').querySelectorAll('[data-device-scan]').forEach(b=>b.addEventListener('click', ()=>openDeviceOnboardModal('')));
     $('#content').querySelectorAll('[data-port-connect]').forEach(b=>b.addEventListener('click', ()=>{
       const p = (DB.ports||[]).find(x=>x.id===b.dataset.portConnect); if(!p) return;
       const now = new Date().toLocaleString('zh-CN',{hour12:false});
