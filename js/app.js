@@ -11,6 +11,91 @@
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
   const monthName = m => ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'][m-1];
 
+  /* ================= 真实天气服务（Open-Meteo · 牧场坐标） ================= */
+  let weatherLoading = false;
+  function weatherCodeInfo(code){
+    code = Number(code);
+    if (code === 0) return { icon:'☀️', text:'晴' };
+    if (code === 1) return { icon:'🌤️', text:'大部晴朗' };
+    if (code === 2) return { icon:'⛅', text:'多云' };
+    if (code === 3) return { icon:'☁️', text:'阴天' };
+    if (code === 45 || code === 48) return { icon:'🌫️', text:'雾' };
+    if (code >= 51 && code <= 57) return { icon:'🌦️', text:'毛毛雨' };
+    if (code >= 61 && code <= 67) return { icon:'🌧️', text:'降雨' };
+    if (code >= 71 && code <= 77) return { icon:'🌨️', text:'降雪' };
+    if (code >= 80 && code <= 82) return { icon:'🌦️', text:'阵雨' };
+    if (code >= 85 && code <= 86) return { icon:'❄️', text:'阵雪' };
+    if (code >= 95 && code <= 99) return { icon:'⛈️', text:'雷雨' };
+    return { icon:'☁️', text:'多云' };
+  }
+  function windDirection(deg){
+    const dirs = ['北风','东北风','东风','东南风','南风','西南风','西风','西北风'];
+    return dirs[Math.round(Number(deg || 0) / 45) % 8];
+  }
+  function renderWeatherPanel(){
+    const w = DB.weather;
+    const set = (id, value)=>{ const el = document.getElementById(id); if (el) el.textContent = value; };
+    set('bsWeatherIcon', w.icon);
+    set('bsWeatherTemp', `${Math.round(w.temp)}℃`);
+    set('bsWeatherInfo', `${w.text} · ${w.wind} · ${w.snow} · 体感 ${Math.round(w.feels)}℃`);
+    set('bsWeatherSource', `${w.source || 'Open-Meteo'} · ${w.updated || '本地备份'}`);
+    const fc = document.getElementById('bsWeatherForecast');
+    if (fc) fc.innerHTML = (w.forecast || []).slice(0,3).map(f=>`<div><span>${f.day}</span><b>${f.icon}${Math.round(f.high)}℃</b><i>${Math.round(f.low)}℃</i></div>`).join('');
+  }
+  async function refreshRealWeather(){
+    if (weatherLoading) return;
+    weatherLoading = true;
+    const lat = DB.meta.lat || 48.02, lon = DB.meta.lon || 118.08;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=Asia%2FShanghai&forecast_days=4`;
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 9000);
+    try {
+      const res = await fetch(url, { signal: controller.signal, cache:'no-store' });
+      if (!res.ok) throw new Error('weather http ' + res.status);
+      const j = await res.json();
+      const cur = j.current || {}, daily = j.daily || {};
+      const info = weatherCodeInfo(cur.weather_code);
+      const days = ['明天','后天','大后天'];
+      const forecast = (daily.time || []).slice(1,4).map((t,i)=>{
+        const di = weatherCodeInfo((daily.weather_code || [])[i+1]);
+        return { day:days[i] || t, icon:di.icon, high:(daily.temperature_2m_max || [])[i+1], low:(daily.temperature_2m_min || [])[i+1] };
+      });
+      const precip = Math.round((daily.precipitation_probability_max || [0])[0] || 0);
+      const windSpeed = Math.round(cur.wind_speed_10m || 0);
+      const low = Math.round((daily.temperature_2m_min || [cur.temperature_2m])[0]);
+      let alert = '天气整体平稳，请关注昼夜温差和牧场实时预警。';
+      if (low <= 0) alert = `低温提示：今夜最低 ${low}℃，犊牛舍注意保温、饮水防止结冰。`;
+      else if (precip >= 60) alert = `降水概率 ${precip}%，请及时覆盖饲草区并检查棚圈排水。`;
+      else if (windSpeed >= 35) alert = `风力较强，建议暂停无人机作业并加固棚圈设施。`;
+      DB.weather = Object.assign({}, DB.weather, {
+        temp:Math.round(cur.temperature_2m),
+        feels:Math.round(cur.apparent_temperature),
+        icon:info.icon,
+        text:info.text,
+        wind:`${windDirection(cur.wind_direction_10m)} ${windSpeed}km/h`,
+        snow:`降水概率 ${precip}%`,
+        low,
+        high:Math.round((daily.temperature_2m_max || [cur.temperature_2m])[0]),
+        humidity:Math.round(cur.relative_humidity_2m || 0),
+        pressure:Math.round(cur.surface_pressure || 0),
+        forecast,
+        alert,
+        source:'Open-Meteo 实时',
+        updated:new Date().toLocaleString('zh-CN',{hour12:false,timeZone:'Asia/Shanghai'})
+      });
+      saveDB();
+      renderWeatherPanel();
+      initWeatherChip();
+    } catch(err){
+      console.warn('实时天气获取失败，使用本地备份数据', err);
+      const el = document.getElementById('bsWeatherSource');
+      if (el) el.textContent = '本地备份 · 网络不可用';
+    } finally {
+      clearTimeout(timer);
+      weatherLoading = false;
+    }
+  }
+
   /* ================= IoT 实时采集引擎（模拟智能硬件自动上报） ================= */
   const live = { on:true, lastSync:'—', t:DB.weather.temp, shed:24.3, online:0, ndvi:0.74, hum:58, visitors:48 };
   let iotTimer = null;
@@ -215,7 +300,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=19" alt="YILATE">
+          <img src="assets/logo.png?v=20" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -320,12 +405,13 @@
             </div>
           </section>
           <section class="bs-panel bs-weather">
-            <div class="bsp-title">🌦️ ${w.place} <em>WEATHER</em></div>
-            <div class="bs-w-main"><span>${w.icon}</span><b>${w.temp}℃</b></div>
-            <div class="bs-w-info">${w.text} · ${w.wind} · ${w.snow}</div>
-            <div class="bs-w-fc">
+            <div class="bsp-title">🌦️ ${w.place} <em>LIVE WEATHER</em><button class="bs-weather-refresh" id="bsWeatherRefresh" title="刷新真实天气">↻</button></div>
+            <div class="bs-w-main"><span id="bsWeatherIcon">${w.icon}</span><b id="bsWeatherTemp">${w.temp}℃</b></div>
+            <div class="bs-w-info" id="bsWeatherInfo">${w.text} · ${w.wind} · ${w.snow}</div>
+            <div class="bs-w-fc" id="bsWeatherForecast">
               ${(w.forecast||[]).map(f=>`<div><span>${f.day}</span><b>${f.icon}${f.high}℃</b><i>${f.low}℃</i></div>`).join('')}
             </div>
+            <div class="bs-w-source" id="bsWeatherSource">${w.source||'Open-Meteo'} · ${w.updated||'本地备份'}</div>
           </section>
         </div>
       </div>
@@ -414,6 +500,10 @@
   function afterBigscreen(){
     /* 数字计数 */
     countUp(document.querySelector('.bsp-big'), compute().totalAnimals, 1400);
+    renderWeatherPanel();
+    refreshRealWeather();
+    const wRefresh = $('#bsWeatherRefresh');
+    if (wRefresh) wRefresh.addEventListener('click', ()=>{ toast('正在获取牧场实时天气…'); refreshRealWeather(); });
 
     /* ① 牛群结构 */
     Charts.donut($('#bsStock'), { size:112, thickness:14, centerValue:fmt(compute().totalAnimals), centerTitle:'存栏',
@@ -1568,7 +1658,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=19" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=20" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

@@ -4,7 +4,7 @@ const DEFAULT_DATA = {
     name:'伊拉特智慧牧场', nameEn:'YILATE Smart Ranch',
     owner:'伊拉特',
     location:'内蒙古 · 呼伦贝尔市 · 新巴尔虎左旗 · 吉布胡郎图苏木呼伦嘎查',
-    gps:'约 48.0°N, 118.1°E（场部）',
+    gps:'48.02°N, 118.08°E（场部）', lat:48.02, lon:118.08,
     area:13290, areaSelf:3850, areaRented:9440, grazingArea:11790, hayArea:1500,
     founded:2016, smartSince:2026,
     climate:'寒温带大陆性季风气候 · 极端低温 -45℃ · 积雪期约 140 天',
@@ -22,14 +22,15 @@ const DEFAULT_DATA = {
   },
 
   weather: {
-    place:'新巴尔虎左旗 · 吉布胡郎图苏木', temp:-28, feels:-36, icon:'❄️', text:'晴冷 · 微风',
-    wind:'西北风 4-5 级', snow:'积雪 18cm', low:-38, high:-21,
+    place:'新巴尔虎左旗 · 吉布胡郎图苏木', temp:13, feels:9.9, icon:'☁️', text:'多云 · 北风',
+    wind:'北风 18km/h', snow:'降水概率 74%', low:7.5, high:17.2,
     forecast:[
-      { day:'今天', icon:'❄️', high:-21, low:-38 },
-      { day:'明天', icon:'🌤️', high:-19, low:-34 },
-      { day:'后天', icon:'🌨️', high:-24, low:-39 }
+      { day:'明天', icon:'🌦️', high:18.9, low:3.2 },
+      { day:'后天', icon:'☁️', high:15.6, low:1.1 },
+      { day:'大后天', icon:'⛅', high:19.8, low:7.6 }
     ],
-    alert:'寒潮预警：犊牛舍加温至 22℃，饮水保持不冻'
+    alert:'今日有阵雨可能，注意饲草防潮；夜间温差较大，犊牛舍保持干燥保温。',
+    source:'Open-Meteo', updated:'2026-09-19 09:30'
   },
 
   nav: [
@@ -405,7 +406,7 @@ const DEFAULT_DATA = {
 };
 
 /* ============ 持久化与通用 CRUD（支持 a.b 路径） ============ */
-const KEY = 'yilate-ranch-v19';
+const KEY = 'yilate-ranch-v20';
 let DB = loadDB();
 
 function loadDB(){

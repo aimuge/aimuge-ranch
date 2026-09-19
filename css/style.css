@@ -2103,3 +2103,59 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 @media (prefers-reduced-motion: reduce){
   .bs-rail-track,.bs-rail-track span,.bs-data-rail::before,.bs-v8 .dh-svg,.bs-v8 .dh-avatar::before,.bs-v8 .dh-avatar::after{animation:none}
 }
+
+/* ============ v20 大屏视觉强化 + 实时天气 ============ */
+.bs-v8::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(115deg,transparent 0 46%,rgba(56,189,248,.045) 47%,transparent 48%),
+    radial-gradient(circle at 50% 112%,rgba(34,211,238,.16),transparent 42%);
+  mix-blend-mode:screen;
+}
+.bs-v8 .bs-body,.bs-v8 .bs-kpistrip,.bs-v8 .bs-ticker,.bs-v8 .bs-bottom{position:relative;z-index:3}
+.bs-v8 .bs-col > .bs-panel{--acc:#22d3ee;border-radius:15px;border-color:rgba(56,189,248,.42);transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}
+.bs-v8 .bs-col > .bs-panel:nth-child(2){--acc:#818cf8}
+.bs-v8 .bs-col > .bs-panel:nth-child(3){--acc:#34d399}
+.bs-v8 .bs-col > .bs-panel:nth-child(4){--acc:#f0b429}
+.bs-v8 .bs-col > .bs-panel:hover{transform:translateY(-2px);border-color:var(--acc);box-shadow:0 0 0 1px color-mix(in srgb,var(--acc) 24%,transparent),0 22px 48px -28px color-mix(in srgb,var(--acc) 55%,transparent),inset 0 0 34px color-mix(in srgb,var(--acc) 10%,transparent)}
+.bs-v8 .bs-panel::before{background:linear-gradient(90deg,transparent,var(--acc,#22d3ee),transparent);height:2px;box-shadow:0 0 14px var(--acc,#22d3ee)}
+.bs-v8 .bs-panel::after{opacity:.68}
+.bs-v8 .bsp-title{font-size:12px;font-weight:800;margin-bottom:7px}
+.bs-v8 .bs-cam{border-color:rgba(56,189,248,.34);box-shadow:inset 0 0 24px rgba(34,211,238,.08),0 8px 18px -18px #000}
+.bs-v8 .bs-cam:hover{border-color:#5eead4;background:linear-gradient(140deg,rgba(34,76,118,.96),rgba(10,28,52,.98))}
+.bs-v8 .bs-kpi:nth-child(1){--kacc:#5eead4}.bs-v8 .bs-kpi:nth-child(2){--kacc:#34d399}.bs-v8 .bs-kpi:nth-child(3){--kacc:#7dd3fc}.bs-v8 .bs-kpi:nth-child(4){--kacc:#a78bfa}.bs-v8 .bs-kpi:nth-child(5){--kacc:#f0b429}
+.bs-v8 .bs-kpi::after{background:linear-gradient(90deg,transparent,var(--kacc,#22d3ee),transparent);height:2px;box-shadow:0 0 13px var(--kacc,#22d3ee)}
+.bs-v8 .bs-kpi::before{background:linear-gradient(180deg,var(--kacc,#5eead4),#2563eb,transparent)}
+.bs-v8 .bs-kpi b{font-size:20px;letter-spacing:.2px}
+
+/* 天气卡片：数据来自牧场坐标实时接口 */
+.bs-weather{position:relative;overflow:hidden}
+.bs-weather::before{background:linear-gradient(90deg,transparent,#38bdf8,transparent)!important}
+.bs-weather .bsp-title{display:flex;align-items:center;gap:5px}
+.bs-weather-refresh{margin-left:auto;border:1px solid rgba(94,234,212,.35);background:rgba(94,234,212,.10);color:#5eead4;border-radius:6px;width:22px;height:20px;line-height:1;cursor:pointer;font-size:13px;transition:.2s}
+.bs-weather-refresh:hover{background:rgba(94,234,212,.22);transform:rotate(90deg);box-shadow:0 0 16px rgba(94,234,212,.32)}
+.bs-w-main{display:flex;align-items:center;gap:9px}
+.bs-w-main span{filter:drop-shadow(0 0 12px rgba(125,211,252,.42));animation:weatherIconFloat 4s ease-in-out infinite}
+.bs-w-main b{font-size:30px;letter-spacing:.4px;background:linear-gradient(100deg,#eaf7ff,#7dd3fc,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bs-w-info{text-shadow:0 0 12px rgba(56,189,248,.14)}
+.bs-w-source{margin-top:6px;font-size:8px;letter-spacing:.4px;color:#6487ad;text-align:right}
+@keyframes weatherIconFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.04)}}
+
+@media (max-width:1200px){
+  .bs-v8 .bs-kpi b{font-size:17px}
+  .bs-w-main b{font-size:25px}
+}
+@media (prefers-reduced-motion: reduce){
+  .bs-w-main span{animation:none}
+}
+
+/* v20 响应式修复：手机端恢复单列，避免天气和图表卡过窄 */
+@media (max-width:1200px){
+  .bs-v8 .bs-body{grid-template-columns:1fr 1fr}
+  .bs-v8 .bs-mid{grid-column:1/-1;order:-1}
+}
+@media (max-width:700px){
+  .bs-v8 .bs-body{grid-template-columns:1fr}
+  .bs-v8 .bs-col{min-width:0}
+  .bs-v8 .bs-weather{min-width:0}
+}
