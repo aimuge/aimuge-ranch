@@ -1,0 +1,278 @@
+{"kind":"deck","id":"pr/92yb7l","name":"Deck"}
+{"kind":"layout","layoutId":"33766ded-59df-4329-a669-2af9b7e2a588","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"4c1ca613-e49b-4d45-8996-60014861b6f3","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/6anmm2","slide":1,"title":"艾牧戈智慧牧场","textShapes":4}
+{"kind":"textbox","id":"sh/knuds3u1","slide":1,"text":"艾牧戈智慧牧场\n一体化管理平台","textPreview":"艾牧戈智慧牧场 | 一体化管理平台","textChars":15,"textLines":2,"bbox":[72,250,1136,96]}
+{"kind":"textbox","id":"sh/5o3ul8vm","slide":1,"text":"养殖 · 草场 · 饲草 · 屠宰 · 防疫 · 装备 · 产品 · 文旅 · 智能体","textPreview":"养殖 · 草场 · 饲草 · 屠宰 · 防疫 · 装备 · 产品 · 文旅 · 智能体","textChars":43,"textLines":1,"bbox":[72,388,1136,40]}
+{"kind":"shape","id":"sh/6pcvudc7","slide":1,"bbox":[72,470,180,6]}
+{"kind":"textbox","id":"sh/7alcnids","slide":1,"text":"新一代家庭牧场数字化解决方案 ｜ 呼伦贝尔 · 陈巴尔虎旗","textPreview":"新一代家庭牧场数字化解决方案 ｜ 呼伦贝尔 · 陈巴尔虎旗","textChars":29,"textLines":1,"bbox":[72,500,1136,32]}
+{"kind":"textbox","id":"sh/sbedwnud","slide":1,"text":"扫码体验  https://aimuge.github.io/aimuge-ranch/","textPreview":"扫码体验  https://aimuge.github.io/aimuge-ranch/","textChars":44,"textLines":1,"bbox":[72,630,1136,28]}
+{"kind":"image","id":"im/idg7694j","slide":1,"name":"","geometry":"roundRect","bbox":[72,64,120,64]}
+{"kind":"notes","id":"nt/6anmm2","slide":1,"text":"开场 30 秒：这是一套从内蒙古呼伦贝尔传统家庭牧场里长出来的数字化管理系统。\n一句话定位：养殖、草场、装备、屠宰、防疫、产品、文旅、智能体，全部在一个系统里。\n页脚网址是永久地址，电脑关机也能访问，可以现场扫码体验。"}
+{"kind":"slide","id":"sl/42vypg","slide":2,"title":"背景与挑战","textShapes":12}
+{"kind":"shape","id":"sh/gz2hcja1","slide":2,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/vyt03etw","slide":2,"text":"背景与挑战","textPreview":"背景与挑战","textChars":5,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/udkzatsb","slide":2,"text":"传统畜牧业的账，靠本子和脑子，越来越记不过来","textPreview":"传统畜牧业的账，靠本子和脑子，越来越记不过来","textChars":22,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/54vi98by","slide":2,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/43mhg3ad","slide":2,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/32t07yts","slide":2,"text":"2/13","textPreview":"2/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"shape","id":"sh/i1kzets7","slide":2,"bbox":[72,210,520,120]}
+{"kind":"shape","id":"sh/d8vid8ru","slide":2,"bbox":[92,228,10,10]}
+{"kind":"textbox","id":"sh/s7mhk3a9","slide":2,"text":"牲畜数据靠记忆","textPreview":"牲畜数据靠记忆","textChars":7,"textLines":1,"bbox":[116,218,460,30]}
+{"kind":"textbox","id":"sh/ax8nqdw3","slide":2,"text":"存栏、产羔、防疫、用药，都靠脑子记，接羔季一忙就乱","textPreview":"存栏、产羔、防疫、用药，都靠脑子记，接羔季一忙就乱","textChars":25,"textLines":1,"bbox":[116,252,460,60]}
+{"kind":"shape","id":"sh/bihojido","slide":2,"bbox":[72,346,520,120]}
+{"kind":"shape","id":"sh/cjq5sne9","slide":2,"bbox":[92,364,10,10]}
+{"kind":"textbox","id":"sh/xkz6lsvu","slide":2,"text":"草场饲草靠估算","textPreview":"草场饲草靠估算","textChars":7,"textLines":1,"bbox":[116,354,460,30]}
+{"kind":"textbox","id":"sh/yl8nuxwz","slide":2,"text":"载畜量、冬储饲草、轮牧计划没有底，白灾一来就抓瞎","textPreview":"载畜量、冬储饲草、轮牧计划没有底，白灾一来就抓瞎","textChars":24,"textLines":1,"bbox":[116,388,460,60]}
+{"kind":"shape","id":"sh/zm1on2dk","slide":2,"bbox":[72,482,520,120]}
+{"kind":"shape","id":"sh/kna5w7e5","slide":2,"bbox":[92,500,10,10]}
+{"kind":"textbox","id":"sh/loj6psvq","slide":2,"text":"出栏检疫靠跑腿","textPreview":"出栏检疫靠跑腿","textChars":7,"textLines":1,"bbox":[116,490,460,30]}
+{"kind":"textbox","id":"sh/eponitwv","slide":2,"text":"防疫上报、检疫出证、屠宰备案，来回跑腿、反复填表","textPreview":"防疫上报、检疫出证、屠宰备案，来回跑腿、反复填表","textChars":24,"textLines":1,"bbox":[116,524,460,60]}
+{"kind":"shape","id":"sh/fqxobydg","slide":2,"bbox":[640,210,568,380]}
+{"kind":"textbox","id":"sh/jitc3apw","slide":2,"text":"呼伦贝尔的冬天，\n比别处更难","textPreview":"呼伦贝尔的冬天， | 比别处更难","textChars":14,"textLines":2,"bbox":[680,240,500,90]}
+{"kind":"textbox","id":"sh/ih0bu58b","slide":2,"text":"冬季最低 -42℃，接羔、补饲、防寒、白灾预警、冰雪牧游……\n\n寒冷地区经营，更需要一个“看得见、算得清、连得上”的系统。","textPreview":"冬季最低 -42℃，接羔、补饲、防寒、白灾预警、冰雪牧游…… |  | 寒冷地区经营，更需要一个“看得见、算得清、连得上”的系统。","textChars":61,"textLines":3,"bbox":[680,360,500,200]}
+{"kind":"notes","id":"nt/42vypg","slide":2,"text":"先讲问题：传统家庭牧场最缺的不是苦干，而是‘数’——数据记不住、算不清、连不上。\n呼伦贝尔寒冷地区叠加了白灾、接羔、补饲压力，痛点更集中。\n结尾落到：需要一套系统把生产全流程管起来。"}
+{"kind":"slide","id":"sl/c28j24","slide":3,"title":"典型应用案例","textShapes":14}
+{"kind":"shape","id":"sh/x872dc7a","slide":3,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/alwjixoj","slide":3,"text":"典型应用案例","textPreview":"典型应用案例","textChars":6,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/bmp0b2p4","slide":3,"text":"艾牧戈家庭牧场：一个小牧场的完整样板","textPreview":"艾牧戈家庭牧场：一个小牧场的完整样板","textChars":18,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/kby1o76l","slide":3,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/lc72hc76","slide":3,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/y9gjmhov","slide":3,"text":"3/13","textPreview":"3/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"textbox","id":"sh/japkf2pg","slide":3,"text":"内蒙古 · 呼伦贝尔市 · 陈巴尔虎旗 · 呼和诺尔草原","textPreview":"内蒙古 · 呼伦贝尔市 · 陈巴尔虎旗 · 呼和诺尔草原","textChars":28,"textLines":1,"bbox":[72,210,560,60]}
+{"kind":"shape","id":"sh/0fe1cnqh","slide":3,"bbox":[72,290,270,150]}
+{"kind":"textbox","id":"sh/1gni5s72","slide":3,"text":"30,000 亩","textPreview":"30,000 亩","textChars":8,"textLines":1,"bbox":[96,314,220,44]}
+{"kind":"textbox","id":"sh/dobilsfe","slide":3,"text":"草场（放牧 2.2 万 / 打草 0.8 万）","textPreview":"草场（放牧 2.2 万 / 打草 0.8 万）","textChars":23,"textLines":1,"bbox":[96,366,222,60]}
+{"kind":"shape","id":"sh/cn21sny9","slide":3,"bbox":[362,290,270,150]}
+{"kind":"textbox","id":"sh/bmt0jixo","slide":3,"text":"10,232 头只","textPreview":"10,232 头只","textChars":9,"textLines":1,"bbox":[386,314,220,44]}
+{"kind":"textbox","id":"sh/qlkjqdg3","slide":3,"text":"存栏：牛 · 羊 · 马 · 双峰驼","textPreview":"存栏：牛 · 羊 · 马 · 双峰驼","textChars":18,"textLines":1,"bbox":[386,366,222,60]}
+{"kind":"shape","id":"sh/lcvipsfq","slide":3,"bbox":[652,290,270,150]}
+{"kind":"textbox","id":"sh/0bm1w7y5","slide":3,"text":"11,352 台","textPreview":"11,352 台","textChars":8,"textLines":1,"bbox":[676,314,220,44]}
+{"kind":"textbox","id":"sh/zad0n2xk","slide":3,"text":"联网智能终端 · 20 个功能模块","textPreview":"联网智能终端 · 20 个功能模块","textChars":17,"textLines":1,"bbox":[676,366,222,60]}
+{"kind":"shape","id":"sh/y9kjuxgz","slide":3,"bbox":[942,290,270,150]}
+{"kind":"textbox","id":"sh/9gv2tcfm","slide":3,"text":"97.6%","textPreview":"97.6%","textChars":5,"textLines":1,"bbox":[966,314,220,44]}
+{"kind":"textbox","id":"sh/8fm107yh","slide":3,"text":"本年度繁殖成活率","textPreview":"本年度繁殖成活率","textChars":8,"textLines":1,"bbox":[966,366,222,60]}
+{"kind":"shape","id":"sh/sjulwbmd","slide":3,"bbox":[72,480,1136,150]}
+{"kind":"textbox","id":"sh/tk32pgny","slide":3,"text":"经营模式：四季轮牧 + 打草储备 + 暖棚越冬 + 牧户文旅\n\n智慧化路径：2020 年接入物联网，2026 年建成“养殖·草场·装备·防疫·屠宰·产品·文旅”一体化平台","textPreview":"经营模式：四季轮牧 + 打草储备 + 暖棚越冬 + 牧户文旅 |  | 智慧化路径：2020 年接入物联网，2026 年建成“养殖·草场·装备·防疫·屠宰·产品·文旅”一体化平台","textChars":85,"textLines":3,"bbox":[100,500,1080,110]}
+{"kind":"notes","id":"nt/c28j24","slide":3,"text":"用真实案例建立可信度：这是系统背后的样板牧场。\n四个数字现场可展开：草场、存栏、设备、成活率。\n强调经营模式闭环 + 智慧化时间线。"}
+{"kind":"slide","id":"sl/sm01a7","slide":4,"title":"平台总览","textShapes":26}
+{"kind":"shape","id":"sh/ru543qpw","slide":4,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/sve5cvqh","slide":4,"text":"平台总览","textPreview":"平台总览","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/twnm5072","slide":4,"text":"一台手机，管住牧场的所有事","textPreview":"一台手机，管住牧场的所有事","textChars":13,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/exwne58n","slide":4,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/fi547ap8","slide":4,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/gje5gfqt","slide":4,"text":"4/13","textPreview":"4/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"textbox","id":"sh/1k7m9k7e","slide":4,"text":"20 大功能模块，覆盖牧场生产、经营、监管、文旅全场景","textPreview":"20 大功能模块，覆盖牧场生产、经营、监管、文旅全场景","textChars":27,"textLines":1,"bbox":[72,210,540,70]}
+{"kind":"shape","id":"sh/u1c3218j","slide":4,"bbox":[72,300,170,44]}
+{"kind":"textbox","id":"sh/vml4v6p4","slide":4,"text":"数据大屏","textPreview":"数据大屏","textChars":4,"textLines":1,"bbox":[72,310,170,24]}
+{"kind":"shape","id":"sh/nyporq9g","slide":4,"bbox":[256,300,170,44]}
+{"kind":"textbox","id":"sh/mxgnylsv","slide":4,"text":"数据总览","textPreview":"数据总览","textChars":4,"textLines":1,"bbox":[256,310,170,24]}
+{"kind":"shape","id":"sh/9kr6t0r6","slide":4,"bbox":[440,300,170,44]}
+{"kind":"textbox","id":"sh/ozy50val","slide":4,"text":"四季循环","textPreview":"四季循环","textChars":4,"textLines":1,"bbox":[440,310,170,24]}
+{"kind":"shape","id":"sh/zupon694","slide":4,"bbox":[624,300,170,44]}
+{"kind":"textbox","id":"sh/etgnu1sj","slide":4,"text":"养殖管理","textPreview":"养殖管理","textChars":4,"textLines":1,"bbox":[624,310,170,24]}
+{"kind":"shape","id":"sh/1w76pgra","slide":4,"bbox":[808,300,170,44]}
+{"kind":"textbox","id":"sh/0vy5wbap","slide":4,"text":"草场分类","textPreview":"草场分类","textChars":4,"textLines":1,"bbox":[808,310,170,24]}
+{"kind":"shape","id":"sh/rq54j6t8","slide":4,"bbox":[72,358,170,44]}
+{"kind":"textbox","id":"sh/qpwnq1sn","slide":4,"text":"饲草管理","textPreview":"饲草管理","textChars":4,"textLines":1,"bbox":[72,368,170,24]}
+{"kind":"shape","id":"sh/u1w721cf","slide":4,"bbox":[256,358,170,44]}
+{"kind":"textbox","id":"sh/vm5ob6d0","slide":4,"text":"屠宰加工","textPreview":"屠宰加工","textChars":4,"textLines":1,"bbox":[256,368,170,24]}
+{"kind":"shape","id":"sh/gnep4rul","slide":4,"bbox":[440,358,170,44]}
+{"kind":"textbox","id":"sh/hon6dwv6","slide":4,"text":"防疫管理","textPreview":"防疫管理","textChars":4,"textLines":1,"bbox":[440,368,170,24]}
+{"kind":"shape","id":"sh/2pw761cr","slide":4,"bbox":[624,358,170,44]}
+{"kind":"textbox","id":"sh/3q5of6dw","slide":4,"text":"政务对接","textPreview":"政务对接","textChars":4,"textLines":1,"bbox":[624,368,170,24]}
+{"kind":"shape","id":"sh/4rep8buh","slide":4,"bbox":[808,358,170,44]}
+{"kind":"textbox","id":"sh/psn6hgv2","slide":4,"text":"智慧装备","textPreview":"智慧装备","textChars":4,"textLines":1,"bbox":[808,368,170,24]}
+{"kind":"shape","id":"sh/qtg7alcn","slide":4,"bbox":[72,416,170,44]}
+{"kind":"textbox","id":"sh/rupojqd8","slide":4,"text":"产品中心","textPreview":"产品中心","textChars":4,"textLines":1,"bbox":[72,426,170,24]}
+{"kind":"shape","id":"sh/1ora9kfa","slide":4,"bbox":[256,416,170,44]}
+{"kind":"textbox","id":"sh/0ni90fep","slide":4,"text":"文旅牧游","textPreview":"文旅牧游","textChars":4,"textLines":1,"bbox":[256,426,170,24]}
+{"kind":"shape","id":"sh/zm987ax4","slide":4,"bbox":[440,416,170,44]}
+{"kind":"textbox","id":"sh/el0ry5wz","slide":4,"text":"畜牧业智能体","textPreview":"畜牧业智能体","textChars":6,"textLines":1,"bbox":[440,426,170,24]}
+{"kind":"shape","id":"sh/9cbadkfm","slide":4,"bbox":[624,416,170,44]}
+{"kind":"textbox","id":"sh/ori94fe1","slide":4,"text":"牧事日志","textPreview":"牧事日志","textChars":4,"textLines":1,"bbox":[624,426,170,24]}
+{"kind":"shape","id":"sh/nq9sbuxg","slide":4,"bbox":[808,416,170,44]}
+{"kind":"textbox","id":"sh/mp0r2pwv","slide":4,"text":"经营账本","textPreview":"经营账本","textChars":4,"textLines":1,"bbox":[808,426,170,24]}
+{"kind":"shape","id":"sh/xgbah4fi","slide":4,"bbox":[72,474,170,44]}
+{"kind":"textbox","id":"sh/wf298zex","slide":4,"text":"用工管理","textPreview":"用工管理","textChars":4,"textLines":1,"bbox":[72,484,170,24]}
+{"kind":"shape","id":"sh/sn6lwn2h","slide":4,"bbox":[256,474,170,44]}
+{"kind":"textbox","id":"sh/tozmps32","slide":4,"text":"保险理赔","textPreview":"保险理赔","textChars":4,"textLines":1,"bbox":[256,484,170,24]}
+{"kind":"shape","id":"sh/6lo3uxkb","slide":4,"bbox":[440,474,170,44]}
+{"kind":"textbox","id":"sh/7mx4nilw","slide":4,"text":"防狼防盗","textPreview":"防狼防盗","textChars":4,"textLines":1,"bbox":[440,484,170,24]}
+{"kind":"shape","id":"sh/kj6lsn25","slide":4,"bbox":[624,474,170,44]}
+{"kind":"textbox","id":"sh/5kf2ls3q","slide":4,"text":"牧场相册","textPreview":"牧场相册","textChars":4,"textLines":1,"bbox":[624,484,170,24]}
+{"kind":"shape","id":"sh/iho3qdkf","slide":4,"bbox":[808,474,170,44]}
+{"kind":"textbox","id":"sh/jixkjil0","slide":4,"text":"牧场档案","textPreview":"牧场档案","textChars":4,"textLines":1,"bbox":[808,484,170,24]}
+{"kind":"textbox","id":"sh/ofql472p","slide":4,"text":"所有台账可新增、可修改、可删除，录入即时联动汇总——不是静态展示，是能真正用起来的动态系统。","textPreview":"所有台账可新增、可修改、可删除，录入即时联动汇总——不是静态展示，是能真正用起来的动态系统。","textChars":46,"textLines":1,"bbox":[72,520,540,90]}
+{"kind":"image","id":"im/uxsza14f","slide":4,"name":"","geometry":"roundRect","bbox":[660,210,560,420]}
+{"kind":"notes","id":"nt/sm01a7","slide":4,"text":"一屏概览 20 个模块：生产、经营、监管、文旅全覆盖。\n强调‘动态’：每块数据都能录、能改、能删，且实时联动。\n右侧大图是系统首页，现场可放大讲解。"}
+{"kind":"slide","id":"sl/e9dast","slide":5,"title":"生产方式","textShapes":14}
+{"kind":"shape","id":"sh/wzed43ah","slide":5,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/vy5wbytw","slide":5,"text":"生产方式","textPreview":"生产方式","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/axwvitsb","slide":5,"text":"一年四季，生产闭环不脱节","textPreview":"一年四季，生产闭环不脱节","textChars":12,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/547eh8by","slide":5,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/k3yd83at","slide":5,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/j2pwfit8","slide":5,"text":"5/13","textPreview":"5/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"shape","id":"sh/i1wv6dsn","slide":5,"bbox":[72,210,270,150]}
+{"kind":"shape","id":"sh/l83u5obu","slide":5,"bbox":[72,210,270,8]}
+{"kind":"textbox","id":"sh/07udcja9","slide":5,"text":"春季","textPreview":"春季","textChars":2,"textLines":1,"bbox":[94,236,220,44]}
+{"kind":"textbox","id":"sh/qpgne14n","slide":5,"text":"接羔 · 防疫 · 返青休牧","textPreview":"接羔 · 防疫 · 返青休牧","textChars":14,"textLines":1,"bbox":[94,292,226,56]}
+{"kind":"shape","id":"sh/bqp47658","slide":5,"bbox":[362,210,270,150]}
+{"kind":"shape","id":"sh/cry5grmt","slide":5,"bbox":[362,210,270,8]}
+{"kind":"textbox","id":"sh/ds769wne","slide":5,"text":"夏季","textPreview":"夏季","textChars":2,"textLines":1,"bbox":[384,236,220,44]}
+{"kind":"textbox","id":"sh/yt0ni14z","slide":5,"text":"轮牧 · 打草 · 旅游旺季","textPreview":"轮牧 · 打草 · 旅游旺季","textChars":14,"textLines":1,"bbox":[384,292,226,56]}
+{"kind":"shape","id":"sh/zu9ob654","slide":5,"bbox":[652,210,270,150]}
+{"kind":"shape","id":"sh/0vi5kbmp","slide":5,"bbox":[652,210,270,8]}
+{"kind":"textbox","id":"sh/lgr6dgna","slide":5,"text":"秋季","textPreview":"秋季","textChars":2,"textLines":1,"bbox":[674,236,220,44]}
+{"kind":"textbox","id":"sh/mh0nml4v","slide":5,"text":"防疫 · 出栏 · 饲草储备","textPreview":"防疫 · 出栏 · 饲草储备","textChars":14,"textLines":1,"bbox":[674,292,226,56]}
+{"kind":"shape","id":"sh/ni9ofq5g","slide":5,"bbox":[942,210,270,150]}
+{"kind":"shape","id":"sh/jmt43q1o","slide":5,"bbox":[942,210,270,8]}
+{"kind":"textbox","id":"sh/ilknulk3","slide":5,"text":"冬季","textPreview":"冬季","textChars":2,"textLines":1,"bbox":[964,236,220,44]}
+{"kind":"textbox","id":"sh/5obm5gje","slide":5,"text":"接羔 · 补饲 · 冰雪牧游","textPreview":"接羔 · 补饲 · 冰雪牧游","textChars":14,"textLines":1,"bbox":[964,292,226,56]}
+{"kind":"shape","id":"sh/kn25wv29","slide":5,"bbox":[72,392,1136,100]}
+{"kind":"textbox","id":"sh/vi94z61c","slide":5,"text":"闭环：收入反哺草场改良与智能装备 → 草原越养越好 → 生产越干越顺","textPreview":"闭环：收入反哺草场改良与智能装备 → 草原越养越好 → 生产越干越顺","textChars":34,"textLines":1,"bbox":[100,414,1080,60]}
+{"kind":"textbox","id":"sh/xkbm1gji","slide":5,"text":"系统内置 12 个月年度轮盘，可逐月推进演示","textPreview":"系统内置 12 个月年度轮盘，可逐月推进演示","textChars":22,"textLines":1,"bbox":[72,520,200,60]}
+{"kind":"image","id":"im/1kbe9w7a","slide":5,"name":"","geometry":"roundRect","bbox":[290,520,700,140]}
+{"kind":"notes","id":"nt/e9dast","slide":5,"text":"四季循环是本系统的生产主线：春夏秋冬各干各的、环环相扣。\n强调‘闭环’：收入反哺草场，越养越好。\n系统里可以逐月推进演示，现场建议走一遍 1-12 月。"}
+{"kind":"slide","id":"sl/owvooz","slide":6,"title":"智慧装备","textShapes":15}
+{"kind":"shape","id":"sh/yh8v654z","slide":6,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/lkju10nq","slide":6,"text":"智慧装备","textPreview":"智慧装备","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/0jad8vm5","slide":6,"text":"智能硬件一张网，数据自动上报","textPreview":"智能硬件一张网，数据自动上报","textChars":14,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/behcvq58","slide":6,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/qd8v2l4n","slide":6,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/dgzux0ne","slide":6,"text":"6/13","textPreview":"6/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"textbox","id":"sh/cfqd4vmt","slide":6,"text":"AI 识别监控","textPreview":"AI 识别监控","textChars":7,"textLines":1,"bbox":[72,210,220,50]}
+{"kind":"textbox","id":"sh/valw7a5s","slide":6,"text":"发情 / 分娩 / 明火烟雾 / 周界入侵，42 路摄像机","textPreview":"发情 / 分娩 / 明火烟雾 / 周界入侵，42 路摄像机","textChars":29,"textLines":1,"bbox":[300,210,340,56]}
+{"kind":"textbox","id":"sh/a9svep47","slide":6,"text":"电子耳标 + GPS/北斗项圈","textPreview":"电子耳标 + GPS/北斗项圈","textChars":15,"textLines":1,"bbox":[72,276,220,50]}
+{"kind":"textbox","id":"sh/o7itw36d","slide":6,"text":"耳标 10,105 枚 · 项圈 656 套 · 体温监测 420 套","textPreview":"耳标 10,105 枚 · 项圈 656 套 · 体温监测 420 套","textChars":35,"textLines":1,"bbox":[300,276,340,56]}
+{"kind":"textbox","id":"sh/p8ra5ony","slide":6,"text":"无人设备","textPreview":"无人设备","textChars":4,"textLines":1,"bbox":[72,342,220,50]}
+{"kind":"textbox","id":"sh/250ruto7","slide":6,"text":"热成像无人机 · 四足机器人 · 投料 / 清粪机器人","textPreview":"热成像无人机 · 四足机器人 · 投料 / 清粪机器人","textChars":27,"textLines":1,"bbox":[300,342,340,56]}
+{"kind":"textbox","id":"sh/n69s3y5s","slide":6,"text":"农机与棚圈","textPreview":"农机与棚圈","textChars":5,"textLines":1,"bbox":[72,408,220,50]}
+{"kind":"textbox","id":"sh/g3i9sj6h","slide":6,"text":"打搂捆草 / 青贮 / TMR · 恒温暖棚 / 防冻饮水 / 电子围栏","textPreview":"打搂捆草 / 青贮 / TMR · 恒温暖棚 / 防冻饮水 / 电子围栏","textChars":36,"textLines":1,"bbox":[300,408,340,56]}
+{"kind":"textbox","id":"sh/14ra1on2","slide":6,"text":"端口协议","textPreview":"端口协议","textChars":4,"textLines":1,"bbox":[72,474,220,50]}
+{"kind":"textbox","id":"sh/ehgrq9ob","slide":6,"text":"ONVIF · RFID · LoRa · Modbus · ISOBUS · 北斗短报文","textPreview":"ONVIF · RFID · LoRa · Modbus · ISOBUS · 北斗短报文","textChars":45,"textLines":1,"bbox":[300,474,340,56]}
+{"kind":"shape","id":"sh/fipsze5w","slide":6,"bbox":[72,540,568,100]}
+{"kind":"textbox","id":"sh/sfy9oj65","slide":6,"text":"采集链路：传感器 → LoRa/4G/北斗网关 → 平台 → 大屏，全程免人工录入","textPreview":"采集链路：传感器 → LoRa/4G/北斗网关 → 平台 → 大屏，全程免人工录入","textChars":41,"textLines":1,"bbox":[100,560,512,70]}
+{"kind":"image","id":"im/61s3atsr","slide":6,"name":"","geometry":"roundRect","bbox":[660,210,560,430]}
+{"kind":"notes","id":"nt/owvooz","slide":6,"text":"设备层讲‘一张网’：感知、传输、平台、应用四层。\n协议兼容市场主流设备：ONVIF、RFID、LoRa、Modbus、ISOBUS。\n强调数据自动上报，不用人录。"}
+{"kind":"slide","id":"sl/yg8kkt","slide":7,"title":"政务对接","textShapes":13}
+{"kind":"shape","id":"sh/cbi9wr6t","slide":7,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/bapsnmp8","slide":7,"text":"政务对接","textPreview":"政务对接","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/q9gruhon","slide":7,"text":"防疫、检疫、屠宰、溯源，一键上报","textPreview":"防疫、检疫、屠宰、溯源，一键上报","textChars":16,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/p87alc72","slide":7,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/o7y9sr6h","slide":7,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/36psjmpw","slide":7,"text":"7/13","textPreview":"7/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"shape","id":"sh/25grqhob","slide":7,"bbox":[72,214,540,82]}
+{"kind":"textbox","id":"sh/1k7ahc76","slide":7,"text":"动物疫病防控直报","textPreview":"动物疫病防控直报","textChars":8,"textLines":1,"bbox":[100,224,490,26]}
+{"kind":"textbox","id":"sh/gjy9o76l","slide":7,"text":"免疫记录、消毒台账实时上报","textPreview":"免疫记录、消毒台账实时上报","textChars":13,"textLines":1,"bbox":[100,254,490,28]}
+{"kind":"shape","id":"sh/qd4by1gb","slide":7,"bbox":[72,310,540,82]}
+{"kind":"textbox","id":"sh/redsrmxw","slide":7,"text":"动物检疫电子出证","textPreview":"动物检疫电子出证","textChars":8,"textLines":1,"bbox":[100,320,490,26]}
+{"kind":"textbox","id":"sh/sfmt0reh","slide":7,"text":"出栏检疫申报、合格证明同步","textPreview":"出栏检疫申报、合格证明同步","textChars":13,"textLines":1,"bbox":[100,350,490,28]}
+{"kind":"shape","id":"sh/dgvatwf2","slide":7,"bbox":[72,406,540,82]}
+{"kind":"textbox","id":"sh/i9kbuhgf","slide":7,"text":"定点屠宰监管","textPreview":"定点屠宰监管","textChars":6,"textLines":1,"bbox":[100,416,490,26]}
+{"kind":"textbox","id":"sh/3atsnmxk","slide":7,"text":"屠宰批次、肉品品质检验备案","textPreview":"屠宰批次、肉品品质检验备案","textChars":13,"textLines":1,"bbox":[100,446,490,28]}
+{"kind":"shape","id":"sh/4bmtwry5","slide":7,"bbox":[72,502,540,82]}
+{"kind":"textbox","id":"sh/5cvapwfq","slide":7,"text":"畜禽标识溯源","textPreview":"畜禽标识溯源","textChars":6,"textLines":1,"bbox":[100,512,490,26]}
+{"kind":"textbox","id":"sh/ulkrqxg3","slide":7,"text":"耳标备案、一畜一码全链可查","textPreview":"耳标备案、一畜一码全链可查","textChars":13,"textLines":1,"bbox":[100,542,490,28]}
+{"kind":"shape","id":"sh/vmtsj2xo","slide":7,"bbox":[72,600,540,80]}
+{"kind":"textbox","id":"sh/jqp8rydg","slide":7,"text":"一键上报 → 回执留痕；数据与主管部门接口对接，政府查得到、牧民心不慌","textPreview":"一键上报 → 回执留痕；数据与主管部门接口对接，政府查得到、牧民心不慌","textChars":35,"textLines":1,"bbox":[100,616,490,50]}
+{"kind":"image","id":"im/5knyhkz6","slide":7,"name":"","geometry":"roundRect","bbox":[660,210,560,470]}
+{"kind":"notes","id":"nt/yg8kkt","slide":7,"text":"政务侧讲‘合规’：防疫、检疫、屠宰、溯源四个口子。\n演示页可现场点“上报”看回执号生成。\n正式接入需向旗农牧局申请接口，系统已留好对接位。"}
+{"kind":"slide","id":"sl/cjl5u3","slide":8,"title":"畜牧业智能体","textShapes":7}
+{"kind":"shape","id":"sh/onahwjup","slide":8,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/nm103ed4","slide":8,"text":"畜牧业智能体","textPreview":"畜牧业智能体","textChars":6,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/2lszu9cj","slide":8,"text":"手机端 AI 助手，牧民随问随答","textPreview":"手机端 AI 助手，牧民随问随答","textChars":16,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/xs3i9ov6","slide":8,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/wru10jul","slide":8,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/bql07ed0","slide":8,"text":"8/13","textPreview":"8/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"textbox","id":"sh/apcjy9cv","slide":8,"text":"“现在存栏多少？”\n“饲草够不够过冬？”\n“该不该转场了？”","textPreview":"“现在存栏多少？” | “饲草够不够过冬？” | “该不该转场了？”","textChars":30,"textLines":3,"bbox":[72,210,560,120]}
+{"kind":"textbox","id":"sh/lgnid8vi","slide":8,"text":"智能体基于牧场实时数据回答：存栏、饲草、防疫、出栏、转场、天气、预警……并给出寒冷地区饲养建议。","textPreview":"智能体基于牧场实时数据回答：存栏、饲草、防疫、出栏、转场、天气、预警……并给出寒冷地区饲养建议。","textChars":48,"textLines":1,"bbox":[72,360,560,120]}
+{"kind":"textbox","id":"sh/kfe143ux","slide":8,"text":"支持语音提问 · 8 个快捷问题一键演示\n手机右下角 🤖 悬浮按钮直接唤起","textPreview":"支持语音提问 · 8 个快捷问题一键演示 | 手机右下角 🤖 悬浮按钮直接唤起","textChars":38,"textLines":2,"bbox":[72,500,560,90]}
+{"kind":"image","id":"im/5w3q1ofa","slide":8,"name":"","geometry":"roundRect","bbox":[680,210,430,470]}
+{"kind":"notes","id":"nt/cjl5u3","slide":8,"text":"智能体是手机端的亮点：牧民不会打字也能语音问。\n回答全部来自系统实时数据，不是死话术。\n现场演示：问一句‘饲草够不够过冬’。"}
+{"kind":"slide","id":"sl/21x381","slide":9,"title":"数据大屏","textShapes":6}
+{"kind":"shape","id":"sh/r2xc3y10","slide":9,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/s36tcjil","slide":9,"text":"数据大屏","textPreview":"数据大屏","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/d4fu5ojq","slide":9,"text":"一屏看全牧场，科技蓝指挥舱","textPreview":"一屏看全牧场，科技蓝指挥舱","textChars":13,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/e5obet0b","slide":9,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/f6xc7y1w","slide":9,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/07qtg3ih","slide":9,"text":"9/13","textPreview":"9/13","textChars":4,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"textbox","id":"sh/18zu98j2","slide":9,"text":"存栏结构 · 装备在线率 · 草场利用\n今日经营 · 实时天气 · 滚动预警\n四季进度一键切换","textPreview":"存栏结构 · 装备在线率 · 草场利用 | 今日经营 · 实时天气 · 滚动预警 | 四季进度一键切换","textChars":47,"textLines":3,"bbox":[72,210,540,140]}
+{"kind":"textbox","id":"sh/u94b29k7","slide":9,"text":"全屏汇报模式，适合政府会议、现场演示：\n数字实时跳动，直观可信。","textPreview":"全屏汇报模式，适合政府会议、现场演示： | 数字实时跳动，直观可信。","textChars":32,"textLines":2,"bbox":[72,400,540,100]}
+{"kind":"image","id":"im/mhk7e503","slide":9,"name":"","geometry":"roundRect","bbox":[660,210,560,420]}
+{"kind":"notes","id":"nt/21x381","slide":9,"text":"大屏用于汇报场景：一屏看全，数字实时。\n蓝色科技风与平台整体国际风统一。\n可现场全屏演示。"}
+{"kind":"slide","id":"sl/vyweoe","slide":10,"title":"动态数据","textShapes":12}
+{"kind":"shape","id":"sh/xwzidgf6","slide":10,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/a98j21wv","slide":10,"text":"动态数据","textPreview":"动态数据","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/buh0b6xg","slide":10,"text":"不是静态展示，是能真正用起来的系统","textPreview":"不是静态展示，是能真正用起来的系统","textChars":17,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/o7q10rep","slide":10,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/98zi9wfa","slide":10,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/m5ozy1wj","slide":10,"text":"10/13","textPreview":"10/13","textChars":5,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"shape","id":"sh/n6x07mx4","slide":10,"bbox":[72,212,540,104]}
+{"kind":"textbox","id":"sh/036hwret","slide":10,"text":"1. 实时采集","textPreview":"1. 实时采集","textChars":7,"textLines":1,"bbox":[96,226,490,28]}
+{"kind":"textbox","id":"sh/14fi5wfe","slide":10,"text":"智能硬件模拟每 5 秒上报：体温、圈舍温度、在线率、NDVI","textPreview":"智能硬件模拟每 5 秒上报：体温、圈舍温度、在线率、NDVI","textChars":30,"textLines":1,"bbox":[96,260,492,48]}
+{"kind":"shape","id":"sh/54nmdgne","slide":10,"bbox":[72,328,540,104]}
+{"kind":"textbox","id":"sh/43elkb6t","slide":10,"text":"2. 录入即联动","textPreview":"2. 录入即联动","textChars":8,"textLines":1,"bbox":[96,342,490,28]}
+{"kind":"textbox","id":"sh/j254b658","slide":10,"text":"饲草领用自动扣库存；屠宰记录自动生成产品入库","textPreview":"饲草领用自动扣库存；屠宰记录自动生成产品入库","textChars":22,"textLines":1,"bbox":[96,376,492,48]}
+{"kind":"shape","id":"sh/i1w3i1o3","slide":10,"bbox":[72,444,540,104]}
+{"kind":"textbox","id":"sh/h0nm9wni","slide":10,"text":"3. 数据可改","textPreview":"3. 数据可改","textChars":7,"textLines":1,"bbox":[96,458,490,28]}
+{"kind":"textbox","id":"sh/wzelgr6x","slide":10,"text":"牲畜、台账、订单、照片，全部可增、可改、可删","textPreview":"牲畜、台账、订单、照片，全部可增、可改、可删","textChars":22,"textLines":1,"bbox":[96,492,492,48]}
+{"kind":"shape","id":"sh/vy5k765c","slide":10,"bbox":[72,560,540,104]}
+{"kind":"textbox","id":"sh/uxc3e1or","slide":10,"text":"4. 本地持久化","textPreview":"4. 本地持久化","textChars":8,"textLines":1,"bbox":[96,574,490,28]}
+{"kind":"textbox","id":"sh/9w325wn6","slide":10,"text":"数据存本机，刷新不丢；正式上线可接数据库","textPreview":"数据存本机，刷新不丢；正式上线可接数据库","textChars":20,"textLines":1,"bbox":[96,608,492,48]}
+{"kind":"image","id":"im/3mhwnehc","slide":10,"name":"","geometry":"roundRect","bbox":[660,210,560,460]}
+{"kind":"notes","id":"nt/vyweoe","slide":10,"text":"‘动态’是这套系统区别于静态原型的关键卖点。\n现场演示：登记一笔饲草领用，看库存立刻变化。\n数据本地持久化，刷新不丢；接真实库即可生产化。"}
+{"kind":"slide","id":"sl/w7z3he","slide":11,"title":"价值与效益","textShapes":10}
+{"kind":"shape","id":"sh/wr65wjm1","slide":11,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/bqxo3e5g","slide":11,"text":"价值与效益","textPreview":"价值与效益","textChars":5,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/ap4nu94v","slide":11,"text":"牧民省心，政府有数，草原可持续","textPreview":"牧民省心，政府有数，草原可持续","textChars":15,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/lwf69oni","slide":11,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/kv650jmx","slide":11,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/juxo7e5c","slide":11,"text":"11/13","textPreview":"11/13","textChars":5,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"shape","id":"sh/ytony94r","slide":11,"bbox":[72,220,365,380]}
+{"kind":"shape","id":"sh/tkz6d83e","slide":11,"bbox":[102,250,44,6]}
+{"kind":"textbox","id":"sh/8jq543mt","slide":11,"text":"对牧民","textPreview":"对牧民","textChars":3,"textLines":1,"bbox":[102,272,300,40]}
+{"kind":"textbox","id":"sh/ilsfmt0b","slide":11,"text":"账目清 · 生产明\n少跑腿 · 少损失\n接羔防疫不慌乱","textPreview":"账目清 · 生产明 | 少跑腿 · 少损失 | 接羔防疫不慌乱","textChars":27,"textLines":3,"bbox":[102,330,305,220]}
+{"kind":"shape","id":"sh/3m1gvy1w","slide":11,"bbox":[462,220,365,380]}
+{"kind":"shape","id":"sh/4naxo3ih","slide":11,"bbox":[492,250,44,6]}
+{"kind":"textbox","id":"sh/5ojyx8j2","slide":11,"text":"对政府","textPreview":"对政府","textChars":3,"textLines":1,"bbox":[492,272,300,40]}
+{"kind":"textbox","id":"sh/qpsfqt0n","slide":11,"text":"台账可查 · 检疫可溯\n监管有据 · 对接顺畅\n数据一屏调阅","textPreview":"台账可查 · 检疫可溯 | 监管有据 · 对接顺畅 | 数据一屏调阅","textChars":30,"textLines":3,"bbox":[492,330,305,220]}
+{"kind":"shape","id":"sh/ralgzy18","slide":11,"bbox":[852,220,365,380]}
+{"kind":"shape","id":"sh/sbuxs3it","slide":11,"bbox":[882,250,44,6]}
+{"kind":"textbox","id":"sh/dc3y18je","slide":11,"text":"对草原","textPreview":"对草原","textChars":3,"textLines":1,"bbox":[882,272,300,40]}
+{"kind":"textbox","id":"sh/6t8fe9kj","slide":11,"text":"以草定畜 · 四季轮牧\n打草留茬 · 生态修复\n越养越绿","textPreview":"以草定畜 · 四季轮牧 | 打草留茬 · 生态修复 | 越养越绿","textChars":28,"textLines":3,"bbox":[882,330,305,220]}
+{"kind":"notes","id":"nt/w7z3he","slide":11,"text":"三方面讲价值：牧民、政府、草原生态。\n每个价值点都能对应到前面的功能模块。\n结尾为下一步规划做铺垫。"}
+{"kind":"slide","id":"sl/pwa9js","slide":12,"title":"未来规划","textShapes":16}
+{"kind":"shape","id":"sh/u5ofi9ov","slide":12,"bbox":[72,64,56,6]}
+{"kind":"textbox","id":"sh/hszyton6","slide":12,"text":"未来规划","textPreview":"未来规划","textChars":4,"textLines":1,"bbox":[72,80,1000,24]}
+{"kind":"textbox","id":"sh/wr6xkj6l","slide":12,"text":"下一步：从演示走向生产","textPreview":"下一步：从演示走向生产","textChars":11,"textLines":1,"bbox":[72,106,1136,64]}
+{"kind":"shape","id":"sh/72xgnu54","slide":12,"bbox":[72,180,1136,2]}
+{"kind":"textbox","id":"sh/m1ofe9oj","slide":12,"text":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 · v3.4 · 2026-08-17","textChars":37,"textLines":1,"bbox":[72,668,900,24]}
+{"kind":"textbox","id":"sh/94fyp4na","slide":12,"text":"12/13","textPreview":"12/13","textChars":5,"textLines":1,"bbox":[1176,668,32,24]}
+{"kind":"shape","id":"sh/836xgz6p","slide":12,"bbox":[72,220,1136,104]}
+{"kind":"shape","id":"sh/zydwju58","slide":12,"bbox":[96,248,52,52]}
+{"kind":"textbox","id":"sh/yx4fapon","slide":12,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[96,256,52,36]}
+{"kind":"textbox","id":"sh/0vi9wre1","slide":12,"text":"真实硬件接入","textPreview":"真实硬件接入","textChars":6,"textLines":1,"bbox":[180,236,300,32]}
+{"kind":"textbox","id":"sh/lwrapwfm","slide":12,"text":"对接市面主流传感器/摄像头/项圈，替换模拟数据","textPreview":"对接市面主流传感器/摄像头/项圈，替换模拟数据","textChars":23,"textLines":1,"bbox":[180,274,980,30]}
+{"kind":"shape","id":"sh/yt0ruhwb","slide":12,"bbox":[72,336,1136,104]}
+{"kind":"shape","id":"sh/zu9snmxw","slide":12,"bbox":[96,364,52,52]}
+{"kind":"textbox","id":"sh/cry9s7e5","slide":12,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[96,372,52,36]}
+{"kind":"textbox","id":"sh/ds7alcfq","slide":12,"text":"大模型智能体","textPreview":"大模型智能体","textChars":6,"textLines":1,"bbox":[180,352,300,32]}
+{"kind":"textbox","id":"sh/q5grqxwz","slide":12,"text":"方案生成、疫病辅助诊断、个性化饲养建议","textPreview":"方案生成、疫病辅助诊断、个性化饲养建议","textChars":19,"textLines":1,"bbox":[180,390,980,30]}
+{"kind":"shape","id":"sh/bqpsj2xk","slide":12,"bbox":[72,452,1136,104]}
+{"kind":"shape","id":"sh/wn2t4be9","slide":12,"bbox":[96,480,52,52]}
+{"kind":"textbox","id":"sh/hobaxgfu","slide":12,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[96,488,52,36]}
+{"kind":"textbox","id":"sh/5k7ahw7y","slide":12,"text":"双端小程序","textPreview":"双端小程序","textChars":5,"textLines":1,"bbox":[180,468,300,32]}
+{"kind":"textbox","id":"sh/4jy9ob6d","slide":12,"text":"牧民端作业 + 游客端牧户游预订","textPreview":"牧民端作业 + 游客端牧户游预订","textChars":16,"textLines":1,"bbox":[180,506,980,30]}
+{"kind":"shape","id":"sh/3ipsf6p8","slide":12,"bbox":[72,568,1136,104]}
+{"kind":"shape","id":"sh/ihgrm1on","slide":12,"bbox":[96,596,52,52]}
+{"kind":"textbox","id":"sh/hg7adw72","slide":12,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[96,604,52,36]}
+{"kind":"textbox","id":"sh/gfe9kr6h","slide":12,"text":"多牧户复制","textPreview":"多牧户复制","textChars":5,"textLines":1,"bbox":[180,584,300,32]}
+{"kind":"textbox","id":"sh/ve5sbmpw","slide":12,"text":"一套模板，更多家庭牧场快速上线","textPreview":"一套模板，更多家庭牧场快速上线","textChars":15,"textLines":1,"bbox":[180,622,980,30]}
+{"kind":"notes","id":"nt/pwa9js","slide":12,"text":"未来四步：硬件、AI、小程序、规模化。\n强调系统架构已预留接口，升级平滑。\n给听众一个可期待的发展方向。"}
+{"kind":"slide","id":"sl/u3k05t","slide":13,"title":"扫码体验，欢迎来牧场看看","textShapes":3}
+{"kind":"textbox","id":"sh/cn6lgv2p","slide":13,"text":"扫码体验，欢迎来牧场看看","textPreview":"扫码体验，欢迎来牧场看看","textChars":12,"textLines":1,"bbox":[72,150,1136,80]}
+{"kind":"textbox","id":"sh/bmxk7q1k","slide":13,"text":"艾牧戈智慧牧场 · 一体化管理平台 v3.4","textPreview":"艾牧戈智慧牧场 · 一体化管理平台 v3.4","textChars":22,"textLines":1,"bbox":[72,250,1136,40]}
+{"kind":"textbox","id":"sh/lczmd0jm","slide":13,"text":"https://aimuge.github.io/aimuge-ranch/ ｜ 永久有效 · 电脑关机也能打开","textPreview":"https://aimuge.github.io/aimuge-ranch/ ｜ 永久有效 · 电脑关机也能打开","textChars":56,"textLines":1,"bbox":[72,640,1136,36]}
+{"kind":"image","id":"im/7uhcnuh8","slide":13,"name":"","geometry":"roundRect","bbox":[490,320,300,300]}
+{"kind":"notes","id":"nt/u3k05t","slide":13,"text":"结尾回到开场：邀请现场扫码体验。\n强调网址永久有效，方便会后继续了解。\n感谢聆听，欢迎提问。"}

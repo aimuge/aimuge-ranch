@@ -2736,3 +2736,18 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .video-wrap{transform:none!important}
 @keyframes humanFadeIn{0%{opacity:.2}100%{opacity:1}}
 @media (max-width:700px){.bs-v8 .bs-dh-center .dh-human{width:216px!important;height:122px!important;transform:none!important}}
+
+
+/* ============ v49 讲解员镜头放大、移除圆形背景光晕 ============ */
+.bs-v8 .bs-dh-center .dh-human{
+  width:300px!important;height:169px!important;
+  filter:drop-shadow(0 11px 12px rgba(0,0,0,.54))!important;
+}
+.bs-v8 .bs-dh-center .narrator-motion{
+  filter:drop-shadow(0 10px 10px rgba(0,0,0,.50)) saturate(1.06) contrast(1.04)!important;
+}
+.bs-v8 .bs-dh-center .video-frame-glow{display:none!important}
+@media (max-width:700px){
+  .bs-v8 .bs-dh-center .dh-human{width:248px!important;height:140px!important}
+  .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:148px!important}
+}
