@@ -2592,3 +2592,17 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .human-face-dynamics::after{content:"";position:absolute;left:47%;top:30.5%;width:10%;height:7%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,210,190,.16),transparent 68%);filter:blur(4px);animation:bargaFaceGlow 4.5s ease-in-out infinite}
 @keyframes bargaFaceGlow{0%,100%{opacity:.28;transform:scale(.9)}50%{opacity:.72;transform:scale(1.08)}}
 @media (prefers-reduced-motion: reduce){.human-hand,.eye-blink,.smile-line,.human-face-dynamics::after{animation:none}}
+
+/* ============ v38 新真人数字人：顺滑眨眼、微笑、双手讲解动作 ============ */
+/* 新人物素材为 1022×1273，宽度适配后位置按图层坐标重算 */
+.human-hand.hand-a{left:18.8%!important;top:65.2%!important;height:13.5%!important;transform-origin:50% 12%!important;animation:bargaHandSmoothA 6.2s ease-in-out infinite!important}
+.human-hand.hand-b{left:73.5%!important;top:64.7%!important;height:14%!important;transform-origin:50% 12%!important;animation:bargaHandSmoothB 6.2s ease-in-out infinite!important}
+.eye-blink.left-eye{left:35.8%!important;top:42.9%!important;width:6.8%!important;height:1.7%!important;animation:bargaBlinkSmooth 4.8s ease-in-out infinite!important}
+.eye-blink.right-eye{left:43.7%!important;top:42.9%!important;width:6.4%!important;height:1.7%!important;animation:bargaBlinkSmooth 4.8s .16s ease-in-out infinite!important}
+.smile-line{left:39.6%!important;top:47.6%!important;width:9.8%!important;height:2.4%!important;border-bottom-color:rgba(154,57,60,.70)!important;animation:bargaSmileSmooth 6.2s ease-in-out infinite!important}
+.human-face-dynamics::after{left:36.5%!important;top:40.8%!important;width:14%!important;height:8%!important;animation:bargaFaceGlow 5.2s ease-in-out infinite}
+@keyframes bargaHandSmoothA{0%,100%{transform:translate3d(0,0,0) rotate(-1deg)}28%{transform:translate3d(3px,-5px,0) rotate(3deg)}52%{transform:translate3d(0,-2px,0) rotate(.5deg)}76%{transform:translate3d(-2px,-6px,0) rotate(-2.5deg)}}
+@keyframes bargaHandSmoothB{0%,100%{transform:translate3d(0,0,0) rotate(1deg)}30%{transform:translate3d(-3px,-6px,0) rotate(-3deg)}56%{transform:translate3d(0,-2px,0) rotate(-.5deg)}78%{transform:translate3d(2px,-5px,0) rotate(2.5deg)}}
+@keyframes bargaBlinkSmooth{0%,38%,44%,100%{opacity:0;transform:translateY(-1px) scaleY(.18)}40%{opacity:.92;transform:translateY(0) scaleY(1)}41.2%{opacity:.90;transform:translateY(0) scaleY(.32)}}
+@keyframes bargaSmileSmooth{0%,100%{opacity:.48;transform:scaleX(.88) translateY(1px)}45%{opacity:.92;transform:scaleX(1.08) translateY(0)}70%{opacity:.76;transform:scaleX(1) translateY(0)}}
+@media (prefers-reduced-motion: reduce){.human-hand,.eye-blink,.smile-line,.human-face-dynamics::after{animation:none}}
