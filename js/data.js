@@ -406,14 +406,44 @@ const DEFAULT_DATA = {
 };
 
 /* ============ 持久化与通用 CRUD（支持 a.b 路径） ============ */
-const KEY = 'yilate-ranch-v46';
+const KEY = 'yilate-ranch-v47';
 let DB = loadDB();
 
 function loadDB(){
   try { const raw = localStorage.getItem(KEY); if (raw){ const d = JSON.parse(raw); if (d && d.meta) return d; } } catch(e){}
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
-function saveDB(){ try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){} }
+let cloudPushTimer = null;
+function cloudPush(){
+  if (!/^https?:$/.test(location.protocol)) return;
+  clearTimeout(cloudPushTimer);
+  cloudPushTimer = setTimeout(async()=>{
+    try {
+      await fetch('/api/ranch/state', {
+        method:'PUT', credentials:'include',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({ data:DB })
+      });
+    } catch(e){}
+  }, 700);
+}
+function saveDB(){ try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){} cloudPush(); }
+async function loadCloudState(){
+  if (!/^https?:$/.test(location.protocol)) return;
+  try {
+    const r = await fetch('/api/ranch/state', {credentials:'include', headers:{accept:'application/json'}});
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d && d.data) {
+      DB = d.data;
+      try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){}
+      window.dispatchEvent(new CustomEvent('ranch-cloud-data', { detail:DB }));
+    } else {
+      cloudPush();
+    }
+  } catch(e){}
+}
+window.addEventListener('DOMContentLoaded', loadCloudState);
 function byPath(obj, path){ return path.split('.').reduce((o,k)=> (o==null?undefined:o[k]), obj); }
 function setPath(obj, path, val){
   const ks = path.split('.'); const last = ks.pop();

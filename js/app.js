@@ -11,6 +11,39 @@
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
   const monthName = m => ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'][m-1];
 
+  /* ================= 登录会话与角色菜单 ================= */
+  const AUTH_USER_KEY = 'yilate-auth-user';
+  let authUser = null;
+  try { authUser = JSON.parse(localStorage.getItem(AUTH_USER_KEY) || 'null'); } catch(e){}
+  const ROLE_MENUS = {
+    owner: null,
+    platform: ['bigscreen','devices','admin'],
+    ranch_admin: ['bigscreen','dashboard','cycle','livestock','grassland','forage','vaccine','devices','slaughter','products','gov','tourism','log','ledger','labor','insurance','gallery','admin','agent'],
+    veterinarian: ['bigscreen','dashboard','livestock','forage','vaccine','log','gallery','agent'],
+    herder: ['bigscreen','dashboard','livestock','grassland','forage','vaccine','devices','slaughter','log','labor','insurance','gallery','agent'],
+    service: ['bigscreen','dashboard','tourism','products','log','agent'],
+    gov: ['profile','bigscreen','dashboard','grassland','forage','vaccine','slaughter','gov','gallery']
+  };
+  function visibleNav(){
+    const allow = authUser ? ROLE_MENUS[authUser.role] : null;
+    return !allow ? DB.nav : DB.nav.filter(n=>allow.includes(n.key));
+  }
+  async function refreshAuth(){
+    if (!/^https?:$/.test(location.protocol)) return;
+    try {
+      const r = await fetch('/api/auth/me', {credentials:'include',headers:{accept:'application/json'}});
+      if (!r.ok) { authUser=null; try{localStorage.removeItem(AUTH_USER_KEY)}catch(e){} return; }
+      const d=await r.json(); authUser=d.user; try{localStorage.setItem(AUTH_USER_KEY,JSON.stringify(authUser))}catch(e){}
+      if (authUser.mustChangePassword) { location.href='/change-password.html'; return; }
+      const name=$('.user-name'), role=$('.user-role'), avatar=$('.avatar');
+      if(name) name.textContent=authUser.name+' · 已登录';
+      if(role) role.textContent=authUser.role==='owner'?'牧场最高管理员':authUser.role;
+      if(avatar) avatar.textContent=(authUser.name||'牧').slice(0,1);
+      const allowed=visibleNav().map(x=>x.key);
+      if(!allowed.includes(current)) render(allowed[0]||'bigscreen'); else { renderNav(); }
+    } catch(e){}
+  }
+
   /* ================= 真实天气服务（Open-Meteo · 牧场坐标） ================= */
   let weatherLoading = false;
   function weatherCodeInfo(code){
@@ -243,14 +276,14 @@
 
   /* ================= 导航（可配置栏目） ================= */
   function renderNav(){
-    navBox.innerHTML = DB.nav.map(n=>`
+    navBox.innerHTML = visibleNav().map(n=>`
       <a class="nav-item ${n.key===current?'active':''}" data-page="${n.key}">
         <span class="nav-ico">${n.icon}</span><span class="nav-title">${n.title}</span>
       </a>`).join('');
     navBox.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click', ()=>render(n.dataset.page)));
     const mnav = $('#mnav');
     if (mnav){
-      mnav.innerHTML = DB.nav.map(n=>{
+      mnav.innerHTML = visibleNav().map(n=>{
         const mt = n.key==='agent' ? '智能服务小伊' : n.title;
         return `
         <button class="mn-item ${n.key===current?'active':''}" data-page="${n.key}" title="${n.title}">
@@ -319,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=46" alt="YILATE">
+          <img src="assets/logo.png?v=47" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1831,7 +1864,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=46" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=47" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -2651,9 +2684,20 @@
     if (live.on) { iotChip.textContent = '● 实时采集 ' + live.lastSync; }
     toast(live.on ? '已开启智能硬件实时采集' : '已暂停实时采集','warn');
   });
+  window.addEventListener('ranch-cloud-data', ()=>{ renderNav(); render(current); initWeatherChip(); renderLive(); });
   initWeatherChip();
   renderNav();
   render('bigscreen');   /* 默认打开数据大屏（看板优先） */
   renderLive();
+  refreshAuth();
+  const userBox = document.querySelector('.user');
+  if (userBox) userBox.addEventListener('click', ()=>{
+    if (!authUser) return;
+    confirmAction(`确认退出 ${authUser.name} 的登录吗？`, '退出登录', async ()=>{
+      try { await fetch('/api/auth/logout',{method:'POST',credentials:'include'}); } catch(e){}
+      try { localStorage.removeItem(AUTH_USER_KEY); } catch(e){}
+      location.href='/login';
+    });
+  });
   startIot();
 })();

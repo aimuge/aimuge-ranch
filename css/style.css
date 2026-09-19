@@ -2722,3 +2722,17 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .human-light-scan{display:none!important}
 .video-frame-glow{inset:8% 17% 3%!important;border-radius:50%!important;box-shadow:0 0 30px rgba(34,211,238,.20)!important;background:radial-gradient(ellipse at center bottom,rgba(34,211,238,.12),transparent 68%)}
 @media (max-width:700px){.bs-map.bs-map-robot{height:290px}.bs-v8 .bs-dh-center .dh-human{width:216px!important;height:122px!important}.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:145px!important}}
+
+/* ============ v47 讲解员固定远镜头 ============ */
+.bs-v8 .bs-dh-center .dh-human{
+  width:260px!important;height:146px!important;
+  transform:none!important;
+  animation:humanFadeIn .35s ease-out both!important;
+  filter:drop-shadow(0 10px 11px rgba(0,0,0,.52)) drop-shadow(0 0 10px rgba(94,234,212,.28));
+}
+.bs-v8 .bs-dh-center:hover .dh-human,
+.bs-v8 .bs-dh-center:active .dh-human{transform:none!important}
+.narrator-motion{transform:translateX(-50%)!important;transition:none!important}
+.video-wrap{transform:none!important}
+@keyframes humanFadeIn{0%{opacity:.2}100%{opacity:1}}
+@media (max-width:700px){.bs-v8 .bs-dh-center .dh-human{width:216px!important;height:122px!important;transform:none!important}}
