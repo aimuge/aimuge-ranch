@@ -2159,3 +2159,52 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .bs-v8 .bs-col{min-width:0}
   .bs-v8 .bs-weather{min-width:0}
 }
+
+/* ============ v21 流光色彩增强 ============ */
+.bs-colorwash{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;opacity:.82;mix-blend-mode:screen}
+.bs-colorwash i{position:absolute;display:block;width:52%;height:78%;border-radius:50%;filter:blur(58px);transform:translate3d(0,0,0)}
+.bs-colorwash i:nth-child(1){left:-14%;top:-8%;background:rgba(34,211,238,.18);animation:bsColorDriftA 16s ease-in-out infinite}
+.bs-colorwash i:nth-child(2){right:-12%;top:8%;background:rgba(129,140,248,.16);animation:bsColorDriftB 19s ease-in-out infinite}
+.bs-colorwash i:nth-child(3){left:28%;bottom:-28%;background:rgba(52,211,153,.13);animation:bsColorDriftC 22s ease-in-out infinite}
+@keyframes bsColorDriftA{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18%,12%,0) scale(1.18)}}
+@keyframes bsColorDriftB{0%,100%{transform:translate3d(0,0,0) scale(1.08)}50%{transform:translate3d(-16%,18%,0) scale(.92)}}
+@keyframes bsColorDriftC{0%,100%{transform:translate3d(0,0,0) scale(.96)}50%{transform:translate3d(10%,-14%,0) scale(1.2)}}
+
+/* 光束：六道不同冷暖色 */
+.bs-sweeps i{background:linear-gradient(90deg,transparent,rgba(94,234,212,.12),rgba(255,255,255,.25),rgba(34,211,238,.18),transparent)}
+.bs-sweeps i:nth-child(2){background:linear-gradient(90deg,transparent,rgba(129,140,248,.10),rgba(255,255,255,.20),rgba(167,139,250,.18),transparent)}
+.bs-sweeps i:nth-child(3){background:linear-gradient(90deg,transparent,rgba(34,211,238,.10),rgba(255,255,255,.22),rgba(59,130,246,.20),transparent)}
+.bs-sweeps i:nth-child(4){width:110px;animation-duration:11s;animation-delay:4.4s;opacity:.62;background:linear-gradient(90deg,transparent,rgba(52,211,153,.15),rgba(255,255,255,.30),rgba(45,212,191,.18),transparent)}
+.bs-sweeps i:nth-child(5){width:300px;animation-duration:16s;animation-delay:8.8s;opacity:.42;background:linear-gradient(90deg,transparent,rgba(240,180,41,.14),rgba(255,255,255,.24),rgba(251,146,60,.15),transparent)}
+.bs-sweeps i:nth-child(6){width:80px;animation-duration:9.5s;animation-delay:1.2s;opacity:.54;background:linear-gradient(90deg,transparent,rgba(236,72,153,.12),rgba(255,255,255,.24),rgba(129,140,248,.18),transparent)}
+
+/* 面板流光边框和彩色内发光 */
+.bs-v8 .bs-panel{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(24,46,82,.97),rgba(8,20,40,.985));backdrop-filter:blur(10px)}
+.bs-v8 .bs-panel::after{
+  content:"";position:absolute;inset:0;width:auto;height:auto;pointer-events:none;z-index:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg,transparent 8%,var(--acc,#22d3ee) 28%,rgba(255,255,255,.95) 38%,var(--acc,#22d3ee) 48%,transparent 68%,var(--acc,#22d3ee) 88%,transparent 96%);
+  background-size:300% 100%;opacity:.62;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:bsPanelColorFlow 7.5s linear infinite;
+}
+.bs-v8 .bs-panel > *{position:relative;z-index:2}
+.bs-v8 .bs-panel::before{z-index:1}
+@keyframes bsPanelColorFlow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+.bs-v8 .bs-col > .bs-panel:nth-child(2)::after{animation-delay:1.3s}
+.bs-v8 .bs-col > .bs-panel:nth-child(3)::after{animation-delay:2.6s}
+.bs-v8 .bs-col > .bs-panel:nth-child(4)::after{animation-delay:3.8s}
+
+/* KPI 卡片多色扫光 */
+.bs-v8 .bs-kpi{overflow:hidden;isolation:isolate}
+.bs-v8 .bs-kpi::after{content:"";position:absolute;top:-60%;left:-40%;right:auto;bottom:-60%;width:58%;height:auto;background:linear-gradient(90deg,transparent,rgba(255,255,255,.20),transparent);transform:skewX(-18deg);opacity:.72;animation:bsKpiSweep 6.8s ease-in-out infinite}
+.bs-v8 .bs-kpi:nth-child(2)::after{animation-delay:1.1s}.bs-v8 .bs-kpi:nth-child(3)::after{animation-delay:2.2s}.bs-v8 .bs-kpi:nth-child(4)::after{animation-delay:3.3s}.bs-v8 .bs-kpi:nth-child(5)::after{animation-delay:4.4s}
+@keyframes bsKpiSweep{0%,18%{left:-55%;opacity:0}35%{opacity:.7}100%{left:145%;opacity:0}}
+
+/* 底部数据流增加光谱色 */
+.bs-data-rail{box-shadow:0 18px 40px -26px rgba(0,0,0,.98),0 0 28px -12px rgba(34,211,238,.35),inset 0 1px 0 rgba(255,255,255,.05)}
+.bs-rail-track span:nth-child(9n+1){color:#5eead4}.bs-rail-track span:nth-child(9n+2){color:#7dd3fc}.bs-rail-track span:nth-child(9n+4){color:#a78bfa}.bs-rail-track span:nth-child(9n+6){color:#f0b429}.bs-rail-track span:nth-child(9n+8){color:#fb7185}
+
+@media (prefers-reduced-motion: reduce){
+  .bs-colorwash i,.bs-v8 .bs-panel::after,.bs-v8 .bs-kpi::after{animation:none}
+}

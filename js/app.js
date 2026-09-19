@@ -291,16 +291,17 @@
     const letterize = text => [...text].map((ch,i)=>`<span style="--i:${i}">${ch===' '?'&nbsp;':ch}</span>`).join('');
     return `
     <div class="bigscreen bs-v8">
-      <div class="bs-sweeps"><i></i><i></i><i></i></div>
+      <div class="bs-sweeps"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <div class="bs-letters">
         ${['牛·草·牧·数·据·云','牧·场·智·能·感·知','草·畜·平·衡·轮·牧','耳·标·测·温·定·位','自·动·称·重·分·群','饲·草·储·备·打·草','犊·牛·保·温·饮·水','政·务·对·接·溯·源','牧·户·游·接·待','智·慧·农·机·作·业','雪·灾·预·警·防·火','冷·链·产·品·溯·源','北·斗·短·报·文','无·人·机·巡·场'].map((t,i)=>`<span style="--x:${(i*7.1+1).toFixed(1)}%;--d:${(9+(i%5)*1.8).toFixed(1)}s;--dl:-${(i*0.85).toFixed(2)}s">${t}</span>`).join('')}
       </div>
       <div class="bs-radar"><i></i><i></i><i></i><b></b></div>
+      <div class="bs-colorwash"><i></i><i></i><i></i></div>
       <div class="bs-bits">01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101 01010011 01001101 01010011 01010010 00110001 01011001 01001100 01010100 01000101</div>
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=20" alt="YILATE">
+          <img src="assets/logo.png?v=21" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1658,7 +1659,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=20" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=21" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
