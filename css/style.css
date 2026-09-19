@@ -2208,3 +2208,46 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 @media (prefers-reduced-motion: reduce){
   .bs-colorwash i,.bs-v8 .bs-panel::after,.bs-v8 .bs-kpi::after{animation:none}
 }
+
+/* ============ v22 数据大屏版块去重与彩色数据卡 ============ */
+/* 让右侧四块数据区信息独立、紧凑 */
+.bs-v8 .bs-col > .bs-panel:last-child{--acc:#f0b429}
+.bs-weather .bs-w-main{margin-top:1px}
+.bs-weather .bs-w-main span{font-size:25px}
+.bs-weather .bs-w-main b{font-size:25px}
+.bs-weather .bs-w-info{font-size:9.5px;line-height:1.45;margin-top:2px}
+.bs-weather .bs-w-fc{gap:5px;margin-top:5px}
+.bs-weather .bs-w-fc div{padding:3px 3px;font-size:8.5px;border-radius:7px}
+.bs-weather .bs-w-fc b{font-size:10px;margin:0}
+.bs-weather .bs-w-fc i{font-size:8px}
+.bs-weather .bs-w-source{margin-top:4px;font-size:7.5px}
+
+.bs-forage-head{display:flex;align-items:center;justify-content:space-between;margin:1px 0 6px}
+.bs-forage-head div{display:flex;align-items:baseline;gap:6px}
+.bs-forage-head b{font-size:25px;line-height:1;color:#5eead4;text-shadow:0 0 16px rgba(94,234,212,.45)}
+.bs-forage-head span{font-size:9px;color:#8fb8dc}
+.bs-forage-head small{font-size:8px;color:#6684a7}
+.bs-forage-list{display:flex;flex-direction:column;gap:4px}
+.bs-forage-row>div:first-child{display:flex;justify-content:space-between;gap:5px;font-size:8.5px;color:#8eafd0}
+.bs-forage-row b{font-weight:700;color:#c9e9ff}
+.bs-forage-bar{position:relative;height:3px;margin-top:2px;overflow:hidden;border-radius:99px;background:rgba(86,130,174,.20)}
+.bs-forage-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--fc),#fff);box-shadow:0 0 8px var(--fc);animation:bsBarPulse 3.4s ease-in-out infinite}
+@keyframes bsBarPulse{0%,100%{filter:saturate(1)}50%{filter:saturate(1.5) brightness(1.16)}}
+
+.bs-health-metrics,.bs-biz-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:1px 0 7px}
+.bs-health-metrics>div,.bs-biz-metrics>div{padding:6px 5px;border-radius:8px;background:rgba(104,113,250,.11);border:1px solid rgba(129,140,248,.20);text-align:center}
+.bs-health-metrics>div:nth-child(2){background:rgba(34,211,238,.10);border-color:rgba(34,211,238,.22)}
+.bs-health-metrics>div:nth-child(3){background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.22)}
+.bs-health-metrics b,.bs-biz-metrics b{display:block;font-size:15px;line-height:1;color:#dff7ff;text-shadow:0 0 12px rgba(125,211,252,.24)}
+.bs-health-metrics span,.bs-biz-metrics span{display:block;margin-top:4px;font-size:8px;color:#85a7ca}
+.bs-biz-metrics{grid-template-columns:1fr 1fr}
+.bs-biz-metrics>div{background:rgba(240,180,41,.10);border-color:rgba(240,180,41,.24);text-align:left}
+.bs-biz-metrics>div:nth-child(2){background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.22)}
+.bs-biz-metrics b{font-size:17px;color:#f8e7ba}
+.bs-biz-metrics>div:nth-child(2) b{color:#8ff0cf}
+.bs-health-list,.bs-biz-stock{display:flex;flex-wrap:wrap;gap:4px}
+.bs-health-list>div{display:flex;justify-content:space-between;gap:5px;width:100%;padding:4px 6px;border-radius:6px;background:rgba(34,211,238,.07);font-size:8.5px;color:#8fb8dc}
+.bs-health-list b{font-weight:700;color:#cfeaff}.bs-health-list span{color:#6c94bc}
+.bs-biz-stock span{display:flex;align-items:center;gap:3px;padding:3px 5px;border-radius:6px;background:rgba(255,255,255,.045);font-size:8px;color:#9ab5d2;white-space:nowrap}
+.bs-biz-stock i{font-style:normal}.bs-biz-stock b{color:#f0d59b;font-size:8.5px;margin-left:auto}
+@media (max-width:1200px){.bs-health-metrics,.bs-biz-metrics{gap:4px}.bs-health-metrics b{font-size:13px}.bs-health-metrics span{font-size:7.5px}}

@@ -279,7 +279,6 @@
       `犊牛舍恒温 22℃ · 饮水不冻`,
       `当前 ${monthName(demoMonth)} · ${m.season}季 · ${m.name}`
     ].join('　◆　');
-    const health = c.devRate;
     const equipList = DB.deviceList.filter(d=>d.id!=='DV1');
     const equipOnline = equipList.filter(d=>String(d.state).includes('在线')).reduce((a,d)=>a+d.count,0);
     const equipOffline = equipList.reduce((a,d)=>a+d.count,0) - equipOnline;
@@ -301,7 +300,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=21" alt="YILATE">
+          <img src="assets/logo.png?v=22" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -380,31 +379,6 @@
         </div>
 
         <div class="bs-col">
-          <section class="bs-panel">
-            <div class="bsp-title">🩺 设备健康度 <em>HEALTH</em></div>
-            <div class="bs-health">
-              <div class="bs-health-num">${health}<small>%</small></div>
-              <div class="bs-health-legend">
-                <span><i style="background:#3ddc97"></i>在线设备 <b>${fmt(c.devOnline)}</b></span>
-                <span><i style="background:#f0b429"></i>端口待连 <b>${(DB.ports||[]).length-c.portsOn}</b></span>
-                <span><i style="background:#94a3b8"></i>离线/检修 <b>${fmt(c.devOffline)}</b></span>
-              </div>
-            </div>
-          </section>
-          <section class="bs-panel">
-            <div class="bsp-title">🔔 告警统计 <em>ALERTS</em></div>
-            <div class="bs-rows">
-              <div class="bs-row"><span>今日告警 / 已处理</span><b>${DB.tasks.length} / ${DB.tasks.length-1} 条</b></div>
-              <div class="bs-row"><span>高优先级</span><b>${DB.tasks.filter(t=>t.level==='高').length} 条</b></div>
-            </div>
-            <div class="bs-tasks">${DB.tasks.slice(0,1).map(t=>`<div class="bs-task"><span>◆</span>${t.text.slice(0,24)}</div>`).join('')}</div>
-          </section>
-          <section class="bs-panel">
-            <div class="bsp-title">🔌 端口对接 <em>PORTS</em></div>
-            <div class="bs-rows">
-              ${(DB.ports||[]).slice(0,3).map(p=>`<div class="bs-row"><span>${p.kind}</span><b>${p.status==='已连接'?'已连接':'待连接'}</b></div>`).join('')}
-            </div>
-          </section>
           <section class="bs-panel bs-weather">
             <div class="bsp-title">🌦️ ${w.place} <em>LIVE WEATHER</em><button class="bs-weather-refresh" id="bsWeatherRefresh" title="刷新真实天气">↻</button></div>
             <div class="bs-w-main"><span id="bsWeatherIcon">${w.icon}</span><b id="bsWeatherTemp">${w.temp}℃</b></div>
@@ -413,6 +387,37 @@
               ${(w.forecast||[]).map(f=>`<div><span>${f.day}</span><b>${f.icon}${f.high}℃</b><i>${f.low}℃</i></div>`).join('')}
             </div>
             <div class="bs-w-source" id="bsWeatherSource">${w.source||'Open-Meteo'} · ${w.updated||'本地备份'}</div>
+          </section>
+
+          <section class="bs-panel bs-forage-panel">
+            <div class="bsp-title">🧊 饲草储备与冬储 <em>FORAGE</em></div>
+            <div class="bs-forage-head"><div><b>${c.foragePct}%</b><span>冬储完成率</span></div><small>天然草 · 青贮 · 精料</small></div>
+            <div class="bs-forage-list">
+              ${DB.forageInventory.map((x,i)=>{const pct=Math.max(2,Math.min(100,Math.round(x.stock/x.target*100)));return `<div class="bs-forage-row"><div><span>${x.name.replace('（打草场自产）','')}</span><b>${x.stock}/${x.target} ${x.unit}</b></div><div class="bs-forage-bar"><i style="width:${pct}%;--fc:${['#34d399','#22d3ee','#a78bfa','#f0b429'][i%4]}"></i></div></div>`}).join('')}
+            </div>
+          </section>
+
+          <section class="bs-panel bs-health-data">
+            <div class="bsp-title">💉 防疫健康与免疫 <em>HEALTH</em></div>
+            <div class="bs-health-metrics">
+              <div><b>${DB.vaccinePlans.length}</b><span>免疫项目</span></div>
+              <div><b>${DB.vaccineRecords.filter(r=>r.status==='完成').length}</b><span>完成记录</span></div>
+              <div><b>96.8%</b><span>免疫覆盖率</span></div>
+            </div>
+            <div class="bs-health-list">
+              ${DB.vaccinePlans.slice(0,2).map(v=>`<div><span>${v.season.replace('（3-4月）','').replace('（9-10月）','')}</span><b>${v.vaccine}</b></div>`).join('')}
+            </div>
+          </section>
+
+          <section class="bs-panel bs-biz-panel">
+            <div class="bsp-title">💰 产品与经营 <em>BUSINESS</em></div>
+            <div class="bs-biz-metrics">
+              <div><b>${money(c.saleAmount)}</b><span>累计销售</span></div>
+              <div><b>${c.todayOrders} 单</b><span>牧游订单</span></div>
+            </div>
+            <div class="bs-biz-stock">
+              ${DB.productInventory.slice(0,3).map(x=>`<span><i>${x.name.includes('牛肉')?'🥩':x.name.includes('犊牛')?'🐮':'🥛'}</i>${x.name} <b>${x.stock}${x.unit}</b></span>`).join('')}
+            </div>
           </section>
         </div>
       </div>
@@ -1659,7 +1664,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=21" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=22" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
