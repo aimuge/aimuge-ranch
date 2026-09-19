@@ -316,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=32" alt="YILATE">
+          <img src="assets/logo.png?v=33" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -390,31 +390,36 @@
               <svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
               <div class="bs-dh bs-dh-center" id="dhBox" title="点击机器人听牧场简介">
                 <div class="dh-avatar dh-robot">
-                  <svg viewBox="0 0 150 210" class="dh-svg robot-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="智慧牧场人形讲解机器人">
+                  <svg viewBox="0 0 150 220" class="dh-svg robot-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="银白装甲人形讲解机器人">
                     <defs>
-                      <linearGradient id="humanoidShell" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0fbff"/><stop offset=".35" stop-color="#75ddf4"/><stop offset="1" stop-color="#1458bc"/></linearGradient>
-                      <linearGradient id="humanoidMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2766ad"/><stop offset=".5" stop-color="#12396d"/><stop offset="1" stop-color="#071b3e"/></linearGradient>
-                      <linearGradient id="humanoidGlow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
-                      <filter id="humanoidGlowFilter"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                      <linearGradient id="optimusWhite" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".22" stop-color="#dcecf5"/><stop offset=".55" stop-color="#9fb5c6"/><stop offset=".82" stop-color="#eaf7ff"/><stop offset="1" stop-color="#71889c"/></linearGradient>
+                      <linearGradient id="optimusSilver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef8ff"/><stop offset=".36" stop-color="#a9bfce"/><stop offset=".65" stop-color="#f8fdff"/><stop offset="1" stop-color="#657a8d"/></linearGradient>
+                      <linearGradient id="optimusDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d4d59"/><stop offset=".45" stop-color="#17222d"/><stop offset="1" stop-color="#050b11"/></linearGradient>
+                      <linearGradient id="optimusVisor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1c2a"/><stop offset=".5" stop-color="#172d40"/><stop offset="1" stop-color="#02070c"/></linearGradient>
+                      <linearGradient id="optimusCore" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8ffff"/><stop offset=".4" stop-color="#4fd1e8"/><stop offset="1" stop-color="#1264b4"/></linearGradient>
+                      <filter id="optimusGlow"><feGaussianBlur stdDeviation="2.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                     </defs>
-                    <ellipse cx="75" cy="203" rx="43" ry="6" fill="rgba(0,0,0,.36)"/>
-                    <path d="M75 16V5" stroke="#7dd3fc" stroke-width="3"/><circle cx="75" cy="4" r="4" fill="#f472b6" filter="url(#humanoidGlowFilter)"/>
-                    <ellipse cx="75" cy="45" rx="29" ry="31" fill="url(#humanoidShell)" stroke="#a5f3fc" stroke-width="2"/>
-                    <rect x="53" y="35" width="44" height="24" rx="11" fill="#061a43" stroke="#67e8f9" stroke-width="2"/>
-                    <circle cx="66" cy="47" r="4.5" fill="#5eead4" filter="url(#humanoidGlowFilter)"/><circle cx="84" cy="47" r="4.5" fill="#5eead4" filter="url(#humanoidGlowFilter)"/>
-                    <path d="M66 58q9 5 18 0" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M66 75v12M84 75v12" stroke="#4b83bf" stroke-width="6" stroke-linecap="round"/>
-                    <path d="M48 91q27-16 54 0l7 55H41z" fill="url(#humanoidMetal)" stroke="#38bdf8" stroke-width="2"/>
-                    <path d="M53 98 35 146" stroke="#5ba5e8" stroke-width="9" stroke-linecap="round"/>
-                    <path d="M97 98 115 146" stroke="#5ba5e8" stroke-width="9" stroke-linecap="round"/>
-                    <circle cx="34" cy="150" r="7" fill="#8ce8ef" stroke="#dffcff" stroke-width="2"/><circle cx="116" cy="150" r="7" fill="#8ce8ef" stroke="#dffcff" stroke-width="2"/>
-                    <circle cx="54" cy="101" r="7" fill="#7dd3fc" stroke="#dffcff" stroke-width="1.5"/><circle cx="96" cy="101" r="7" fill="#7dd3fc" stroke="#dffcff" stroke-width="1.5"/>
-                    <rect x="59" y="111" width="32" height="23" rx="7" fill="#082651" stroke="#5eead4" stroke-width="1.5"/>
-                    <circle cx="75" cy="122" r="7" fill="none" stroke="url(#humanoidGlow)" stroke-width="2" stroke-dasharray="4 3" filter="url(#humanoidGlowFilter)"/>
-                    <path d="M49 146h52v10H49z" fill="#1d4d8d" stroke="#60a5fa" stroke-width="1.5"/>
-                    <path d="M61 156 55 191M89 156l6 35" stroke="#3f74bd" stroke-width="8" stroke-linecap="round"/>
-                    <circle cx="55" cy="171" r="5" fill="#5eead4"/><circle cx="95" cy="171" r="5" fill="#5eead4"/>
-                    <path d="M47 194h16M87 194h16" stroke="#7dd3fc" stroke-width="6" stroke-linecap="round"/>
+                    <ellipse cx="75" cy="211" rx="46" ry="7" fill="rgba(0,0,0,.38)"/>
+                    <path d="M75 12V3" stroke="#a8c7dc" stroke-width="3.4"/><circle cx="75" cy="3" r="4" fill="#68e1e7" filter="url(#optimusGlow)"/>
+                    <path d="M52 27Q75 7 98 27l-5 31Q75 71 57 58z" fill="url(#optimusWhite)" stroke="#f5fdff" stroke-width="1.8"/>
+                    <path d="M57 28Q75 20 93 28l-3 29Q75 64 59 57z" fill="url(#optimusVisor)" stroke="#284355" stroke-width="1.2"/>
+                    <ellipse cx="67" cy="44" rx="6.5" ry="3.1" fill="#70f0f2" filter="url(#optimusGlow)"/><ellipse cx="83" cy="44" rx="6.5" ry="3.1" fill="#70f0f2" filter="url(#optimusGlow)"/>
+                    <path d="M66 57Q75 62 84 57" fill="none" stroke="#7393a8" stroke-width="1.5" stroke-linecap="round"/>
+                    <rect x="67" y="61" width="16" height="10" rx="4" fill="url(#optimusSilver)" stroke="#8aa2b3" stroke-width="1"/>
+                    <path d="M46 75Q75 63 104 75l6 53Q75 142 44 128z" fill="url(#optimusWhite)" stroke="#eef9ff" stroke-width="1.7"/>
+                    <path d="M54 78Q75 71 96 78l-4 47Q75 133 58 125z" fill="url(#optimusSilver)" opacity=".72"/>
+                    <rect x="63" y="86" width="24" height="26" rx="8" fill="url(#optimusDark)" stroke="#8aa4b8" stroke-width="1.1"/>
+                    <circle cx="75" cy="99" r="7.2" fill="none" stroke="url(#optimusCore)" stroke-width="2.2" stroke-dasharray="4 3" filter="url(#optimusGlow)"/>
+                    <path d="M38 81Q23 74 18 96l-8 56 12 5 15-53zM112 81q15-7 20 15l8 56-12 5-15-53z" fill="url(#optimusWhite)" stroke="#bdd5e2" stroke-width="1.3"/>
+                    <path d="M20 152q-5 10 2 18l-3 5q-5 5-8-1l-3-18q-1-5 12-4zM130 152q5 10-2 18l3 5q5 5 8-1l3-18q1-5-12-4z" fill="url(#optimusSilver)" stroke="#7f97a9" stroke-width="1.1"/>
+                    <circle cx="25" cy="83" r="7" fill="url(#optimusSilver)" stroke="#eaf8ff" stroke-width="1.2"/><circle cx="125" cy="83" r="7" fill="url(#optimusSilver)" stroke="#eaf8ff" stroke-width="1.2"/>
+                    <path d="M47 130h56l7 13-4 15H44l-4-15z" fill="url(#optimusDark)" stroke="#8fa8b9" stroke-width="1.1"/>
+                    <path d="M46 139h58" stroke="#6d8799" stroke-width="2"/><path d="M52 146h46" stroke="#30495b" stroke-width="1.2"/>
+                    <path d="M57 154 51 194M93 154l6 40" stroke="url(#optimusSilver)" stroke-width="10" stroke-linecap="round"/>
+                    <path d="M51 181q-7 12 4 18l18-3q5-5 3-13zM99 181q7 12-4 18l-18-3q-5-5-3-13z" fill="url(#optimusWhite)" stroke="#aec4d2" stroke-width="1.2"/>
+                    <path d="M47 202h20M83 202h20" stroke="#d9eaf3" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M53 168a5 5 0 1 0 10 0a5 5 0 1 0-10 0M87 168a5 5 0 1 0 10 0a5 5 0 1 0-10 0" fill="url(#optimusCore)" filter="url(#optimusGlow)"/>
+                    <path d="M34 87q-5 18 1 35M116 87q5 18-1 35" stroke="rgba(255,255,255,.72)" stroke-width="1.2" fill="none"/>
                   </svg>
                   <div class="dh3d-badge">AI 机器人</div>
                 </div>
@@ -1804,7 +1809,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=32" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=33" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
