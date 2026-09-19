@@ -316,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=38" alt="YILATE">
+          <img src="assets/logo.png?v=39" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -398,9 +398,9 @@
               <div class="bs-dh bs-dh-center" id="dhBox" title="点击机器人听牧场简介">
                 <div class="dh-avatar dh-human">
                   <div class="human-photo-wrap barga-wrap">
-                    <img class="human-photo barga-base" src="assets/photos/digital2-base.png" alt="真人数字人讲解员">
-                    <img class="human-hand hand-a" src="assets/photos/digital2-hand-a.png" alt="">
-                    <img class="human-hand hand-b" src="assets/photos/digital2-hand-b.png" alt="">
+                    <img class="human-photo barga-base" src="assets/photos/digital3-base.png" alt="新真人数字人讲解员">
+                    <img class="human-hand hand-a" src="assets/photos/digital3-hand-a.png" alt="">
+                    <img class="human-hand hand-b" src="assets/photos/digital3-hand-b.png" alt="">
                     <span class="human-face-dynamics"><i class="eye-blink left-eye"></i><i class="eye-blink right-eye"></i><i class="smile-line"></i></span>
                     <i class="human-light-scan"></i>
                   </div>
@@ -1802,7 +1802,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=38" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=39" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
