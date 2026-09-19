@@ -3049,3 +3049,10 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .page .tbl{min-width:0!important;table-layout:auto}
 .page .tbl th,.page .tbl td{white-space:normal!important;word-break:break-word;vertical-align:top}
 .page .tbl th{line-height:1.35}
+
+/* v59 手机端顶栏精简：隐藏实时采集长条，保留头像和核心按钮 */
+@media (max-width:640px){
+  .iot-chip{display:none!important}
+  .topbar-right{gap:6px!important}
+  .topbar{overflow:hidden}
+}
