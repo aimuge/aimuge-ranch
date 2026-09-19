@@ -2487,3 +2487,13 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 .bs-map-robot::before{content:"";position:absolute;left:50%;top:78px;width:150px;height:150px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.20),rgba(34,211,238,.05) 46%,transparent 70%);filter:blur(3px);animation:robotHalo 3.4s ease-in-out infinite;pointer-events:none}
 @keyframes robotHalo{0%,100%{opacity:.5;transform:translateX(-50%) scale(.9)}50%{opacity:1;transform:translateX(-50%) scale(1.12)}}
 @media (max-width:700px){.bs-map.bs-map-robot{height:252px}.bs-v8 .bs-dh-center{top:20px!important}.bs-v8 .bs-dh-center .dh-avatar{width:112px!important}.bs-v8 .bs-dh-center .dh-svg.robot-svg{width:112px!important}.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:152px!important}}
+
+/* ============ v31 人形机器人中央讲解 ============ */
+.bs-map.bs-map-robot{height:320px}
+.bs-v8 .bs-dh-center{top:18px!important}
+.bs-v8 .bs-dh-center .dh-avatar{width:132px!important;height:202px!important}
+.bs-v8 .bs-dh-center .dh-svg.robot-svg{width:132px!important;height:194px!important}
+.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:230px!important}
+.bs-map.bs-map-robot .map-zone.z1{top:10%}.bs-map.bs-map-robot .map-zone.z2{top:5%}.bs-map.bs-map-robot .map-zone.z3{top:12%}
+.bs-map.bs-map-robot .map-zone.z4{bottom:8%}.bs-map.bs-map-robot .map-zone.z5{bottom:4%}.bs-map.bs-map-robot .map-zone.z6{bottom:9%}
+@media (max-width:700px){.bs-map.bs-map-robot{height:330px}.bs-v8 .bs-dh-center{top:16px!important}.bs-v8 .bs-dh-center .dh-avatar{width:116px!important;height:184px!important}.bs-v8 .bs-dh-center .dh-svg.robot-svg{width:116px!important;height:178px!important}.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:212px!important}.bs-map.bs-map-robot .map-zone.z4{bottom:6%}.bs-map.bs-map-robot .map-zone.z5{bottom:2%}.bs-map.bs-map-robot .map-zone.z6{bottom:7%}}
