@@ -316,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=31" alt="YILATE">
+          <img src="assets/logo.png?v=32" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -425,6 +425,17 @@
                   </div>
                   <div class="dh-text" id="dhText">牧场简介</div>
                 </div>
+              </div>
+              <div class="robot-chat-panel" id="robotChatPanel" aria-hidden="true">
+                <div class="rc-head"><b>人形机器人 · 牧场问答</b><button id="robotChatClose" title="关闭">×</button></div>
+                <div class="rc-body" id="robotChatBody"><div class="rc-msg bot">您好，我是伊拉特智慧牧场人形机器人。您可以问我存栏、草场、饲草、防疫、设备和经营情况。</div></div>
+                <div class="rc-quick">
+                  <button data-rcq="今天牧场整体情况怎么样？">今日快报</button>
+                  <button data-rcq="现在存栏多少牛？">存栏数据</button>
+                  <button data-rcq="天然草够不够过冬？">饲草储备</button>
+                  <button data-rcq="设备在线情况？">设备状态</button>
+                </div>
+                <div class="rc-input"><input id="robotChatInput" placeholder="问：现在存栏多少牛？"><button id="robotChatSend">发送</button></div>
               </div>
             </div>
           </section>
@@ -669,11 +680,11 @@
     pickNewsVoice();
     if (window.speechSynthesis) speechSynthesis.onvoiceschanged = pickNewsVoice;
     const resetVoiceButton = ()=>{ if (voiceBtn) voiceBtn.textContent = '🔊 语音讲解'; };
-    const speak = ()=>{
+    const speak = (txt = profileIntro)=>{
       if (!window.speechSynthesis) return;
       if (speechSynthesis.speaking) return;
       try {
-        const u = new SpeechSynthesisUtterance(profileIntro);
+        const u = new SpeechSynthesisUtterance(txt);
         u.lang = 'zh-CN';
         u.rate = 0.92;
         u.pitch = 0.96;
@@ -691,11 +702,33 @@
       toast(msg || '🔊 小伊正在完整讲解牧场简介');
     };
     /* 点击小伊或她抱着的小牛 → 完整播报牧场简介 */
-    if (dhBox) dhBox.addEventListener('click', ()=>startNarration('🔊 小伊正在完整讲解牧场简介'));
+    const chatPanel = $('#robotChatPanel'), chatBody = $('#robotChatBody'), chatInput = $('#robotChatInput');
+    const appendRobotMsg = (role, text)=>{
+      if (!chatBody) return;
+      const d = document.createElement('div'); d.className = 'rc-msg ' + role; d.textContent = text; chatBody.appendChild(d); chatBody.scrollTop = chatBody.scrollHeight;
+    };
+    const sendRobotQuestion = (q)=>{
+      q = String(q || '').trim(); if (!q || !chatInput) return;
+      appendRobotMsg('user', q); chatInput.value = '';
+      const answer = agentReply(q);
+      setTimeout(()=>{ appendRobotMsg('bot', answer); if (voiceOn) speak(answer); }, 260);
+    };
+    if (dhBox) dhBox.addEventListener('click', ()=>{
+      if (chatPanel){ chatPanel.classList.add('open'); chatPanel.setAttribute('aria-hidden','false'); setTimeout(()=>chatInput && chatInput.focus(),120); }
+      startNarration('🔊 人形机器人已启动讲解，欢迎提问');
+    });
     if (calfBox) calfBox.addEventListener('click', (e)=>{
       e.stopPropagation();
       startNarration('🐮 小牛提示：正在完整讲解伊拉特智慧牧场简介');
     });
+    if (chatPanel && chatBody){
+      const closeChat = $('#robotChatClose');
+      if (closeChat) closeChat.addEventListener('click', (e)=>{ e.stopPropagation(); chatPanel.classList.remove('open'); chatPanel.setAttribute('aria-hidden','true'); });
+      const sendBtn = $('#robotChatSend');
+      if (sendBtn) sendBtn.addEventListener('click', (e)=>{ e.stopPropagation(); sendRobotQuestion(chatInput.value); });
+      if (chatInput) chatInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendRobotQuestion(chatInput.value); } });
+      chatPanel.querySelectorAll('[data-rcq]').forEach(b=>b.addEventListener('click', (e)=>{ e.stopPropagation(); sendRobotQuestion(b.dataset.rcq); }));
+    }
     if (voiceBtn) voiceBtn.addEventListener('click', (e)=>{
       e.stopPropagation();
       voiceOn = !voiceOn;
@@ -1771,7 +1804,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=31" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=32" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
