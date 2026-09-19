@@ -352,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=55" alt="YILATE">
+          <img src="assets/logo.png?v=56" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -705,8 +705,16 @@
     const pickNewsVoice = ()=>{
       if (!window.speechSynthesis) return;
       const voices = speechSynthesis.getVoices() || [];
-      const zh = voices.filter(v=>/^zh|Chinese|中文|普通话/i.test((v.lang||'')+' '+(v.name||'')));
-      newsVoice = zh.find(v=>/Xiaoxiao|Yunxi|Xiaoyi|Yunjian|Natural|Online/i.test(v.name)) || zh.find(v=>/Ting-Ting|Meijia|Sinji|Li-mu|Chinese/i.test(v.name)) || zh[0] || null;
+      const meta = v=>((v.lang||'')+' '+(v.name||'')+' '+(v.voiceURI||'')).toLowerCase();
+      const isCantonese = v=>/yue|zh-hk|zh-mo|cantonese|hong kong|粤语|粵語|sin-?ji/i.test(meta(v));
+      const zh = voices.filter(v=>!/^en/i.test(v.lang||'') && /zh|chinese|中文|普通话|mandarin|putonghua/i.test(meta(v)) && !isCantonese(v));
+      const mandarin = zh.filter(v=>/zh-cn|zh-sg|mandarin|putonghua|普通话|大陆|简体/i.test(meta(v)));
+      const pool = mandarin.length ? mandarin : zh;
+      newsVoice = pool.find(v=>/xiaoxiao|yunxi|xiaoyi|yunjian/i.test(meta(v)))
+        || pool.find(v=>/natural|online/i.test(meta(v)))
+        || pool.find(v=>/ting-?ting|meijia|huihui|kangkang|yaoyao/i.test(meta(v)))
+        || pool[0] || null;
+      if (newsVoice) document.documentElement.dataset.narratorVoice = newsVoice.name;
     };
     pickNewsVoice();
     if (window.speechSynthesis) speechSynthesis.onvoiceschanged = pickNewsVoice;
@@ -1864,7 +1872,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=55" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=56" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
