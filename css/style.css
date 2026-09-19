@@ -2645,3 +2645,23 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .mn-item{height:31px;padding:0 8px!important;font-size:10.5px!important}
   .mn-item b{font-size:10.5px!important}
 }
+
+/* ============ v41 新脸 + 静止服装 + 仅双手顺滑动作 ============ */
+/* 身体和服装只执行一次出场，不再持续呼吸或移动 */
+.bs-v8 .bs-dh-center .dh-human{animation:humanEnter 1.1s cubic-bezier(.2,.9,.2,1.15) both!important}
+.bs-v8 .bs-dh-center .human-photo{animation:none!important;transform:none!important}
+.human-light-scan{display:none!important}
+.human-photo-wrap::before{animation:humanGroundPulse 4.5s ease-in-out infinite!important}
+/* 新分层素材的人脸与手部位置 */
+.human-hand.hand-a{left:51.2%!important;top:66.9%!important;height:15.1%!important;transform-origin:50% 10%!important;animation:handOnlyA 8s cubic-bezier(.37,0,.63,1) infinite!important;will-change:transform}
+.human-hand.hand-b{left:31.4%!important;top:67.5%!important;height:14.6%!important;transform-origin:50% 10%!important;animation:handOnlyB 8s cubic-bezier(.37,0,.63,1) infinite!important;will-change:transform}
+.eye-blink.left-eye{left:45.7%!important;top:25.4%!important;width:6.6%!important;height:1.7%!important;animation:eyeBlinkNew 5.6s ease-in-out infinite!important}
+.eye-blink.right-eye{left:54.9%!important;top:25.4%!important;width:6.5%!important;height:1.7%!important;animation:eyeBlinkNew 5.6s .18s ease-in-out infinite!important}
+.smile-line{left:49.1%!important;top:30.6%!important;width:9.2%!important;height:2.4%!important;animation:smileNew 6.4s ease-in-out infinite!important}
+.human-face-dynamics::after{left:45%;top:23.8%!important;width:13%!important;height:8%!important;animation:bargaFaceGlow 5.4s ease-in-out infinite!important}
+/* 左手和右手按讲解节奏独立、连续动作 */
+@keyframes handOnlyA{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}22%{transform:translate3d(2px,-3px,0) rotate(1.2deg)}48%{transform:translate3d(0,-1px,0) rotate(.3deg)}72%{transform:translate3d(-1.5px,-3.5px,0) rotate(-1deg)}}
+@keyframes handOnlyB{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}24%{transform:translate3d(-2px,-3px,0) rotate(-1.1deg)}52%{transform:translate3d(0,-1px,0) rotate(-.2deg)}76%{transform:translate3d(1.5px,-3.5px,0) rotate(1deg)}}
+@keyframes eyeBlinkNew{0%,39%,45%,100%{opacity:0;transform:translateY(-1px) scaleY(.18)}41%{opacity:.93;transform:translateY(0) scaleY(1)}42.2%{opacity:.86;transform:translateY(0) scaleY(.3)}}
+@keyframes smileNew{0%,100%{opacity:.48;transform:scaleX(.9) translateY(1px)}48%{opacity:.9;transform:scaleX(1.06) translateY(0)}68%{opacity:.7;transform:scaleX(.98) translateY(0)}}
+@media (prefers-reduced-motion: reduce){.human-hand,.eye-blink,.smile-line,.human-face-dynamics::after{animation:none!important}}
