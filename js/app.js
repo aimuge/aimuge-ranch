@@ -305,7 +305,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=27" alt="YILATE">
+          <img src="assets/logo.png?v=28" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -495,14 +495,13 @@
       </div>
 
       <div class="bs-dh" id="dhBox" title="点击小伊或小牛听讲解">
-        <div class="dh-bubble">
-          <div class="dh-hi">小伊 · 3D 数字讲解员</div>
-          <div class="dh-text" id="dhText">${DB.meta.name} · 牧场档案</div>
-          <div class="dh-codeflow">
-            <span>YILATE SMART RANCH · 呼伦贝尔 · 新巴尔虎左旗 · 吉布胡郎图苏木 · 呼伦嘎查 ·</span>
-            <span>YILATE SMART RANCH · 呼伦贝尔 · 新巴尔虎左旗 · 吉布胡郎图苏木 · 呼伦嘎查 ·</span>
+        <div class="dh-bubble dh-square">
+          <div class="dh-hi">小伊</div>
+          <div class="dh-square-flow">
+            <span>YILATE · SMART RANCH · 牧场简介 · 伊拉特智慧牧场 · 西门塔尔牛 ·</span>
+            <span>YILATE · SMART RANCH · 牧场简介 · 伊拉特智慧牧场 · 西门塔尔牛 ·</span>
           </div>
-          <div class="dh-tip">🔊 点击头像 / 小牛 · 新闻主播语音</div>
+          <div class="dh-text" id="dhText">牧场简介</div>
         </div>
         <div class="dh-avatar">
           <svg viewBox="0 0 180 220" class="dh-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3D数字讲解员小伊抱着小牛">
@@ -663,10 +662,8 @@
 
     /* ⑦ 数字人讲解：小伊（牧场主）轮播 + 语音朗读 */
     const profileIntro = (DB.narration && DB.narration[0] && DB.narration[0].text) || intro;
-    const lines = [profileIntro];
-
-    let li = 0, voiceOn = false, newsVoice = null;
-    const textEl = $('#dhText'), voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
+    let voiceOn = false, newsVoice = null;
+    const voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
     const pickNewsVoice = ()=>{
       if (!window.speechSynthesis) return;
       const voices = speechSynthesis.getVoices() || [];
@@ -675,51 +672,45 @@
     };
     pickNewsVoice();
     if (window.speechSynthesis) speechSynthesis.onvoiceschanged = pickNewsVoice;
-    const speak = (txt)=>{
-      if (!voiceOn || !window.speechSynthesis) return;
+    const resetVoiceButton = ()=>{ if (voiceBtn) voiceBtn.textContent = '🔊 语音讲解'; };
+    const speak = ()=>{
+      if (!window.speechSynthesis) return;
+      if (speechSynthesis.speaking) return;
       try {
-        speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(txt);
+        const u = new SpeechSynthesisUtterance(profileIntro);
         u.lang = 'zh-CN';
         u.rate = 0.92;
         u.pitch = 0.96;
         u.volume = 1;
         if (newsVoice) u.voice = newsVoice;
+        u.onend = ()=>{ voiceOn = false; resetVoiceButton(); };
+        u.onerror = ()=>{ voiceOn = false; resetVoiceButton(); };
         speechSynthesis.speak(u);
-      } catch(e){}
+      } catch(e){ voiceOn = false; resetVoiceButton(); }
     };
-    const show = (speakIt)=>{
-      const txt = lines[li % lines.length];
-      if (textEl) textEl.style.opacity = 1;
-      if (speakIt !== false) speak(txt);
-      li++;
-    };
-    show(false);
-    const dhTimer = setInterval(()=>show(true), 14000);
     const startNarration = (msg)=>{
       voiceOn = true;
       if (voiceBtn) voiceBtn.textContent = '🔇 关闭语音';
-      const txt = lines[(li - 1 + lines.length) % lines.length];
-      speak(txt);
-      toast(msg || '🔊 伊拉特牧场主小伊开始为您讲解');
+      speak();
+      toast(msg || '🔊 小伊正在完整讲解牧场简介');
     };
-    /* 点击小伊或她抱着的小牛 → 语音讲解 */
-    if (dhBox) dhBox.addEventListener('click', ()=>startNarration('🔊 伊拉特牧场主小伊开始为您讲解'));
+    /* 点击小伊或她抱着的小牛 → 完整播报牧场简介 */
+    if (dhBox) dhBox.addEventListener('click', ()=>startNarration('🔊 小伊正在完整讲解牧场简介'));
     if (calfBox) calfBox.addEventListener('click', (e)=>{
       e.stopPropagation();
-      startNarration('🐮 小牛提示：正在为您介绍伊拉特智慧牧场');
+      startNarration('🐮 小牛提示：正在完整讲解伊拉特智慧牧场简介');
     });
     if (voiceBtn) voiceBtn.addEventListener('click', (e)=>{
       e.stopPropagation();
       voiceOn = !voiceOn;
       voiceBtn.textContent = voiceOn ? '🔇 关闭语音' : '🔊 语音讲解';
-      if (voiceOn) speak(lines[(li - 1 + lines.length) % lines.length]);
+      if (voiceOn) speak();
       else if (window.speechSynthesis) { try { speechSynthesis.cancel(); } catch(err){} }
-      toast(voiceOn ? '数字人语音讲解已开启' : '已关闭语音讲解');
+      toast(voiceOn ? '小伊开始完整讲解牧场简介' : '已关闭语音讲解');
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(dhTimer); clearInterval(paletteTimer); stopBigscreenCanvas(); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
@@ -1784,7 +1775,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=27" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=28" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

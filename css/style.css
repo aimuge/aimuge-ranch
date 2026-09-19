@@ -2432,3 +2432,22 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 @keyframes bsDayBar{0%,100%{opacity:.55}50%{opacity:1;filter:brightness(1.25)}}
 
 @media (max-width:700px){.bs-map{height:132px}.map-zone{font-size:7px;padding:2px 4px}.bs-daily-strip{grid-template-columns:repeat(2,1fr)}.bs-daily-strip>div:last-child{grid-column:1/-1}}
+
+/* ============ v28 小伊方形简介字母框 + 完整播报 ============ */
+.bs-v8 .bs-dh .dh-bubble.dh-square{
+  width:92px!important;max-width:92px!important;height:92px!important;padding:7px 7px 6px!important;border-radius:11px!important;
+  border:1px solid rgba(94,234,212,.60)!important;background:linear-gradient(145deg,rgba(7,30,68,.985),rgba(3,12,38,.995))!important;
+  box-shadow:0 0 0 1px rgba(34,211,238,.18),0 14px 30px -18px #000,0 0 20px -8px rgba(94,234,212,.75)!important;overflow:hidden!important;
+}
+.bs-v8 .bs-dh .dh-bubble.dh-square::before{content:"";position:absolute;left:6px;top:6px;width:12px;height:12px;border-left:1px solid #5eead4;border-top:1px solid #5eead4;box-shadow:-2px -2px 8px rgba(94,234,212,.32)}
+.bs-v8 .bs-dh .dh-bubble.dh-square::after{content:"";display:block;position:absolute;right:6px;bottom:6px;width:12px;height:12px;left:auto;top:auto;border-right:1px solid #5eead4;border-bottom:1px solid #5eead4;box-shadow:2px 2px 8px rgba(94,234,212,.32);transform:none;background:none}
+.dh-square .dh-hi{font-size:9.5px!important;letter-spacing:1px;text-align:center;color:#9ff5ea!important;margin:0 0 4px!important}
+.dh-square .dh-text{display:none!important}
+.dh-square-flow{position:relative;height:61px;overflow:hidden;border-top:1px solid rgba(94,234,212,.16);border-bottom:1px solid rgba(94,234,212,.16)}
+.dh-square-flow span{position:absolute;top:0;left:50%;display:block;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:1.2px;font-size:7px;line-height:1.35;color:rgba(126,232,232,.78);white-space:nowrap;transform:translateX(-50%);animation:dhSquareRun 7s linear infinite}
+.dh-square-flow span:nth-child(2){animation-delay:-3.5s}
+@keyframes dhSquareRun{0%{transform:translate(-50%,100%)}100%{transform:translate(-50%,-100%)}}
+@media (max-width:980px){
+  .bs-v8 .bs-dh .dh-bubble.dh-square{width:92px!important;max-width:92px!important;height:92px!important;align-self:flex-end;margin-left:auto}
+}
+@media (prefers-reduced-motion: reduce){.dh-square-flow span{animation:none}}
