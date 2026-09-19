@@ -2800,3 +2800,9 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 /* ============ v51 犊牛舍靠近大牛棚圈 ============ */
 .bs-v8 .bs-map.bs-map-robot .map-zone.z2{left:29%!important;top:6%!important}
 @media (max-width:700px){.bs-v8 .bs-map.bs-map-robot .map-zone.z2{left:27%!important;top:5%!important}}
+
+
+/* ============ v52 讲解员再次放大 ============ */
+.bs-v8 .bs-dh-center .dh-human{width:330px!important;height:186px!important}
+.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:192px!important}
+@media (max-width:700px){.bs-v8 .bs-dh-center .dh-human{width:270px!important;height:152px!important}.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:158px!important}}
