@@ -319,7 +319,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=45" alt="YILATE">
+          <img src="assets/logo.png?v=46" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -401,7 +401,7 @@
               <div class="bs-dh bs-dh-center" id="dhBox" title="点击机器人听牧场简介">
                 <div class="dh-avatar dh-human">
                   <div class="human-photo-wrap video-wrap">
-                    <img class="narrator-motion" id="narratorMotion" src="assets/videos/narrator-transparent.webp" alt="透明背景巴尔虎服饰讲解员动态">
+                    <div class="narrator-motion" id="narratorMotion" role="img" aria-label="透明背景巴尔虎服饰讲解员动态"></div>
                     <i class="human-light-scan"></i>
                     <span class="video-frame-glow"></span>
                   </div>
@@ -679,9 +679,18 @@
     if (window.speechSynthesis) speechSynthesis.onvoiceschanged = pickNewsVoice;
     const resetVoiceButton = ()=>{ if (voiceBtn) voiceBtn.textContent = '🔊 语音讲解'; };
     const humanRoot = document.querySelector('.dh-human');
-    let talkTimer = null;
+    const motionEl = document.getElementById('narratorMotion');
+    let talkTimer = null, motionTimer = null, motionFrame = 0;
+    const setMotionFrame = (frame)=>{
+      motionFrame = ((frame % 91) + 91) % 91;
+      if (!motionEl) return;
+      const col = motionFrame % 10, row = Math.floor(motionFrame / 10);
+      motionEl.style.backgroundPosition = `${(col * 100 / 9).toFixed(4)}% ${(row * 100 / 9).toFixed(4)}%`;
+    };
     const stopTalkMotion = ()=>{
       if (talkTimer){ clearInterval(talkTimer); talkTimer = null; }
+      if (motionTimer){ clearInterval(motionTimer); motionTimer = null; }
+      setMotionFrame(0);
       if (humanRoot){ humanRoot.classList.remove('is-speaking'); humanRoot.dataset.talk = '0'; }
     };
     const startTalkMotion = ()=>{
@@ -689,7 +698,13 @@
       humanRoot.classList.add('is-speaking');
       let phase = 0;
       talkTimer = setInterval(()=>{ humanRoot.dataset.talk = String(phase++ % 3); }, 220);
+      if (motionEl){
+        if (motionTimer) clearInterval(motionTimer);
+        setMotionFrame(0);
+        motionTimer = setInterval(()=>setMotionFrame(motionFrame + 1), 167);
+      }
     };
+    setMotionFrame(0);
     const speak = (txt = profileIntro)=>{
       if (!window.speechSynthesis) return;
       if (speechSynthesis.speaking) return;
@@ -1816,7 +1831,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=45" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=46" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
