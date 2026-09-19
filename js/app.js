@@ -305,7 +305,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=26" alt="YILATE">
+          <img src="assets/logo.png?v=27" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -372,8 +372,15 @@
         </div>
 
         <div class="bs-col bs-mid">
+          <section class="bs-panel bs-map-panel">
+            <div class="bsp-title">🗺️ 牧场空间态势 <em>RANCH MAP</em></div>
+            <div class="bs-map">
+              ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🧊','饲草区','z4'],['🏘️','生活区','z5'],['🔧','设备区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f59e0b','#f472b6','#a78bfa'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
+              <svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
+            </div>
+          </section>
           <section class="bs-panel">
-            <div class="bsp-title">🎥 监控画面（6 路） <em>LIVE</em></div>
+            <div class="bsp-title">🎥 监控画面（6 路） <em>实时</em></div>
             <div class="bs-cams">
               ${['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map(x=>`<div class="bs-cam"><span>●</span>${x}<i>实时</i></div>`).join('')}
             </div>
@@ -471,6 +478,15 @@
       </div>
 
       <div class="bs-bottom bs-bottom-v18">
+        <div class="bs-daily-strip">
+          ${[
+            ['今日产犊','2','头','#a3e635'],
+            ['今日饲喂','2','次','#22d3ee'],
+            ['今日称重','5','头','#a78bfa'],
+            ['今日订单',c.todayOrders,'单','#f472b6'],
+            ['今日预警',DB.tasks.length,'项','#fb923c']
+          ].map((x,i)=>`<div style="--dc:${x[3]}"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]}</i><em style="width:${48+(i*11)%44}%"></em></div>`).join('')}
+        </div>
         <div class="bs-data-rail">
           <div class="bs-rail-label"><i></i><b>实时数据</b><small>数据自动更新</small></div>
           <div class="bs-rail-marquee"><div class="bs-rail-track">${letterize(railText + '  ///  ' + railText)}</div></div>
@@ -1768,7 +1784,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=26" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=27" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
