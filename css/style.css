@@ -2474,3 +2474,16 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
 @keyframes dhLineRun{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 @media (max-width:980px){.bs-v8 .bs-dh .dh-bubble.dh-line{width:190px!important;max-width:190px!important;height:25px!important;align-self:flex-end;margin-left:auto}.bs-metric-track span{font-size:10px}}
 @media (prefers-reduced-motion: reduce){.bs-metric-track,.bs-metric-track span,.dh-line-flow{animation:none}}
+
+/* ============ v30 中央大机器人讲解 + 区域修正 ============ */
+.bs-map.bs-map-robot{height:232px}
+.bs-map.bs-map-robot .map-zone.z1{left:7%;top:13%}.bs-map.bs-map-robot .map-zone.z2{left:37%;top:6%}.bs-map.bs-map-robot .map-zone.z3{right:6%;top:16%}
+.bs-map.bs-map-robot .map-zone.z4{left:8%;bottom:12%}.bs-map.bs-map-robot .map-zone.z5{left:37%;bottom:7%}.bs-map.bs-map-robot .map-zone.z6{right:6%;bottom:13%}
+.bs-v8 .bs-dh-center{position:absolute!important;left:50%!important;top:22px!important;right:auto!important;bottom:auto!important;transform:translateX(-50%)!important;display:flex!important;flex-direction:column!important;align-items:center!important;z-index:12!important;cursor:pointer}
+.bs-v8 .bs-dh-center .dh-avatar{width:126px!important;height:160px;margin:0 auto;animation:dh3dFloat 5.2s ease-in-out infinite!important;filter:drop-shadow(0 15px 15px rgba(0,0,0,.58)) drop-shadow(0 0 13px rgba(34,211,238,.42))}
+.bs-v8 .bs-dh-center .dh-svg.robot-svg{width:126px!important;height:154px!important;display:block;filter:drop-shadow(0 0 10px rgba(94,234,212,.35)) saturate(1.18)}
+.bs-v8 .bs-dh-center .dh3d-badge{right:auto;left:50%;bottom:2px;transform:translateX(-50%);font-size:7px;white-space:nowrap}
+.bs-v8 .bs-dh-center .dh-bubble.dh-line{position:absolute!important;left:50%!important;right:auto!important;top:166px!important;transform:translateX(-50%)!important;z-index:14!important}
+.bs-map-robot::before{content:"";position:absolute;left:50%;top:78px;width:150px;height:150px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.20),rgba(34,211,238,.05) 46%,transparent 70%);filter:blur(3px);animation:robotHalo 3.4s ease-in-out infinite;pointer-events:none}
+@keyframes robotHalo{0%,100%{opacity:.5;transform:translateX(-50%) scale(.9)}50%{opacity:1;transform:translateX(-50%) scale(1.12)}}
+@media (max-width:700px){.bs-map.bs-map-robot{height:252px}.bs-v8 .bs-dh-center{top:20px!important}.bs-v8 .bs-dh-center .dh-avatar{width:112px!important}.bs-v8 .bs-dh-center .dh-svg.robot-svg{width:112px!important}.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:152px!important}}

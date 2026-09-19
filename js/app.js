@@ -316,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=29" alt="YILATE">
+          <img src="assets/logo.png?v=30" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -385,9 +385,39 @@
         <div class="bs-col bs-mid">
           <section class="bs-panel bs-map-panel">
             <div class="bsp-title">🗺️ 牧场空间态势 <em>RANCH MAP</em></div>
-            <div class="bs-map">
-              ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🧊','饲草区','z4'],['🏘️','生活区','z5'],['🔧','设备区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f59e0b','#f472b6','#a78bfa'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
+            <div class="bs-map bs-map-robot">
+              ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🏘️','生活区','z4'],['🔧','设备存放区','z5'],['🧊','饲草区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f472b6','#a78bfa','#f59e0b'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
               <svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
+              <div class="bs-dh bs-dh-center" id="dhBox" title="点击机器人听牧场简介">
+                <div class="dh-avatar dh-robot">
+                  <svg viewBox="0 0 150 184" class="dh-svg robot-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="智慧牧场讲解机器人">
+                    <defs>
+                      <linearGradient id="robotBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dff8ff"/><stop offset=".5" stop-color="#55d9f3"/><stop offset="1" stop-color="#1356b8"/></linearGradient>
+                      <linearGradient id="robotDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#183c75"/><stop offset="1" stop-color="#071633"/></linearGradient>
+                      <filter id="robotGlow"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+                    <ellipse cx="75" cy="177" rx="42" ry="6" fill="rgba(0,0,0,.36)"/>
+                    <path d="M54 19h42l8 24-8 24H54l-8-24z" fill="url(#robotBody)" stroke="#8eeeff" stroke-width="2"/>
+                    <rect x="53" y="27" width="44" height="24" rx="12" fill="#061a43" stroke="#67e8f9" stroke-width="2"/>
+                    <circle cx="66" cy="39" r="4" fill="#5eead4" filter="url(#robotGlow)"/><circle cx="86" cy="39" r="4" fill="#5eead4" filter="url(#robotGlow)"/>
+                    <path d="M75 19V7" stroke="#7dd3fc" stroke-width="3"/><circle cx="75" cy="6" r="4" fill="#f472b6" filter="url(#robotGlow)"/>
+                    <path d="M56 65h38l12 58H44z" fill="url(#robotDark)" stroke="#38bdf8" stroke-width="2"/>
+                    <rect x="61" y="78" width="28" height="22" rx="6" fill="#0b2a5b" stroke="#5eead4" stroke-width="1.4"/>
+                    <circle cx="75" cy="89" r="7" fill="none" stroke="#5eead4" stroke-width="2" stroke-dasharray="4 3" filter="url(#robotGlow)"/>
+                    <path d="M45 72 22 103l9 8 25-27M105 72l23 31-9 8-25-27" fill="#1e4f91" stroke="#54d9ff" stroke-width="2"/>
+                    <path d="M51 120 42 166M99 120l9 46" stroke="#3f74bd" stroke-width="7" stroke-linecap="round"/>
+                    <path d="M37 166h13M94 166h13" stroke="#7dd3fc" stroke-width="5" stroke-linecap="round"/>
+                  </svg>
+                  <div class="dh3d-badge">AI 机器人</div>
+                </div>
+                <div class="dh-bubble dh-line">
+                  <div class="dh-line-flow">
+                    <span>YILATE SMART RANCH · 机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
+                    <span>YILATE SMART RANCH · 机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
+                  </div>
+                  <div class="dh-text" id="dhText">牧场简介</div>
+                </div>
+              </div>
             </div>
           </section>
           <section class="bs-panel">
@@ -502,58 +532,6 @@
           <div class="bs-rail-label"><i></i><b>实时数据</b><small>数据自动更新</small></div>
           <div class="bs-rail-marquee"><div class="bs-rail-track">${letterize(railText + '  ///  ' + railText)}</div></div>
           <div class="bs-rail-tag">YILATE / HULUNBUIR</div>
-        </div>
-      </div>
-
-      <div class="bs-dh" id="dhBox" title="点击小伊或小牛听讲解">
-        <div class="dh-bubble dh-line">
-          <div class="dh-line-flow">
-            <span>YILATE SMART RANCH · 小伊 · 牧场简介 · 伊拉特智慧牧场 ·</span>
-            <span>YILATE SMART RANCH · 小伊 · 牧场简介 · 伊拉特智慧牧场 ·</span>
-          </div>
-          <div class="dh-text" id="dhText">牧场简介</div>
-        </div>
-        <div class="dh-avatar">
-          <svg viewBox="0 0 180 220" class="dh-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3D数字讲解员小伊抱着小牛">
-            <defs>
-              <linearGradient id="robeG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset=".55" stop-color="#0d9488"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient>
-              <linearGradient id="calfG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#d6b28b"/></linearGradient>
-              <filter id="calfGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            </defs>
-            <ellipse cx="90" cy="211" rx="54" ry="6" fill="rgba(0,0,0,.35)"/>
-            <path d="M57 177h20v22q0 7-8 7H55q-7 0-7-7v-9q0-8 9-13z" fill="#132b52" stroke="#5eead4" stroke-width="1.3"/>
-            <path d="M103 177h20v22q0 7-8 7h-14q-7 0-7-7v-9q0-8 9-13z" fill="#132b52" stroke="#5eead4" stroke-width="1.3"/>
-            <path d="M49 91q35-17 74 0l16 92q-53 20-106 0z" fill="url(#robeG)" stroke="#f0b429" stroke-width="2.2"/>
-            <path d="M62 95l20 42 20-42" fill="none" stroke="#f0b429" stroke-width="2.1"/>
-            <path d="M48 137h84" stroke="#f0b429" stroke-width="7" opacity=".85"/>
-            <path d="M42 103q-17 21-13 50" stroke="#0e7490" stroke-width="13" fill="none" stroke-linecap="round"/>
-            <path class="dh-wave" d="M137 103q20 17 15 43" stroke="#0e7490" stroke-width="13" fill="none" stroke-linecap="round"/>
-            <circle cx="29" cy="155" r="8" fill="#f7d7b5" stroke="#f0b429" stroke-width="1.3"/>
-            <circle class="dh-hand" cx="151" cy="147" r="8" fill="#f7d7b5" stroke="#f0b429" stroke-width="1.3"/>
-            <circle cx="90" cy="63" r="27" fill="#f7d7b5"/>
-            <path d="M61 60q0-30 29-30t29 30q-10-15-29-15T61 60z" fill="#2b2118"/>
-            <path d="M65 75q-9 23-5 45" stroke="#2b2118" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M115 75q9 23 5 45" stroke="#2b2118" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <circle cx="57" cy="117" r="4.5" fill="#e74c3c"/><circle cx="123" cy="117" r="4.5" fill="#e74c3c"/>
-            <path d="M63 49q27-22 54 0z" fill="#1e3a8a" stroke="#f0b429" stroke-width="2"/>
-            <rect x="60" y="47" width="60" height="7" rx="3.5" fill="#f0b429"/>
-            <circle cx="90" cy="30" r="4.8" fill="#e74c3c"/>
-            <g class="dh-eyes"><circle cx="80" cy="63" r="3" fill="#2b2118"/><circle cx="100" cy="63" r="3" fill="#2b2118"/></g>
-            <circle cx="70" cy="73" r="4" fill="#f2a1a1" opacity=".65"/><circle cx="110" cy="73" r="4" fill="#f2a1a1" opacity=".65"/>
-            <path d="M84 78q6 5 12 0" stroke="#b33a3a" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <g id="calfBox" class="dh-calf" role="button" aria-label="点击小牛听讲解">
-              <ellipse cx="90" cy="185" rx="39" ry="6" fill="rgba(0,0,0,.25)"/>
-              <path d="M59 151q18-15 42-8l24 9-7 28q-29 13-55 0z" fill="url(#calfG)" stroke="#8a5a32" stroke-width="2"/>
-              <path d="M61 156q-19-13-27 1q-5 11 13 14l20 1z" fill="#f7e7cf" stroke="#8a5a32" stroke-width="2"/>
-              <path d="M61 158l-10-9M61 163l-11 8" stroke="#8a5a32" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="48" cy="157" r="3.2" fill="#2b2118"/><circle cx="49" cy="164" r="2" fill="#8a5a32"/>
-              <path d="M78 141q10-12 21 0" fill="#fff7ed" stroke="#8a5a32" stroke-width="2"/>
-              <path d="M72 184v12M98 184v12M119 177v17" stroke="#8a5a32" stroke-width="4" stroke-linecap="round"/>
-              <path d="M74 163q16 9 34 0" fill="none" stroke="#c08457" stroke-width="3" stroke-linecap="round" filter="url(#calfGlow)"/>
-            </g>
-            <path d="M48 151q19 24 42 25q26-1 42-28" fill="none" stroke="#f7d7b5" stroke-width="10" stroke-linecap="round"/>
-          </svg>
-          <div class="dh3d-badge">3D · AI</div>
         </div>
       </div>
 
@@ -1785,7 +1763,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=29" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=30" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
