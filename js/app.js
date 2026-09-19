@@ -17,7 +17,7 @@
   try { authUser = JSON.parse(localStorage.getItem(AUTH_USER_KEY) || 'null'); } catch(e){}
   const ROLE_MENUS = {
     owner: null,
-    platform: ['bigscreen','devices','admin'],
+    platform: null,
     ranch_admin: ['bigscreen','dashboard','cycle','livestock','grassland','forage','vaccine','devices','slaughter','products','gov','tourism','log','ledger','labor','insurance','gallery','admin','agent'],
     veterinarian: ['bigscreen','dashboard','livestock','forage','vaccine','log','gallery','agent'],
     herder: ['bigscreen','dashboard','livestock','grassland','forage','vaccine','devices','slaughter','log','labor','insurance','gallery','agent'],
@@ -352,7 +352,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=47" alt="YILATE">
+          <img src="assets/logo.png?v=48" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -715,7 +715,7 @@
     const motionEl = document.getElementById('narratorMotion');
     let talkTimer = null, motionTimer = null, motionFrame = 0;
     const setMotionFrame = (frame)=>{
-      motionFrame = ((frame % 91) + 91) % 91;
+      motionFrame = ((frame % 61) + 61) % 61;
       if (!motionEl) return;
       const col = motionFrame % 10, row = Math.floor(motionFrame / 10);
       motionEl.style.backgroundPosition = `${(col * 100 / 9).toFixed(4)}% ${(row * 100 / 9).toFixed(4)}%`;
@@ -744,8 +744,8 @@
       try {
         const u = new SpeechSynthesisUtterance(txt);
         u.lang = 'zh-CN';
-        u.rate = 0.92;
-        u.pitch = 0.96;
+        u.rate = 1.0;
+        u.pitch = 1.0;
         u.volume = 1;
         if (newsVoice) u.voice = newsVoice;
         u.onstart = startTalkMotion;
@@ -1864,7 +1864,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=47" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=48" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>
