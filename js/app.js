@@ -316,7 +316,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=34" alt="YILATE">
+          <img src="assets/logo.png?v=35" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -390,42 +390,8 @@
               <svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
               <div class="bs-dh bs-dh-center" id="dhBox" title="点击机器人听牧场简介">
                 <div class="dh-avatar dh-human">
-                  <svg viewBox="0 0 200 310" class="dh-svg human-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="穿蒙古族服装的真人感数字人">
-                      <defs>
-                        <linearGradient id="skinHuman" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8d8bd"/><stop offset=".45" stop-color="#e8b28e"/><stop offset="1" stop-color="#bd795d"/></linearGradient>
-                        <linearGradient id="deelBlue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b4ca2"/><stop offset=".45" stop-color="#073574"/><stop offset="1" stop-color="#021d4f"/></linearGradient>
-                        <linearGradient id="deelLight" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#36b8ef"/><stop offset="1" stop-color="#0b5fbd"/></linearGradient>
-                        <linearGradient id="goldTrim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#f0b429"/><stop offset="1" stop-color="#9c5d05"/></linearGradient>
-                        <linearGradient id="hairHuman" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#39281f"/><stop offset=".55" stop-color="#160f0c"/><stop offset="1" stop-color="#050403"/></linearGradient>
-                        <filter id="humanGlow"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                      </defs>
-                      <ellipse cx="100" cy="300" rx="62" ry="7" fill="rgba(0,0,0,.42)"/>
-                      <path d="M72 270q-7 14 5 22h22q10-8 3-22M126 270q7 14-5 22h-22q-10-8-3-22" fill="#332316" stroke="#d7a230" stroke-width="2"/>
-                      <path d="M55 91q45-27 90 0l15 168q-59 26-120 0z" fill="url(#deelBlue)" stroke="#51c9ff" stroke-width="2.2"/>
-                      <path d="M55 99 40 238l18 2 18-132M145 99l15 139-18 2-18-132" fill="url(#deelLight)" opacity=".92"/>
-                      <path d="M70 98q30-16 60 0l-7 113q-23 12-46 0z" fill="#082d68" stroke="#1a83d6" stroke-width="1.6"/>
-                      <path d="M76 102 70 209M124 102l6 107" stroke="url(#goldTrim)" stroke-width="4" stroke-linecap="round"/>
-                      <path d="M56 94q-19 30-14 76M144 94q19 30 14 76" stroke="url(#deelBlue)" stroke-width="17" fill="none" stroke-linecap="round"/>
-                      <circle cx="42" cy="169" r="9" fill="url(#skinHuman)" stroke="#f4cfb3" stroke-width="1.5"/>
-                      <circle cx="158" cy="169" r="9" fill="url(#skinHuman)" stroke="#f4cfb3" stroke-width="1.5"/>
-                      <path d="M58 160h84l7 29q-49 15-98 0z" fill="#c9363d" stroke="url(#goldTrim)" stroke-width="3"/>
-                      <path d="M64 169h72M67 178h66" stroke="#f0b429" stroke-width="2" opacity=".8"/>
-                      <path d="M100 184 85 214 100 244 115 214z" fill="none" stroke="url(#goldTrim)" stroke-width="4"/>
-                      <circle cx="100" cy="214" r="9" fill="#f0b429" stroke="#fff2b0" stroke-width="2"/>
-                      <path d="M81 77v20M119 77v20" stroke="#d99b79" stroke-width="11" stroke-linecap="round"/>
-                      <ellipse cx="100" cy="62" rx="34" ry="41" fill="url(#skinHuman)" stroke="#f1c7aa" stroke-width="1.6"/>
-                      <path d="M67 59q0-43 33-43t33 43q-12-22-33-22T67 59z" fill="url(#hairHuman)"/>
-                      <path d="M70 64q-12 22-8 54M130 64q12 22 8 54" stroke="url(#hairHuman)" stroke-width="13" fill="none" stroke-linecap="round"/>
-                      <path d="M73 113q-5 25 2 46M127 113q5 25-2 46" stroke="#1c120d" stroke-width="9" fill="none" stroke-linecap="round"/>
-                      <path d="M69 43q31-30 62 0z" fill="#0b4ca2" stroke="url(#goldTrim)" stroke-width="3"/>
-                      <path d="M66 44h68l-5 13H71z" fill="url(#goldTrim)"/>
-                      <path d="M100 17V3" stroke="#f0b429" stroke-width="3"/><circle cx="100" cy="3" r="5" fill="#e24a4f" filter="url(#humanGlow)"/>
-                      <circle cx="87" cy="62" r="3.4" fill="#24140f"/><circle cx="113" cy="62" r="3.4" fill="#24140f"/>
-                      <path d="M81 54q6-4 12 0M107 54q6-4 12 0" stroke="#2f1d16" stroke-width="2" fill="none" stroke-linecap="round"/>
-                      <path d="M91 79q9 7 18 0" stroke="#a34f50" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-                      <circle cx="76" cy="76" r="5" fill="#e8918e" opacity=".48"/><circle cx="124" cy="76" r="5" fill="#e8918e" opacity=".48"/>
-                    </svg>
-                  <div class="dh3d-badge">真人数字人</div>
+                  <div class="human-photo-wrap"><img class="human-photo" src="assets/photos/digital-human.png" alt="穿蒙古族服装的真人数字人"><i class="human-light-scan"></i></div>
+                  <div class="dh3d-badge">真人 · AI</div>
                 </div>
                 <div class="dh-bubble dh-line">
                   <div class="dh-line-flow">
@@ -1813,7 +1779,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=34" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=35" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${r.name}</div>
           <div class="rh-en">${r.nameEn} · 新一代家庭牧场</div>
           <div class="rh-loc">📍 ${r.location}</div>

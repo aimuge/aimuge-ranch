@@ -2536,3 +2536,22 @@ body[data-theme="dark"] .mach-art{background:linear-gradient(150deg,rgba(20,184,
   .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:255px!important}
 }
 @media (prefers-reduced-motion: reduce){.bs-v8 .bs-dh-center .dh-human{animation:none!important}}
+
+/* ============ v35 真人数字人动态出场 ============ */
+.bs-map.bs-map-robot{height:440px}
+.bs-v8 .bs-dh-center{top:18px!important}
+.bs-v8 .bs-dh-center .dh-human{width:182px!important;height:294px!important;opacity:1!important;filter:drop-shadow(0 18px 18px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(73,190,255,.42));animation:humanEnter 1.25s cubic-bezier(.2,.9,.2,1.15) both,humanIdle 5.5s 1.3s ease-in-out infinite!important}
+.human-photo-wrap{position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
+.human-photo{position:relative;z-index:2;width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block;opacity:1;border:0;background:transparent;filter:saturate(1.06) contrast(1.03);animation:humanPhotoBreath 4.8s ease-in-out infinite}
+.human-photo-wrap::before{content:"";position:absolute;left:50%;bottom:8px;width:115px;height:22px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(94,234,212,.44),rgba(56,139,253,.15) 48%,transparent 72%);filter:blur(5px);animation:humanGroundPulse 3.5s ease-in-out infinite}
+.human-light-scan{position:absolute;z-index:3;left:18%;right:18%;top:8%;height:15%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(190,247,255,.28),transparent);filter:blur(2px);mix-blend-mode:screen;animation:humanScan 3.7s ease-in-out infinite}
+.bs-v8 .bs-dh-center .dh-bubble.dh-line{top:324px!important}
+@keyframes humanPhotoBreath{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.012,1.018)}}
+@keyframes humanGroundPulse{0%,100%{opacity:.48;transform:translateX(-50%) scale(.9)}50%{opacity:1;transform:translateX(-50%) scale(1.15)}}
+@keyframes humanScan{0%{top:6%;opacity:0}18%{opacity:.9}82%{opacity:.76}100%{top:82%;opacity:0}}
+@media (max-width:700px){
+  .bs-map.bs-map-robot{height:430px}
+  .bs-v8 .bs-dh-center .dh-human{width:148px!important;height:244px!important}
+  .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:270px!important}
+}
+@media (prefers-reduced-motion: reduce){.human-photo,.human-light-scan,.human-photo-wrap::before{animation:none}}
