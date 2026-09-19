@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v63';
+  const APP_VERSION = 'v64';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -360,7 +360,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=63" alt="YILATE">
+          <img src="assets/logo.png?v=64" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1758,7 +1758,7 @@
         ${statCard({icon:'🔴', label:'离线/检修', value:fmt(c.devOffline)+' 台', sub:'饲料粉碎机检修 · 可回写状态', color:'#d9534f', bg:'#fdeeee'})}
         ${statCard({icon:'🔌', label:'成套装备', value:fmt(c.kit)+' 台套', sub:'6 大分类 · 农机/棚圈/无人设备', color:'#f59e0b', bg:'#fef3c7'})}
       </div>
-      ${card('设备采购接入中心', `
+      ${card('设备采购接入中心 · 适配型号', `
         <div class="onboard-steps">
           <div class="onboard-step"><span>1</span><div><b>扫码 / 输入编号</b><p>扫描设备二维码或输入序列号</p></div></div>
           <i>→</i>
@@ -1814,21 +1814,7 @@
               <div class="mach-head">${machineArt(x[0])}<div><div class="cat-name">${x[0]}</div><div class="cat-desc">${x[1]}</div></div></div>
             </div>`).join('')}
         </div>
-        <div class="card-note">🔌 农机端口已在「后台管理 → 端口连接配置」中开放：填 ISOBUS / Modbus / RTK 协议地址即可接入。</div>`)}
-      ${card('端口对接 · 市场主流设备全兼容', `
-        <div class="proto-row">
-          ${[
-            ['🎥','视频与 AI','海康威视 / 大华 · ONVIF / RTSP + 发情识别算法'],
-            ['🏷️','耳标测温 200 个','RFID 134.2kHz + 测温 · 读写器基站'],
-            ['🛰️','定位项圈','北斗定位项圈 5 个（头牛佩戴）'],
-            ['🚜','饲喂机械','TMR 搅拌机 · 拌料机 · 智能推料装备 · 自动称重'],
-            ['🏠','棚圈保温','犊牛房温控 · 畜牧加热热水器 · 粉料水槽 30 个'],
-            ['📶','组网供电','LoRa/4G 网关 · 太阳能供电 · 太阳能自动大门'],
-            ['🔬','繁育检测','显微镜 · 液氧罐（犊牛急救）'],
-            ['🧠','AI 平台','发情识别 · 产犊预警 · 明火烟雾识别']
-          ].map(x=>`<div class="proto-item"><span>${x[0]}</span><div><b>${x[1]}</b><p>${x[2]}</p></div></div>`).join('')}
-        </div>
-        <div class="card-note">🔌 平台提供标准数据接口（API/协议适配层），市场上符合 ONVIF、GB28181、LoRaWAN、Modbus、ISOBUS、北斗短报文等标准的设备均可即插即用接入。</div>`)}
+        <div class="card-note">🚜 此区为机械化能力展示；实际数量、设备编号和在线状态以“装备台账”为准。农机端口可在「后台管理 → 端口连接配置」中填写 ISOBUS / Modbus / RTK 地址接入。</div>`)}
       ${card('装备分类', `
         <div class="cat-grid">
           ${DB.deviceCats.map(cat=>{
@@ -2010,7 +1996,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=63" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=64" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
