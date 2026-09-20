@@ -48,7 +48,7 @@
       <div class="tabs" id="tabs">
         <button type="button" class="tab active" data-role="owner">伊拉特</button>
         <button type="button" class="tab" data-role="worker">牧民</button>
-        <button type="button" class="tab" data-role="aimugo">艾牧戈</button>
+        <button type="button" class="tab" data-role="aimugo">Aimugo技术</button>
         <button type="button" class="tab" data-role="gov">政府</button>
       </div>
       <div class="field"><label id="accountLabel">伊拉特账号 / 手机号</label><input id="accountInput" autocomplete="username" placeholder="请输入账号或手机号"></div>
@@ -66,7 +66,7 @@
 const roleConfig = {
   owner:  { mode:'password', label:'伊拉特账号 / 手机号', placeholder:'yilate 或绑定手机号' },
   worker: { mode:'sms',      label:'牧民手机号',         placeholder:'请输入绑定的手机号' },
-  aimugo: { mode:'password', label:'艾牧戈员工账号',     placeholder:'请输入平台员工账号' },
+  aimugo: { mode:'password', label:'Aimugo技术账号',     placeholder:'请输入Aimugo技术平台账号' },
   gov:    { mode:'password', label:'政府政务账号',       placeholder:'请输入政务只读账号' }
 };
 let role = 'owner';
@@ -88,7 +88,7 @@ const entry = location.pathname.includes('/platform/') ? 'aimugo' : location.pat
 const isDedicated = location.pathname !== '/login' && location.pathname !== '/login.html';
 if (isDedicated && entry && roleConfig[entry]) {
   document.querySelector('.tabs').style.display='none';
-  const titles={owner:'牧场主登录',worker:'牧民手机端登录',aimugo:'艾牧戈技术平台登录',gov:'政府只读账号登录'};
+  const titles={owner:'牧场主登录',worker:'牧民手机端登录',aimugo:'Aimugo技术平台登录',gov:'政府只读账号登录'};
   document.querySelector('.card h2').textContent=titles[entry];
   document.querySelector('.sub').textContent=entry==='owner'?'伊拉特智慧牧场最高管理员入口':'请使用已授权账号登录，系统将进入对应工作台';
 }
@@ -127,7 +127,7 @@ $('loginForm').addEventListener('submit',async e=>{
   }catch(err){notice(err.message,'error');$('loginBtn').disabled=false;$('loginBtn').textContent=roleConfig[role].mode==='sms'?'验证码登录':'登 录 系 统';}
 });
 $('wechatBtn').addEventListener('click',()=>notice('微信登录需要在微信小程序内授权，当前请先使用短信验证码登录','error'));
-$('forgotLink').addEventListener('click',e=>{e.preventDefault();notice('请联系内蒙古艾牧戈数智科技有限公司重置密码','error')});
+$('forgotLink').addEventListener('click',e=>{e.preventDefault();notice('请联系Aimugo技术平台管理员重置密码','error')});
 setRole(entry && roleConfig[entry] ? entry : 'owner');
 </script>
 </body>
