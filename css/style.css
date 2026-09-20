@@ -3167,3 +3167,127 @@ body[data-theme="light"]{background:#f4f7f8}
   .camera-viewer-head b{font-size:13px}
   .camera-viewer-head span{font-size:10px}
 }
+
+
+/* ============ v67 深海青金高级配色 ============ */
+:root{
+  --green-950:#061721;
+  --green-900:#0a2430;
+  --green-800:#0d3441;
+  --green:#116a78;
+  --green-2:#14849a;
+  --green-light:#e7f3f5;
+  --blue:#0b5876;
+  --blue-light:#e8f2f7;
+  --sand:#c39a55;
+  --sand-light:#fbf6eb;
+  --brown:#755a38;
+  --purple:#6f628c;
+  --steel:#58788c;
+  --ink:#172b37;
+  --muted:#687d89;
+  --line:#d7e4ea;
+  --bg:#f1f5f7;
+  --card:#ffffff;
+  --shadow:0 10px 32px rgba(10,42,56,.075);
+  --premium-navy:#061923;
+  --premium-deep:#0a2a36;
+  --premium-teal:#116b7b;
+  --premium-cyan:#1b91a8;
+  --premium-gold:#c39a55;
+  --premium-gold-light:#e7cd94;
+}
+body[data-theme="light"]{
+  background:
+    radial-gradient(900px 420px at 8% -12%,rgba(27,145,168,.065),transparent 62%),
+    radial-gradient(760px 360px at 98% 0,rgba(195,154,85,.05),transparent 60%),
+    var(--bg);
+}
+.sidebar{background:linear-gradient(178deg,#04131b 0%,#082733 58%,#0a3039 100%);box-shadow:3px 0 22px rgba(5,28,38,.22)}
+.brand-logo{background:linear-gradient(145deg,#f0d79c,#b9893f);box-shadow:0 7px 18px rgba(4,20,28,.25)}
+.brand-sub,.sidebar-foot{color:#9bb8c0}
+.nav-item{color:#c7d9df}
+.nav-item.active{
+  background:linear-gradient(90deg,rgba(27,145,168,.32),rgba(17,107,123,.10));
+  border-color:rgba(121,205,218,.27);
+  box-shadow:0 12px 26px -18px rgba(27,145,168,.9),inset 0 0 0 1px rgba(255,255,255,.025);
+}
+.topbar{background:rgba(250,253,254,.95);border-bottom-color:rgba(17,107,123,.13);box-shadow:0 1px 0 rgba(255,255,255,.8)}
+.topbar::after{background-image:var(--meander),linear-gradient(90deg,transparent,rgba(17,107,123,.58),rgba(195,154,85,.34),transparent);opacity:.68}
+.crumb{color:#142d39}
+.avatar{background:linear-gradient(135deg,#0d6678,#1b91a8);box-shadow:0 6px 16px -9px rgba(17,107,123,.75)}
+.gear-btn,.btn.ghost{background:rgba(255,255,255,.92);border-color:#d5e3e9;color:#335563}
+.gear-btn:hover,.btn.ghost:hover{border-color:#1b91a8;color:#116a78;background:#f8fcfd}
+.btn.solid{background:linear-gradient(135deg,#0d6072,#168198 64%,#1b91a8);box-shadow:0 10px 24px -12px rgba(13,96,114,.72)}
+.btn.solid:hover{box-shadow:0 14px 28px -12px rgba(27,145,168,.72)}
+.iot-chip,.weather-chip,.ver-badge{background:linear-gradient(135deg,rgba(17,107,123,.09),rgba(27,145,168,.08));border-color:rgba(17,107,123,.20);color:#0d6270}
+.iot-chip::before{background:#168198;box-shadow:0 0 9px rgba(22,129,152,.7)}
+.card,.stat-card{
+  border:1px solid var(--line)!important;
+  background:linear-gradient(145deg,#ffffff 0%,#fbfdfe 68%,#f5f9fa 100%)!important;
+  box-shadow:0 12px 34px -24px rgba(8,42,56,.42),0 2px 8px rgba(8,42,56,.025)!important;
+}
+.card:hover,.stat-card:hover{border-color:#c6dce4!important;box-shadow:0 18px 38px -25px rgba(8,42,56,.50)!important}
+.card::before{top:6px;left:6px;border-top-color:#168198!important;border-left-color:#168198!important;opacity:.42!important}
+.card::after{bottom:6px;right:6px;border-bottom-color:#c39a55!important;border-right-color:#c39a55!important;opacity:.42!important}
+.card-head h3,.section-title,.card-title{color:#152e3b!important}
+.card-head h3::before{background:linear-gradient(180deg,#168198,#c39a55)!important}
+.card-head::after{opacity:.22!important}
+.stat-value{background:linear-gradient(135deg,#0b3444 12%,#117e91 74%,#1b91a8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-ico{box-shadow:inset 0 0 0 1px rgba(255,255,255,.72),0 9px 20px -12px currentColor}
+.hero-banner{
+  background:
+    linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),
+    radial-gradient(900px 320px at 12% -30%,rgba(27,145,168,.30),transparent 62%),
+    linear-gradient(120deg,#04141d 0%,#0a3442 50%,#116b7b 100%)!important;
+  box-shadow:0 20px 48px -28px rgba(4,29,39,.88)!important;
+}
+.ranch-hero{background:radial-gradient(900px 260px at 50% -60%,rgba(255,255,255,.12),transparent 60%),linear-gradient(135deg,#04141d 0%,#0a3442 56%,#116b7b 100%)!important}
+.hulu-hero{background:radial-gradient(800px 260px at 50% -50%,rgba(255,255,255,.11),transparent 60%),linear-gradient(135deg,#04141d 0%,#0a3442 58%,#116b7b 100%)!important}
+.live-strip{background:linear-gradient(90deg,#061923,#0a3442 62%,#116b7b)!important}
+.agent-head{background:linear-gradient(120deg,#0a2834,#116b7b)!important}
+.tbl th{background:linear-gradient(180deg,#f6fafb,#edf4f6)!important;color:#365565!important;border-bottom-color:#d9e6eb!important}
+.table-wrap{border-color:#d8e5ea!important}
+.tbl tbody tr:hover{background:linear-gradient(90deg,rgba(17,107,123,.065),transparent)!important}
+.pill.ok{background:#e5f3f2;color:#116b78}.pill.info{background:#e8f2f7;color:#0b5876}.pill.warn{background:#fbf5e9;color:#9a712f}.pill.danger{background:#fbecec;color:#b55252}
+.tab.active{color:#116a78!important;box-shadow:0 4px 12px -8px rgba(17,107,123,.45)}
+.mn-item.active{background:linear-gradient(135deg,#0d6678,#1b91a8)!important;box-shadow:0 5px 14px -8px rgba(17,107,123,.7)!important}
+.prod-price,.honor{color:#b8863e!important}
+.fab{background:linear-gradient(135deg,#0d6072,#1b91a8);box-shadow:0 14px 30px -14px rgba(17,107,123,.85)}
+.send{background:linear-gradient(135deg,#0d6072,#168198)!important}
+
+/* 数据大屏：深海青金 */
+.bigscreen{
+  background:
+    radial-gradient(900px 400px at 82% -12%,rgba(27,145,168,.25),transparent 62%),
+    radial-gradient(760px 380px at 8% 110%,rgba(195,154,85,.12),transparent 60%),
+    linear-gradient(180deg,#031019 0%,#061d28 54%,#04141d 100%)!important;
+}
+.bs-panel{background:linear-gradient(150deg,rgba(9,38,50,.84),rgba(5,22,32,.89))!important;border-color:rgba(73,174,194,.20)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 18px 38px -30px #000}
+.bsp-title{color:#a4d6df!important}.bsp-title em{color:#648a98!important}
+.bs-kpi{background:linear-gradient(145deg,rgba(13,53,68,.96),rgba(5,25,36,.98))!important;border-color:rgba(55,160,180,.34)!important}
+.bs-kpi::before{background:linear-gradient(180deg,#3bb4c7,#c39a55,transparent)!important}
+.bs-title{background:linear-gradient(90deg,#e9f7fa,#54c0d2 54%,#e7cd94)!important;-webkit-background-clip:text!important;background-clip:text!important}
+.bs-title-en,.bst-track{color:#7199a8!important}
+.bs-cam{background:linear-gradient(140deg,rgba(12,52,66,.94),rgba(5,24,34,.98))!important;border-color:rgba(54,156,176,.30)!important}
+.bs-equip{background:linear-gradient(145deg,rgba(12,52,66,.94),rgba(5,23,34,.98))!important;border-color:rgba(54,156,176,.28)!important}
+.bs-data-rail{background:linear-gradient(100deg,rgba(10,48,61,.98),rgba(5,23,33,.99) 52%,rgba(12,66,78,.96))!important;border-color:rgba(54,156,176,.34)!important}
+.bs-rail-label i{background:#48b4c5;box-shadow:0 0 12px rgba(72,180,197,.9)}
+.bs-rail-label b{color:#8dd6e2}
+.bs-rail-track span:nth-child(6n+1){color:#62c9d8}.bs-rail-track span:nth-child(6n+3){color:#82c8d9}.bs-rail-track span:nth-child(6n+5){color:#e0c27c}
+
+body[data-theme="dark"]{
+  --green:#1b91a8;--green-2:#37b3c8;--green-light:rgba(27,145,168,.18);
+  --blue:#37b3c8;--blue-light:rgba(55,179,200,.14);
+  --ink:#e8f5f7;--muted:#8eacb6;--line:rgba(61,165,185,.19);
+  --bg:#031019;--card:rgba(6,28,38,.86);
+  background:
+    radial-gradient(1000px 560px at 8% -12%,rgba(27,145,168,.25),transparent 60%),
+    radial-gradient(880px 460px at 94% -6%,rgba(195,154,85,.08),transparent 58%),
+    linear-gradient(180deg,#031019 0%,#020a10 100%);
+}
+body[data-theme="dark"] .card,body[data-theme="dark"] .stat-card{background:linear-gradient(150deg,rgba(7,31,42,.92),rgba(4,20,29,.94))!important;border-color:rgba(55,179,200,.18)!important}
+body[data-theme="dark"] .topbar{background:rgba(3,17,25,.90);border-bottom-color:rgba(55,179,200,.18)}
+body[data-theme="dark"] .tbl th{background:linear-gradient(180deg,#082838,#061f2c)!important;color:#a6d7df!important}
+body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,200,.11)}
