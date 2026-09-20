@@ -3402,3 +3402,47 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
   .sidebar-foot{background-position:top left,left 2px!important}
   .mnav{padding-top:8px!important;padding-bottom:8px!important}
 }
+
+
+/* ============ v72 桌面图文纹理浅蓝着色 ============ */
+:root{--desktop-texture:url("../assets/mongolian-texture.webp")}
+.brand::after{
+  height:14px!important;bottom:-2px!important;opacity:.62!important;
+  background:linear-gradient(90deg,transparent,#8ed7e5 18%,#b5e8f1 50%,#8ed7e5 82%,transparent)!important;
+  -webkit-mask-image:var(--desktop-texture)!important;mask-image:var(--desktop-texture)!important;
+  -webkit-mask-repeat:repeat-x!important;mask-repeat:repeat-x!important;
+  -webkit-mask-size:auto 18px!important;mask-size:auto 18px!important;
+  -webkit-mask-position:center top!important;mask-position:center top!important;
+}
+.sidebar-foot{
+  position:relative!important;padding-top:24px!important;background-image:none!important;
+}
+.sidebar-foot::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:14px;pointer-events:none;opacity:.52;
+  background:linear-gradient(90deg,transparent,#8ed7e5 16%,#b5e8f1 50%,#8ed7e5 84%,transparent);
+  -webkit-mask-image:var(--desktop-texture);mask-image:var(--desktop-texture);
+  -webkit-mask-repeat:repeat-x;mask-repeat:repeat-x;
+  -webkit-mask-size:auto 18px;mask-size:auto 18px;
+  -webkit-mask-position:center top;mask-position:center top;
+}
+.mnav{
+  position:sticky!important;
+  background-image:linear-gradient(180deg,rgba(255,255,255,.99),rgba(246,251,252,.99))!important;
+}
+.mnav::before,.mnav::after{
+  content:"";position:absolute;left:0;right:0;height:8px;pointer-events:none;opacity:.24;
+  background:linear-gradient(90deg,#6eb9ca,#9edbe7,#6eb9ca);
+  -webkit-mask-image:var(--desktop-texture);mask-image:var(--desktop-texture);
+  -webkit-mask-repeat:repeat-x;mask-repeat:repeat-x;
+  -webkit-mask-size:auto 9px;mask-size:auto 9px;
+  -webkit-mask-position:center top;mask-position:center top;
+}
+.mnav::before{top:0}.mnav::after{bottom:0;transform:scaleY(-1)}
+.topbar::after{
+  background:linear-gradient(90deg,transparent,#6eb9ca 18%,#9edbe7 50%,#6eb9ca 82%,transparent)!important;
+  -webkit-mask-image:var(--desktop-texture)!important;mask-image:var(--desktop-texture)!important;
+  -webkit-mask-repeat:repeat-x!important;mask-repeat:repeat-x!important;
+  -webkit-mask-size:auto 10px!important;mask-size:auto 10px!important;
+  -webkit-mask-position:center top!important;mask-position:center top!important;
+  opacity:.38!important;
+}
