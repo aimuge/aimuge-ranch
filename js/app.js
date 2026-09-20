@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v65';
+  const APP_VERSION = 'v66';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -365,7 +365,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=65" alt="YILATE">
+          <img src="assets/logo.png?v=66" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -2023,7 +2023,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=65" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=66" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -2545,6 +2545,9 @@
   }
   function pageAdmin(){
     const c = compute();
+    const livePort=(DB.ports||[]).find(p=>p.liveUrl||p.streamUrl);
+    const gbPort=(DB.ports||[]).find(p=>/GB28181/i.test(p.protocol||''));
+    const serverPort=location.port||(location.protocol==='https:'?'443':'80');
     return `
     <div class="page">
       ${pageHeader('后台管理 · 数据与权限', '数据维护 · 栏目设置 · 账号权限 · 系统日志', '')}
@@ -2604,6 +2607,19 @@
             <div class="info-table">
               ${[['牧场名称', DB.meta.name],['牧场主', DB.meta.owner],['养殖方式', DB.meta.mode],['建设地点', DB.meta.location],['草场面积', fmt(DB.meta.area)+' 亩'],['开发单位', DB.meta.developer],['智慧化启动', DB.meta.smartSince+' 年']].map(([k,v])=>`<div class="info-row"><span>${k}</span><b>${v}</b></div>`).join('')}
             </div>`)}
+          ${card('系统运行环境与视频服务器', `
+            <div class="info-table">
+              ${[
+                ['当前访问地址', location.origin],
+                ['当前主机/IP', location.hostname],
+                ['当前端口', serverPort],
+                ['安全协议', location.protocol==='https:'?'HTTPS':'HTTP（正式环境建议HTTPS）'],
+                ['平台接口入口', location.origin+'/api'],
+                ['监控直播网关', livePort?(livePort.liveUrl||livePort.streamUrl):'未配置'],
+                ['GB28181服务器', gbPort?(gbPort.endpoint||'已配置端口'):'未配置']
+              ].map(([k,v])=>`<div class="info-row"><span>${k}</span><b title="${escTxt(v)}">${escTxt(v)}</b></div>`).join('')}
+            </div>
+            <div class="card-note">🌐 这里显示的是当前浏览器实际访问的系统和视频网关地址。若系统部署到阿里云、腾讯云或牧场服务器，这里会自动显示对应公网IP或域名。</div>`)}
         </div>
       </div>
     </div>`;
