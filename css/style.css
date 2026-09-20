@@ -3327,3 +3327,38 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
   .sidebar-foot{background-position:top left,left 2px!important}
   .mnav{padding-top:9px!important;padding-bottom:9px!important}
 }
+
+
+/* ============ v70 浅蓝色高级蒙古纹样 ============ */
+:root{
+  --mongol-blue-dark:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2784%27%20height%3D%2728%27%20viewBox%3D%270%200%2084%2028%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%238ed7e5%27%20stroke-width%3D%271%27%20opacity%3D%27.62%27%3E%3Cpath%20d%3D%27M2%2023%20V7%20H15%20V18%20H8%20V12%27%2F%3E%3Cpath%20d%3D%27M30%2023%20V7%20H43%20V18%20H36%20V12%27%2F%3E%3Cpath%20d%3D%27M58%2023%20V7%20H71%20V18%20H64%20V12%27%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%23b5e8f1%27%20stroke-width%3D%271%27%20opacity%3D%27.38%27%3E%3Cpath%20d%3D%27M21%203%20L27%209%20L21%2015%20L15%209%20Z%27%2F%3E%3Cpath%20d%3D%27M49%2013%20L55%2019%20L49%2025%20L43%2019%20Z%27%2F%3E%3Cpath%20d%3D%27M77%203%20L83%209%20L77%2015%20L71%209%20Z%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --mongol-blue-light:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2784%27%20height%3D%2728%27%20viewBox%3D%270%200%2084%2028%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%236eb9ca%27%20stroke-width%3D%271%27%20opacity%3D%27.52%27%3E%3Cpath%20d%3D%27M2%2023%20V7%20H15%20V18%20H8%20V12%27%2F%3E%3Cpath%20d%3D%27M30%2023%20V7%20H43%20V18%20H36%20V12%27%2F%3E%3Cpath%20d%3D%27M58%2023%20V7%20H71%20V18%20H64%20V12%27%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%239edbe7%27%20stroke-width%3D%271%27%20opacity%3D%27.55%27%3E%3Cpath%20d%3D%27M21%203%20L27%209%20L21%2015%20L15%209%20Z%27%2F%3E%3Cpath%20d%3D%27M49%2013%20L55%2019%20L49%2025%20L43%2019%20Z%27%2F%3E%3Cpath%20d%3D%27M77%203%20L83%209%20L77%2015%20L71%209%20Z%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+}
+.brand::after{
+  height:13px!important;bottom:-2px!important;opacity:.68!important;
+  background-image:var(--mongol-blue-dark)!important;
+  background-size:84px 22px!important;background-repeat:repeat-x!important;
+  background-position:center top!important;
+}
+.sidebar-foot{
+  padding-top:27px!important;
+  background-image:linear-gradient(90deg,transparent,rgba(142,215,229,.44),rgba(181,232,241,.24),transparent),var(--mongol-blue-dark)!important;
+  background-size:100% 1px,84px 20px!important;
+  background-position:top left,center top!important;
+  background-repeat:no-repeat,repeat-x!important;
+}
+.mnav{
+  border-top:1px solid rgba(110,185,202,.20)!important;
+  border-bottom:1px solid rgba(110,185,202,.20)!important;
+  background-image:var(--mongol-blue-light),linear-gradient(180deg,rgba(255,255,255,.99),rgba(244,250,251,.99))!important;
+  background-size:84px 11px,auto!important;
+  background-position:top left,center!important;
+  background-repeat:repeat-x,no-repeat!important;
+}
+.topbar::after{
+  background-image:var(--mongol-blue-light),linear-gradient(90deg,transparent,rgba(110,185,202,.48),rgba(158,219,231,.30),transparent)!important;
+  background-size:84px 11px,100% 1px!important;
+  background-position:center top,center!important;
+  background-repeat:repeat-x,no-repeat!important;
+  opacity:.68!important;
+}
