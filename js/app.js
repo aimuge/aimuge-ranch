@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v64';
+  const APP_VERSION = 'v65';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -311,6 +311,11 @@
   function pageBigscreen(){
     const ps = pageSetting('bigscreen');
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
+    const livePorts = (DB.ports||[]).filter(p=>p.liveUrl||p.streamUrl);
+    const cameraWall = ['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map((name,i)=>({
+      name, liveUrl:(livePorts[i]&&(livePorts[i].liveUrl||livePorts[i].streamUrl))||'',
+      source:(livePorts[i]&&livePorts[i].name)||'待接入监控网关'
+    }));
     const w = DB.weather;
     const intro = `${DB.meta.name}位于${DB.meta.location.replace('内蒙古 · ','')}，由牧场主${DB.meta.owner}经营，现养西门塔尔牛${fmt(c.cattle)}头。`;
     const ticker = [
@@ -360,7 +365,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=64" alt="YILATE">
+          <img src="assets/logo.png?v=65" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -469,9 +474,9 @@
             </div>
           </section>
           <section class="bs-panel">
-            <div class="bsp-title">🎥 监控画面（6 路） <em>实时</em></div>
+            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播':'待接网关'}</em></div>
             <div class="bs-cams">
-              ${['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map(x=>`<div class="bs-cam"><span>●</span>${x}<i>实时</i></div>`).join('')}
+              ${cameraWall.map(x=>`<div class="bs-cam ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-name="${escTxt(x.name)}" title="${escTxt(x.source)}"><span>●</span>${escTxt(x.name)}<i>${x.liveUrl?'点击直播':'待接网关'}</i></div>`).join('')}
             </div>
           </section>
           <section class="bs-panel bs-season">
@@ -698,6 +703,9 @@
 
     /* ⑤ 月份切换 */
     $('#content').querySelectorAll('.bs-yc .yc-cell').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
+
+    /* 监控大屏直播 */
+    $('#content').querySelectorAll('.bs-cam[data-live-url]').forEach(b=>b.addEventListener('click', ()=>openCameraViewer(b.dataset.cameraName, b.dataset.liveUrl)));
 
     /* ⑥ 全屏 */
     const fs = $('#bsFull');
@@ -1672,6 +1680,24 @@
     {name:'battery', label:'供电/电量', type:'text'},
     {name:'last', label:'最近上报', type:'text'}
   ];
+  function openCameraViewer(name,url){
+    if(!url) return;
+    const ov=document.createElement('div'); ov.className='modal-overlay camera-viewer-overlay';
+    const isMedia=/\.(m3u8|mp4)(\?|$)/i.test(url);
+    const body=isMedia
+      ? `<video class="camera-live-video" src="${escTxt(url)}" controls autoplay muted playsinline></video>`
+      : `<iframe class="camera-live-frame" src="${escTxt(url)}" allow="autoplay; fullscreen" referrerpolicy="no-referrer"></iframe>`;
+    ov.innerHTML=`<div class="modal camera-viewer-modal">
+      <div class="camera-viewer-head"><div><b>🎥 ${escTxt(name||'监控直播')}</b><span>大屏实时视频</span></div><button class="modal-x" type="button">×</button></div>
+      <div class="camera-viewer-body">${body}<div class="camera-live-note">如画面未显示，请检查监控网关地址、网络和浏览器是否允许嵌入。</div></div>
+      <div class="modal-foot"><a class="btn ghost" href="${escTxt(url)}" target="_blank" rel="noopener">↗ 新窗口打开</a><button class="btn solid" data-close>关闭</button></div>
+    </div>`;
+    document.body.appendChild(ov);
+    const close=()=>ov.remove();
+    ov.addEventListener('click',e=>{if(e.target===ov)close()});
+    ov.querySelector('.modal-x').onclick=close;
+    ov.querySelector('[data-close]').onclick=close;
+  }
   const DEVICE_ONBOARD_PRESETS = [
     {key:'camera', name:'监控摄像头', icon:'🎥', cat:'D1', portKind:'监控端口', brands:['海康威视','大华','宇视','天地伟业'], protocols:['ONVIF','RTSP','GB28181'], protocol:'ONVIF / RTSP / GB28181', endpoint:'rtsp://设备IP:554/Streaming/Channels/101', where:'生活区 / 饲草区 / 设备区 / 犊牛舍 / 活动区 / 牛舍内', battery:'市电 + UPS', prefixes:['CAM','HK','DH','YS']},
     {key:'earTag', name:'耳标测温（读写器+耳标）', icon:'🏷️', cat:'D2', portKind:'耳标端口', brands:['RFID 134.2kHz','BLE 测温耳标'], protocols:['RFID 134.2kHz','BLE','TCP/IP','MQTT'], protocol:'RFID 134.2kHz + 测温 · TCP/IP / BLE', endpoint:'tcp://读写器IP:8000', where:'全场牛只', battery:'耳标电池 2-3 年', prefixes:['EB','RFID','TAG']},
@@ -1699,7 +1725,8 @@
       {name:'count', label:'数量', type:'number', value:selected&&selected.key==='earTag'?'1':'1'},
       {name:'where', label:'安装位置', type:'text', value:selected?selected.where:''},
       {name:'protocol', label:'自动识别的连接协议', type:'text', value:selected?selected.protocol:''},
-      {name:'endpoint', label:'连接地址 / 网关地址', type:'text', value:selected?selected.endpoint:'', placeholder:'例：rtsp://IP:554 / tcp://IP:8000 / mqtt://...'},
+      {name:'endpoint', label:'设备连接地址 / 网关地址', type:'text', value:selected?selected.endpoint:'', placeholder:'例：rtsp://IP:554 / tcp://IP:8000 / mqtt://...'},
+      {name:'liveUrl', label:'大屏直播地址（WVP/go2rtc/HLS/WebRTC）', type:'text', placeholder:'例：http://服务器:1984/stream.html?src=hk1 或 https://服务器/live/camera1.m3u8'},
       {name:'account', label:'账号 / 设备密钥', type:'text', placeholder:'没有可留空'}
     ], async v=>{
       const p = inferDevicePreset(v.serial, v.preset);
@@ -1710,7 +1737,7 @@
         adapterKey:p.key, serial, name:p.name, cat:p.cat,
         model:(v.brand||p.brands[0])+' '+(v.model||''), count:+v.count||1,
         where:v.where||p.where, protocol:v.protocol||p.protocol,
-        endpoint:v.endpoint||p.endpoint, account:v.account||'—'
+        endpoint:v.endpoint||p.endpoint, liveUrl:v.liveUrl||'', account:v.account||'—'
       };
       let cloudResult = null;
       if (/^https?:/.test(location.protocol)){
@@ -1737,7 +1764,7 @@
       const port = cloudResult?.port || {
         id:uid('PT'), kind:p.portKind, name:p.name+' · '+serial,
         protocol:payload.protocol, endpoint:payload.endpoint,
-        account:payload.account||'—', status:'已连接',
+        liveUrl:payload.liveUrl||'', account:payload.account||'—', status:'已连接',
         last:new Date().toLocaleString('zh-CN',{hour12:false})
       };
       DB.deviceList.push(device);
@@ -1996,7 +2023,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=64" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=65" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -2597,6 +2624,7 @@
         { name:'protocol', label:'连接协议', type:'select', options:['RTSP','ONVIF','GB28181','TCP/IP','MQTT','Modbus RTU','Modbus TCP','ISOBUS','RFID 134.2kHz','北斗短报文'].map(v=>({v})), value:p.protocol },
         { name:'endpoint', label:'连接地址 / 端口', type:'text', value:p.endpoint, placeholder:'例：rtsp://192.168.1.64:554/... 或 modbus://192.168.1.90:502' },
         { name:'account', label:'账号 / 设备编号', type:'text', value:p.account||'' },
+        { name:'liveUrl', label:'大屏直播地址（可选）', type:'text', value:p.liveUrl||'', placeholder:'WVP / go2rtc / HLS / WebRTC 网页地址' },
         { name:'name', label:'设备名称', type:'text', value:p.name }
       ], v=>{
         updateRecord('ports', p.id, { ...v, status:'未连接', last:'' });
