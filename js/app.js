@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v89.6';
+  const APP_VERSION = 'v89.7';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -740,10 +740,20 @@
       const zh = voices.filter(v=>!/^en/i.test(v.lang||'') && /zh|chinese|中文|普通话|mandarin|putonghua/i.test(meta(v)) && !isCantonese(v));
       const mandarin = zh.filter(v=>/zh-cn|zh-sg|mandarin|putonghua|普通话|大陆|简体/i.test(meta(v)));
       const pool = mandarin.length ? mandarin : zh;
-      newsVoice = pool.find(v=>/xiaoxiao|yunxi|xiaoyi|yunjian/i.test(meta(v)))
-        || pool.find(v=>/natural|online/i.test(meta(v)))
-        || pool.find(v=>/ting-?ting|meijia|huihui|kangkang|yaoyao/i.test(meta(v)))
-        || pool[0] || null;
+      const score = v=>{
+        const m=meta(v); let s=0;
+        if (/xiaoxiao|晓晓/.test(m)) s+=120;
+        if (/yunxi|云希/.test(m)) s+=110;
+        if (/xiaoyi|晓伊/.test(m)) s+=105;
+        if (/yunjian|云健/.test(m)) s+=100;
+        if (/natural|neural|online/.test(m)) s+=80;
+        if (/ting-?ting|婷婷/.test(m)) s+=65;
+        if (/meijia|美嘉/.test(m)) s+=60;
+        if (/huihui|kangkang|yaoyao|慧慧|康康|瑶瑶/.test(m)) s+=35;
+        if (/zh-cn|mandarin|putonghua|普通话|大陆|简体/.test(m)) s+=25;
+        return s;
+      };
+      newsVoice = [...pool].sort((a,b)=>score(b)-score(a))[0] || null;
       if (newsVoice) document.documentElement.dataset.narratorVoice = newsVoice.name;
     };
     pickNewsVoice();
@@ -751,7 +761,7 @@
     const resetVoiceButton = ()=>{ if (voiceBtn) voiceBtn.textContent = '🔊 语音讲解'; };
     const humanRoot = document.querySelector('.dh-human');
     const motionEl = document.getElementById('narratorMotion');
-    let talkTimer = null, motionTimer = null, motionFrame = 0;
+    let talkTimer = null, motionTimer = null, motionFrame = 0, speechGapTimer = null, speechRunId = 0;
     const setMotionFrame = (frame)=>{
       motionFrame = ((frame % 61) + 61) % 61;
       if (!motionEl) return;
@@ -767,31 +777,70 @@
     const startTalkMotion = ()=>{
       if (!humanRoot) return;
       humanRoot.classList.add('is-speaking');
-      let phase = 0;
-      talkTimer = setInterval(()=>{ humanRoot.dataset.talk = String(phase++ % 3); }, 220);
-      if (motionEl){
-        if (motionTimer) clearInterval(motionTimer);
-        setMotionFrame(0);
-        motionTimer = setInterval(()=>setMotionFrame(motionFrame + 1), 167);
+      if (!talkTimer){
+        let phase = 0;
+        talkTimer = setInterval(()=>{ humanRoot.dataset.talk = String(phase++ % 3); }, 220);
       }
+      if (motionEl && !motionTimer) motionTimer = setInterval(()=>setMotionFrame(motionFrame + 1), 167);
     };
+    const stopSpeech = ()=>{
+      speechRunId += 1;
+      if (speechGapTimer){ clearTimeout(speechGapTimer); speechGapTimer = null; }
+      if (window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
+      stopTalkMotion();
+    };
+    const narrationChunks = text=>{
+      const clean = String(text || '')
+        .replace(/(\d),(?=\d{3}(\D|$))/g,'$1')
+        .replace(/(\d+)(头|亩|个|路|栋|台|捆|年|月|日)/g,'$1 $2')
+        .replace(/\s+/g,' ').trim();
+      const sentences = (clean.match(/[^。！？!?；;]+[。！？!?；;]?/g) || [clean]).map(x=>x.trim()).filter(Boolean);
+      const out = [];
+      sentences.forEach(sentence=>{
+        if (sentence.length <= 38){ out.push(sentence); return; }
+        let buf = '';
+        (sentence.match(/[^，,、；;]+[，,、；;]?/g) || [sentence]).forEach(part=>{
+          if (buf && (buf + part).length > 38){ out.push(buf.trim()); buf = part; }
+          else buf += part;
+        });
+        if (buf.trim()) out.push(buf.trim());
+      });
+      return out.length ? out : [clean];
+    };
+    const pauseAfter = text=>/[！？!?]$/.test(text) ? 240 : /[。；;]$/.test(text) ? 210 : /[，,、]$/.test(text) ? 130 : 170;
     setMotionFrame(0);
     const speak = (txt = profileIntro)=>{
-      if (!window.speechSynthesis) return;
-      if (speechSynthesis.speaking) return;
-      try {
-        const u = new SpeechSynthesisUtterance(txt);
-        u.lang = 'zh-CN';
-        u.rate = 1.0;
-        u.pitch = 1.0;
-        u.volume = 1;
-        if (newsVoice) u.voice = newsVoice;
-        u.onstart = startTalkMotion;
-        u.onboundary = e=>{ if (humanRoot) humanRoot.dataset.talk = String((e.charIndex || 0) % 3); };
-        u.onend = ()=>{ voiceOn = false; resetVoiceButton(); stopTalkMotion(); };
-        u.onerror = ()=>{ voiceOn = false; resetVoiceButton(); stopTalkMotion(); };
-        speechSynthesis.speak(u);
-      } catch(e){ voiceOn = false; resetVoiceButton(); stopTalkMotion(); }
+      if (!window.speechSynthesis) { toast('当前浏览器不支持语音播报，请使用新版 Edge 或 Chrome'); return; }
+      stopSpeech();
+      const runId = speechRunId;
+      const chunks = narrationChunks(txt);
+      const speakChunk = idx=>{
+        if (runId !== speechRunId) return;
+        if (idx >= chunks.length){ voiceOn = false; resetVoiceButton(); stopTalkMotion(); return; }
+        const text = chunks[idx];
+        try {
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = (newsVoice && newsVoice.lang) || 'zh-CN';
+          u.rate = 0.96;
+          u.pitch = 1.02;
+          u.volume = 1;
+          if (newsVoice) u.voice = newsVoice;
+          u.onstart = startTalkMotion;
+          u.onboundary = e=>{ if (humanRoot) humanRoot.dataset.talk = String((e.charIndex || 0) % 3); };
+          u.onend = ()=>{
+            if (runId !== speechRunId) return;
+            speechGapTimer = setTimeout(()=>speakChunk(idx + 1), pauseAfter(text));
+          };
+          u.onerror = ()=>{
+            if (runId !== speechRunId) return;
+            speechGapTimer = setTimeout(()=>speakChunk(idx + 1), 260);
+          };
+          speechSynthesis.speak(u);
+        } catch(e){
+          voiceOn = false; resetVoiceButton(); stopTalkMotion();
+        }
+      };
+      speakChunk(0);
     };
     const startNarration = (msg)=>{
       voiceOn = true;
@@ -810,12 +859,12 @@
       voiceOn = !voiceOn;
       voiceBtn.textContent = voiceOn ? '🔇 关闭语音' : '🔊 语音讲解';
       if (voiceOn) speak();
-      else if (window.speechSynthesis) { try { speechSynthesis.cancel(); } catch(err){} stopTalkMotion(); }
+      else stopSpeech();
       toast(voiceOn ? 'AI机器人开始完整讲解牧场简介' : '已关闭语音讲解');
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stopTalkMotion(); try{ speechSynthesis.cancel(); }catch(e){} obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stopSpeech(); obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
