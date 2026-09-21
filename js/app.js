@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v93.2';
+  const APP_VERSION = 'v93.3';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -29,11 +29,15 @@
     const allow = authUser ? ROLE_MENUS[authUser.role] : null;
     return !allow ? DB.nav : DB.nav.filter(n=>allow.includes(n.key));
   }
+  const isStaticDemoHost = ()=> location.protocol==='file:' || /(^|\.)github\.io$/i.test(location.hostname) || ['8123','8124'].includes(location.port);
   async function refreshAuth(){
     if (!/^https?:$/.test(location.protocol)) return;
     try {
       const r = await fetch('/api/auth/me', {credentials:'include',headers:{accept:'application/json'}});
-      if (!r.ok) { authUser=null; try{localStorage.removeItem(AUTH_USER_KEY)}catch(e){} return; }
+      if (!r.ok) {
+        if (isStaticDemoHost() && authUser && authUser.demo) return;
+        authUser=null; try{localStorage.removeItem(AUTH_USER_KEY)}catch(e){} return;
+      }
       const d=await r.json(); authUser=d.user; try{localStorage.setItem(AUTH_USER_KEY,JSON.stringify(authUser))}catch(e){}
       if (authUser.mustChangePassword) { location.href='/change-password.html'; return; }
       const name=$('.user-name'), role=$('.user-role'), avatar=$('.avatar');
@@ -42,7 +46,9 @@
       if(avatar) avatar.textContent=(authUser.name||'牧').slice(0,1);
       const allowed=visibleNav().map(x=>x.key);
       if(!allowed.includes(current)) render(allowed[0]||'bigscreen'); else { renderNav(); }
-    } catch(e){}
+    } catch(e){
+      if (isStaticDemoHost() && authUser && authUser.demo) return;
+    }
   }
 
   /* ================= 真实天气服务（Open-Meteo · 牧场坐标） ================= */

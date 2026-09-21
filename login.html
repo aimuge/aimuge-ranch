@@ -25,6 +25,7 @@
 .row{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#7da2c4;margin:2px 0 18px}.row a{color:#70dcd6;text-decoration:none}
 .submit{width:100%;height:47px;border:0;border-radius:11px;background:linear-gradient(100deg,#0d9488,#0891b2 54%,#2563eb);color:#fff;font-weight:800;font-size:14px;letter-spacing:2px;cursor:pointer;box-shadow:0 12px 28px -14px #22d3ee}
 .wechat{margin-top:11px;width:100%;height:42px;border-radius:10px;border:1px solid rgba(94,234,212,.26);background:rgba(94,234,212,.06);color:#a5efe8;font-size:12px;cursor:pointer}
+.demo{display:none;margin-top:9px;width:100%;height:40px;border-radius:10px;border:1px solid rgba(195,154,85,.50);background:linear-gradient(100deg,rgba(195,154,85,.14),rgba(27,145,168,.12));color:#f0d79c;font-size:12px;cursor:pointer}
 .notice{margin-top:16px;padding:11px 12px;border-radius:9px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.20);font-size:10px;line-height:1.6;color:#d8b977}
 .help{margin-top:17px;text-align:center;font-size:10px;color:#6d91b2}
 @media(max-width:820px){.login{grid-template-columns:1fr}.logo img{width:150px;height:54px;padding:2px 5px}.hero{min-height:270px;padding:28px 22px}.hero-copy h1{font-size:31px}.hero-copy p{font-size:13px}.stats{display:none}.panel{padding:28px 16px 36px;align-items:flex-start}.card{padding:24px 18px}.hero-foot{display:none}}
@@ -173,6 +174,7 @@
       <div class="row"><label><input id="rememberInput" type="checkbox" checked> 记住此设备</label><a href="#" id="forgotLink">忘记密码</a></div>
       <button class="submit" id="loginBtn" type="submit">登 录 系 统</button>
       <button class="wechat" id="wechatBtn" type="button">微信小程序快捷登录</button>
+      <button class="demo" id="demoLoginBtn" type="button">进入公网演示版</button>
       <div class="notice" id="loginNotice">伊拉特为牧场唯一最高管理员，可授权场长、兽医、牧工、客服等人员权限。其他账号不能修改伊拉特的最高权限。</div>
       <div class="help" id="loginHelp">遇到登录问题，请联系内蒙古艾牧戈数智科技有限公司</div>
     </form>
@@ -199,6 +201,19 @@ function setRole(next){
   $('loginBtn').textContent=c.mode==='sms'?'验证码登录':'登 录 系 统';
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setRole(b.dataset.role)));
+const isStaticDemoHost = location.protocol==='file:' || /(^|\.)github\.io$/i.test(location.hostname) || ['8123','8124'].includes(location.port);
+const demoLoginBtn = $('demoLoginBtn');
+if (isStaticDemoHost && demoLoginBtn) {
+  demoLoginBtn.style.display='block';
+  $('loginNotice').textContent='当前为公网演示版：可直接进入系统查看数据大屏；本地服务器登录仍使用正式账号。';
+  $('loginNotice').style.borderColor='rgba(94,234,212,.38)';
+  $('loginNotice').style.background='rgba(94,234,212,.07)';
+}
+if (demoLoginBtn) demoLoginBtn.addEventListener('click',()=>{
+  const demoUser={username:'public_demo',name:'伊拉特演示账号',role:'owner',demo:true,mustChangePassword:false};
+  localStorage.setItem('yilate-auth-user',JSON.stringify(demoUser));
+  location.href='index.html';
+});
 const entry = location.pathname.includes('/platform/') ? 'aimugo' : location.pathname.includes('/service/') ? 'service' : location.pathname.includes('/owner/') ? 'owner' : new URLSearchParams(location.search).get('role');
 const isDedicated = location.pathname !== '/login' && location.pathname !== '/login.html';
 if (isDedicated && entry && roleConfig[entry]) {
