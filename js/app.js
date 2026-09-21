@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v89.8';
+  const APP_VERSION = 'v89.9';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -419,11 +419,6 @@
             <div id="bsGain" class="bs-chart"></div>
             <div class="bsp-sub">数据来源：三分群全自动保定称</div>
           </section>
-          <section class="bs-panel bs-pasture-panel">
-            <div class="bsp-title">🌾 草场载畜利用 <em>GRASSLAND</em></div>
-            <div id="bsPasture" class="bs-chart"></div>
-            <div class="bsp-sub">自有 3,850 亩 · 租赁 9,440 亩 · 打草 1,500 亩</div>
-          </section>
           <section class="bs-panel bs-breed-panel">
             <div class="bsp-title">🍼 繁育与产犊 <em>BREEDING</em></div>
             <div class="bs-mini-metrics">
@@ -549,42 +544,11 @@
             </div>
           </section>
 
-          <section class="bs-panel bs-health-data">
-            <div class="bsp-title">💉 防疫健康与免疫 <em>HEALTH</em></div>
-            <div class="bs-health-metrics">
-              <div><b>${DB.vaccinePlans.length}</b><span>免疫项目</span></div>
-              <div><b>${DB.vaccineRecords.filter(r=>r.status==='完成').length}</b><span>完成记录</span></div>
-              <div><b>96.8%</b><span>免疫覆盖率</span></div>
-            </div>
-            <div class="bs-health-list">
-              ${DB.vaccinePlans.slice(0,2).map(v=>`<div><span>${v.season.replace('（3-4月）','').replace('（9-10月）','')}</span><b>${v.vaccine}</b></div>`).join('')}
-            </div>
-          </section>
 
-          <section class="bs-panel bs-biz-panel">
-            <div class="bsp-title">💰 产品与经营 <em>BUSINESS</em></div>
-            <div class="bs-biz-metrics">
-              <div><b>${money(c.saleAmount)}</b><span>累计销售</span></div>
-              <div><b>${c.todayOrders} 单</b><span>牧游订单</span></div>
-            </div>
-            <div class="bs-biz-stock">
-              ${DB.productInventory.slice(0,3).map(x=>`<span><i>${x.name.includes('牛肉')?'🥩':x.name.includes('犊牛')?'🐮':'🥛'}</i>${x.name} <b>${x.stock}${x.unit}</b></span>`).join('')}
-            </div>
-          </section>
           <section class="bs-panel bs-gov-panel">
             <div class="bsp-title">🏛️ 政府数据接口 <em>GOV DATA</em></div>
             <div class="bs-gov-metrics"><div><b>${(DB.gov.systems||[]).length}</b><span>已对接系统</span></div><div><b>${(DB.gov.reports||[]).length}</b><span>上报记录</span></div><div><b>100%</b><span>成功率</span></div></div>
             <div class="bs-gov-list">${(DB.gov.systems||[]).slice(0,2).map(g=>`<span><i></i>${g.name.replace('动物','')}<b>${g.status}</b></span>`).join('')}</div>
-          </section>
-          <section class="bs-panel bs-energy-panel">
-            <div class="bsp-title">⚡ 能源与环境 <em>ENERGY</em></div>
-            <div class="bs-energy-grid">
-              <div><span>光伏发电</span><b>4.8 kW</b></div>
-              <div><span>水源余量</span><b>82%</b></div>
-              <div><span>饲料间湿度</span><b>58%</b></div>
-              <div><span>网络信号</span><b>5G/北斗</b></div>
-            </div>
-            <div class="bs-energy-bars">${Array.from({length:16},(_,i)=>`<i style="height:${25+((i*23)%65)}%;--i:${i}"></i>`).join('')}</div>
           </section>
         </div>
       </div>
@@ -702,12 +666,6 @@
         series: g.animals.slice(0,4).map((a,i)=>({ name:a.tag, color:['#5eead4','#38bdf8','#f0b429','#a78bfa'][i], values:a.weights }))
       });
     }
-
-    /* ③ 草场载畜利用 */
-    Charts.bars($('#bsPasture'), {
-      labels:['冬·东','冬·南','春·返青','夏·西','一号打草','二号打草'],
-      series:[{ name:'载畜量利用率 %', color:'#38bdf8', values:[62,58,0,52,0,0] }],
-      height:96, yFormat:v=>Math.round(v)+'%' });
 
     /* ⑤ 月份切换 */
     $('#content').querySelectorAll('.bs-yc .yc-cell').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
