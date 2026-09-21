@@ -3747,3 +3747,50 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
   body.bigscreen-active .bs-season{grid-area:auto!important;grid-column:5/6!important;grid-row:4/5!important}
   body.bigscreen-active .bs-gov-panel{grid-area:auto!important;grid-column:6/7!important;grid-row:4/5!important}
 }
+
+/* v90b 中央3D + 主副监控满版布局 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-v8 .bs-body{
+    display:grid!important;grid-template-columns:repeat(20,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;
+    grid-template-areas:none!important;grid-auto-columns:0!important;grid-auto-rows:0!important;grid-auto-flow:row!important;gap:7px!important;min-height:0!important;
+  }
+  body.bigscreen-active .bs-v8 .bs-maincam-panel{grid-column:1/6!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-v8 .bs-map-panel{grid-column:6/16!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-v8 .bs-smallcam-panel{grid-column:16/21!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-v8 .bs-stock-panel{grid-column:1/5!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-v8 .bs-gain-panel{grid-column:5/9!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-v8 .bs-breed-panel{grid-column:9/13!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-v8 .bs-balance-panel{grid-column:13/17!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-v8 .bs-weather{grid-column:17/21!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-v8 .bs-forage-panel{grid-column:1/5!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-v8 .bs-cow-health{grid-column:5/9!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-v8 .bs-equip-panel{grid-column:9/13!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-v8 .bs-season{grid-column:13/17!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-v8 .bs-gov-panel{grid-column:17/21!important;grid-row:4/5!important}
+}
+@media (max-width:1099px), (max-height:879px){
+  .bs-v8 .bs-body{display:flex!important;flex-direction:column!important;gap:10px!important}
+  .bs-maincam-panel,.bs-map-panel,.bs-smallcam-panel{display:flex!important;flex-direction:column!important;min-height:0!important}
+  .bs-maincam-panel{min-height:300px!important}
+  .bs-maincam-stage{height:260px;flex:none}
+  .bs-smallcams{height:280px!important}
+}
+@media (min-width:1100px) and (max-height:879px){
+  .bs-maincam-panel{min-height:420px!important}.bs-maincam-stage{height:390px!important}.bs-smallcams{height:390px!important}
+}
+.bs-maincam-panel{display:flex;flex-direction:column;min-height:0}
+.bs-maincam-stage{position:relative;flex:1;min-height:0;width:100%;padding:0;border:1px solid rgba(73,174,194,.45);border-radius:11px;overflow:hidden;background:#020b13;cursor:pointer}
+.bs-maincam-img-fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(10px) brightness(.42) saturate(.84);transform:scale(1.12)}
+.bs-maincam-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:saturate(1.04) brightness(.98) contrast(1.04);transform:scale(var(--cam-wall-scale,1));transform-origin:center;transition:transform .22s ease}
+.bs-maincam-meta{position:absolute;z-index:4;left:10px;right:10px;bottom:10px;padding-top:18px;background:linear-gradient(180deg,transparent,rgba(1,9,17,.86));text-align:left}
+.bs-maincam-meta b{display:block;color:#f3fcff;font-size:14px;text-shadow:0 2px 8px #000}.bs-maincam-meta small{display:block;color:#9ddbe8;font-size:8px;margin-top:2px}
+.bs-maincam-action{position:absolute;z-index:5;right:9px;bottom:10px;color:#7ff3cf;font-size:8px;font-style:normal;text-shadow:0 1px 5px #000}
+.bs-smallcam-panel{display:flex;flex-direction:column;min-height:0}
+.bs-smallcams{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:5px;height:auto}
+.bs-cam-mini{padding:0;font-family:inherit;text-align:left;color:inherit;cursor:pointer}
+.bs-cam-mini .bs-cam-head em{font-size:5.5px}
+.bs-cam-controlcell{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:8px;border-radius:9px;border:1px dashed rgba(94,234,212,.45);background:linear-gradient(145deg,rgba(10,64,79,.78),rgba(4,26,38,.96));color:#bdeef4}
+.bs-cam-controlcell b{font-size:13px;color:#e7fcff}.bs-cam-controlcell span{font-size:8px;line-height:1.4;color:#83c5d2}.bs-cam-controlcell em{margin-top:auto;font-style:normal;font-size:8px;color:#7ff3cf}
+.bs-3d-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;border-radius:inherit;cursor:grab;touch-action:none}.bs-3d-canvas:active{cursor:grabbing}
+.map3d-status{position:absolute;z-index:5;left:9px;top:8px;padding:3px 6px;border-radius:999px;background:rgba(3,20,32,.72);border:1px solid rgba(94,234,212,.28);font-size:7px;color:#9ce1ec;letter-spacing:.6px}
+.map3d-status i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#5eead4;box-shadow:0 0 8px #5eead4;margin-right:4px;animation:bsDotPulse 1.4s infinite}

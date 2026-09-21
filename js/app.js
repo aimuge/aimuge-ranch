@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v90';
+  const APP_VERSION = 'v91';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -407,153 +407,155 @@
       </div>
 
       <div class="bs-body">
-        <div class="bs-col">
-          <section class="bs-panel bs-stock-panel">
-            <div class="bsp-title">🐂 牛群结构与存栏 <em>LIVESTOCK</em></div>
-            <div class="bsp-big">${fmt(c.totalAnimals)}</div>
-            <div class="bsp-sub">大牛 102 · 小牛 84</div>
-            <div id="bsStock" class="bs-chart"></div>
-          </section>
-          <section class="bs-panel bs-gain-panel">
-            <div class="bsp-title">⚖️ 增重趋势（kg） <em>WEIGHT GAIN</em></div>
-            <div id="bsGain" class="bs-chart"></div>
-            <div class="bsp-sub">数据来源：三分群全自动保定称</div>
-          </section>
-          <section class="bs-panel bs-breed-panel">
-            <div class="bsp-title">🍼 繁育与产犊 <em>BREEDING</em></div>
-            <div class="bs-mini-metrics">
-              <div><b>84</b><span>年度产犊</span></div>
-              <div><b>96%</b><span>犊牛成活率</span></div>
-              <div><b>3</b><span>待产母牛</span></div>
-            </div>
-            <div class="bs-line-progress"><div><span>年度繁育进度</span><b>84 / 120 头</b></div><i><b style="width:70%"></b></i></div>
-            <div class="bs-ring-mini" style="--p:96"><b>96%</b><span>成活率</span></div>
-          </section>
-          <section class="bs-panel bs-balance-panel">
-            <div class="bsp-title">⚖️ 草畜平衡与权属 <em>BALANCE</em></div>
-            <div class="bs-balance-top"><b>${fmt(DB.grassland.balance.rate)}%</b><span>载畜量使用率 · 安全线 90%</span></div>
-            <div class="bs-balance-split"><span>自家 ${fmt(DB.meta.areaSelf)} 亩</span><span>租赁 ${fmt(DB.meta.areaRented)} 亩</span></div>
-            <div class="bs-balance-bar"><i style="width:${Math.min(100,DB.grassland.balance.rate)}%"></i></div>
-            <div class="bs-balance-note">标准家畜单位 ${fmt(DB.grassland.balance.actual)} / 承载上限 ${fmt(DB.grassland.balance.capacity)}</div>
-          </section>
-        </div>
+        <section class="bs-panel bs-maincam-panel" id="bsMainCamPanel">
+          <div class="bsp-title">🎥 主监控画面 <em>MAIN VIEW</em></div>
+          <button class="bs-maincam-stage" id="bsMainCamStage" type="button" data-camera-index="0" data-camera-name="${escTxt(cameraWall[0].name)}" data-camera-note="${escTxt(cameraWall[0].note)}" data-camera-img="${escTxt(cameraWall[0].img)}" title="点击放大查看主监控">
+            <img class="bs-maincam-img-fill" id="bsMainCamFill" src="${escTxt(cameraWall[0].img)}" alt="" aria-hidden="true" loading="lazy">
+            <img class="bs-maincam-img" id="bsMainCamImg" src="${escTxt(cameraWall[0].img)}" alt="${escTxt(cameraWall[0].name)}实景画面" loading="lazy">
+            <span class="bs-cam-scan"></span>
+            <div class="bs-maincam-meta"><b id="bsMainCamName">${escTxt(cameraWall[0].name)}</b><small id="bsMainCamNote">${escTxt(cameraWall[0].note)}</small></div>
+            <i class="bs-maincam-action">主画面 · 点击放大查看</i>
+          </button>
+        </section>
 
-        <div class="bs-col bs-mid">
-          <section class="bs-panel bs-map-panel">
-            <div class="bsp-title">🧭 牧场空间态势（3D） <em>3D DIGITAL TWIN</em></div>
-            <div class="bs-map bs-map-robot bs-map-3d" id="bs3dMap">
-              <div class="map3d-stage" aria-hidden="true">
-                <div class="map3d-grid"></div>
-                ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🏘️','生活区','z4'],['🔧','设备存放区','z5'],['🧊','饲草区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f472b6','#a78bfa','#f59e0b'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
-                <svg class="map3d-roads" viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
-                <i class="map3d-beacon b1"></i><i class="map3d-beacon b2"></i><i class="map3d-beacon b3"></i>
-              </div>
-              <div class="bs-dh bs-dh-center" id="dhBox" title="点击AI机器人听牧场简介">
-                <div class="dh-avatar dh-human">
-                  <div class="human-photo-wrap video-wrap">
-                    <div class="narrator-motion" id="narratorMotion" role="img" aria-label="透明背景巴尔虎服饰讲解员动态"></div>
-                    <i class="human-light-scan"></i>
-                    <span class="video-frame-glow"></span>
-                  </div>
-                </div>
-                <div class="dh-bubble dh-line">
-                  <div class="dh-line-flow">
-                    <span>YILATE SMART RANCH · AI机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
-                    <span>YILATE SMART RANCH · AI机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
-                  </div>
-                  <div class="dh-text" id="dhText">牧场简介</div>
+        <section class="bs-panel bs-map-panel">
+          <div class="bsp-title">🧭 牧场空间态势（3D） <em>3D DIGITAL TWIN</em></div>
+          <div class="bs-map bs-map-robot bs-map-3d" id="bs3dMap">
+            <canvas id="bs3dCanvas" class="bs-3d-canvas" aria-label="牧场三维空间态势"></canvas>
+            <div class="map3d-status"><i></i>3D TERRAIN · 拖拽旋转 · 滚轮缩放</div>
+            <div class="bs-dh bs-dh-center" id="dhBox" title="点击AI机器人听牧场简介">
+              <div class="dh-avatar dh-human">
+                <div class="human-photo-wrap video-wrap">
+                  <div class="narrator-motion" id="narratorMotion" role="img" aria-label="透明背景巴尔虎服饰讲解员动态"></div>
+                  <i class="human-light-scan"></i>
+                  <span class="video-frame-glow"></span>
                 </div>
               </div>
+              <div class="dh-bubble dh-line">
+                <div class="dh-line-flow">
+                  <span>YILATE SMART RANCH · AI机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
+                  <span>YILATE SMART RANCH · AI机器人讲解 · 牧场简介 · 西门塔尔牛 ·</span>
+                </div>
+                <div class="dh-text" id="dhText">牧场简介</div>
+              </div>
             </div>
-          </section>
-          <section class="bs-panel bs-camera-panel" id="bsCameraPanel">
-            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'虚拟牧场实景'}</em></div>
-            <div class="bs-cam-toolbar" aria-label="监控画面控制">
-              <button type="button" data-cam-step="-1" title="上一路">◀</button>
-              <button type="button" data-cam-auto="-1" title="倒序轮巡">倒退</button>
-              <button type="button" data-cam-auto="0" title="暂停轮巡">暂停</button>
-              <button type="button" data-cam-auto="1" title="正序轮巡">正放</button>
-              <button type="button" data-cam-step="1" title="下一路">▶</button>
-              <span class="bs-cam-tool-sep"></span>
-              <button type="button" data-cam-zoom="-1" title="缩小画面">−</button>
-              <b id="bsCamZoomValue">100%</b>
-              <button type="button" data-cam-zoom="1" title="放大画面">＋</button>
-              <button type="button" data-cam-reset title="恢复原始比例">1:1</button>
-            </div>
-            <div class="bs-cams" style="--cam-wall-scale:1">
-              ${cameraWall.map((x,i)=>`<div class="bs-cam ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-index="${i}" data-camera-name="${escTxt(x.name)}" data-camera-note="${escTxt(x.note)}" title="${escTxt(x.source)}">
-                <img class="bs-cam-img-fill" src="${escTxt(x.img)}" alt="" aria-hidden="true" loading="lazy">
-                <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
-                <div class="bs-cam-frame" aria-hidden="true"></div>
-                <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>AI VIEW</em></div>
-                <span class="bs-cam-scan"></span>
-                <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
-                <i class="bs-cam-action">${x.liveUrl?'点击直播':'点击放大查看'}</i>
-              </div>`).join('')}
-            </div>
-          </section>
-          <section class="bs-panel bs-season">
-            <div class="bsp-title">🍃 当前生产季 <em>SEASON</em></div>
-            <div class="bs-season-name" style="color:${se.color}">${m.season}季</div>
-            <div class="bs-season-focus">${monthName(demoMonth)} · ${m.name} — ${se.focus}</div>
-            <div class="year-cycle bs-yc">
-              ${DB.months.map((mm,i)=>`<div class="yc-cell ${i===demoMonth-1?'now':''}" style="--yc:${SEASON_COLOR[mm.season]}" data-m="${i+1}">${mm.m}</div>`).join('')}
-            </div>
-            <div class="bs-tasks">${m.tasks.slice(0,2).map(t=>`<div class="bs-task"><span>◆</span>${t}</div>`).join('')}</div>
-          </section>
-          <section class="bs-panel bs-equip-panel">
-            <div class="bsp-title">📡 智能装备在线状态 <em>SMART EQUIPMENT</em></div>
-            <div class="bs-equip-summary"><span><i class="ok"></i>在线 ${fmt(equipOnline)} 台</span><span><i class="off"></i>离线/检修 ${fmt(equipOffline)} 台</span><span>监控已在监控墙 · 端口 ${c.portsOn}/${(DB.ports||[]).length}</span></div>
-            <div class="bs-equip-grid">
-              ${equipList.map(d=>{
-                const on = String(d.state).includes('在线');
-                return `<div class="bs-equip ${on?'is-online':'is-offline'}" title="${d.name} · ${d.state} · ${d.protocol}">
-                  ${bigDeviceArt(d.name)}
-                  <div class="bs-equip-meta"><b>${devShortName(d.name)}</b><small>${fmt(d.count)}台 · ${d.state}</small></div>
-                  <i class="bs-equip-dot"></i>
-                </div>`;
-              }).join('')}
-            </div>
-          </section>
-          <section class="bs-panel bs-cow-health">
-            <div class="bsp-title">❤️ 牛只健康监测 <em>HERD HEALTH</em></div>
-            <div class="bs-cow-health-grid">
-              <div><b>38.6℃</b><span>平均体温</span></div>
-              <div><b>2</b><span>发情预警</span></div>
-              <div><b>3</b><span>待产母牛</span></div>
-              <div><b>98%</b><span>活动正常</span></div>
-            </div>
-            <div class="bs-health-spark">${Array.from({length:24},(_,i)=>`<i style="--i:${i};height:${32+((i*17)%58)}%"></i>`).join('')}</div>
-            <div class="bs-health-foot"><span>耳标测温在线</span><b>186 / 186 头</b></div>
-          </section>
-        </div>
+          </div>
+        </section>
 
-        <div class="bs-col">
-          <section class="bs-panel bs-weather">
-            <div class="bsp-title">🌦️ ${w.place} <em>实时天气</em><button class="bs-weather-refresh" id="bsWeatherRefresh" title="刷新真实天气">↻</button></div>
-            <div class="bs-w-main"><span id="bsWeatherIcon">${w.icon}</span><b id="bsWeatherTemp">${w.temp}℃</b></div>
-            <div class="bs-w-info" id="bsWeatherInfo">${w.text} · ${w.wind} · ${w.snow}</div>
-            <div class="bs-w-fc" id="bsWeatherForecast">
-              ${(w.forecast||[]).map(f=>`<div><span>${f.day}</span><b>${f.icon}${f.high}℃</b><i>${f.low}℃</i></div>`).join('')}
+        <section class="bs-panel bs-smallcam-panel" id="bsSmallCamPanel">
+          <div class="bsp-title">📹 分路监控（5 路） <em>MULTI VIEW</em></div>
+          <div class="bs-cam-toolbar" aria-label="监控画面控制">
+            <button type="button" data-cam-step="-1" title="上一路">◀</button>
+            <button type="button" data-cam-auto="-1" title="倒序轮巡">倒退</button>
+            <button type="button" data-cam-auto="0" title="暂停轮巡">暂停</button>
+            <button type="button" data-cam-auto="1" title="正序轮巡">正放</button>
+            <button type="button" data-cam-step="1" title="下一路">▶</button>
+            <span class="bs-cam-tool-sep"></span>
+            <button type="button" data-cam-zoom="-1" title="缩小画面">−</button>
+            <b id="bsCamZoomValue">100%</b>
+            <button type="button" data-cam-zoom="1" title="放大画面">＋</button>
+            <button type="button" data-cam-reset title="恢复原始比例">1:1</button>
+          </div>
+          <div class="bs-smallcams" id="bsSmallCams" style="--cam-wall-scale:1">
+            ${cameraWall.slice(1).map((x,i)=>`<button type="button" class="bs-cam bs-cam-mini ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-index="${i+1}" data-camera-name="${escTxt(x.name)}" data-camera-note="${escTxt(x.note)}" data-camera-img="${escTxt(x.img)}" title="${escTxt(x.source)}">
+              <img class="bs-cam-img-fill" src="${escTxt(x.img)}" alt="" aria-hidden="true" loading="lazy">
+              <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
+              <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>点击放大为主画面</em></div>
+              <span class="bs-cam-scan"></span>
+              <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
+              <i class="bs-cam-action">点击放大</i>
+            </button>`).join('')}
+            <div class="bs-cam-controlcell">
+              <b>6 路轮巡</b>
+              <span>点击小画面可切换为主画面</span>
+              <em>6 / 6 在线</em>
             </div>
-            <div class="bs-w-source" id="bsWeatherSource">${w.source||'Open-Meteo'} · ${w.updated||'本地备份'}</div>
-          </section>
+          </div>
+        </section>
 
-          <section class="bs-panel bs-forage-panel">
-            <div class="bsp-title">🧊 饲草储备与冬储 <em>FORAGE</em></div>
-            <div class="bs-forage-head"><div><b>${c.foragePct}%</b><span>冬储完成率</span></div><small>天然草 · 青贮 · 精料</small></div>
-            <div class="bs-forage-list">
-              ${DB.forageInventory.map((x,i)=>{const pct=Math.max(2,Math.min(100,Math.round(x.stock/x.target*100)));return `<div class="bs-forage-row"><div><span>${x.name.replace('（打草场自产）','')}</span><b>${x.stock}/${x.target} ${x.unit}</b></div><div class="bs-forage-bar"><i style="width:${pct}%;--fc:${['#34d399','#22d3ee','#a78bfa','#f0b429'][i%4]}"></i></div></div>`}).join('')}
-            </div>
-          </section>
+        <section class="bs-panel bs-stock-panel">
+          <div class="bsp-title">🐂 牛群结构与存栏 <em>LIVESTOCK</em></div>
+          <div class="bsp-big">${fmt(c.totalAnimals)}</div>
+          <div class="bsp-sub">大牛 102 · 小牛 84</div>
+          <div id="bsStock" class="bs-chart"></div>
+        </section>
 
+        <section class="bs-panel bs-gain-panel">
+          <div class="bsp-title">⚖️ 增重趋势（kg） <em>WEIGHT GAIN</em></div>
+          <div id="bsGain" class="bs-chart"></div>
+          <div class="bsp-sub">数据来源：三分群全自动保定称</div>
+        </section>
 
-          <section class="bs-panel bs-gov-panel">
-            <div class="bsp-title">🏛️ 政府数据接口 <em>GOV DATA</em></div>
-            <div class="bs-gov-metrics"><div><b>${(DB.gov.systems||[]).length}</b><span>已对接系统</span></div><div><b>${(DB.gov.reports||[]).length}</b><span>上报记录</span></div><div><b>100%</b><span>成功率</span></div></div>
-            <div class="bs-gov-list">${(DB.gov.systems||[]).slice(0,2).map(g=>`<span><i></i>${g.name.replace('动物','')}<b>${g.status}</b></span>`).join('')}</div>
-          </section>
-        </div>
+        <section class="bs-panel bs-breed-panel">
+          <div class="bsp-title">🍼 繁育与产犊 <em>BREEDING</em></div>
+          <div class="bs-mini-metrics">
+            <div><b>84</b><span>年度产犊</span></div>
+            <div><b>96%</b><span>犊牛成活率</span></div>
+            <div><b>3</b><span>待产母牛</span></div>
+          </div>
+          <div class="bs-line-progress"><div><span>年度繁育进度</span><b>84 / 120 头</b></div><i><b style="width:70%"></b></i></div>
+          <div class="bs-ring-mini" style="--p:96"><b>96%</b><span>成活率</span></div>
+        </section>
+
+        <section class="bs-panel bs-balance-panel">
+          <div class="bsp-title">⚖️ 草畜平衡与权属 <em>BALANCE</em></div>
+          <div class="bs-balance-top"><b>${fmt(DB.grassland.balance.rate)}%</b><span>载畜量使用率 · 安全线 90%</span></div>
+          <div class="bs-balance-split"><span>自家 ${fmt(DB.meta.areaSelf)} 亩</span><span>租赁 ${fmt(DB.meta.areaRented)} 亩</span></div>
+          <div class="bs-balance-bar"><i style="width:${Math.min(100,DB.grassland.balance.rate)}%"></i></div>
+          <div class="bs-balance-note">标准家畜单位 ${fmt(DB.grassland.balance.actual)} / 承载上限 ${fmt(DB.grassland.balance.capacity)}</div>
+        </section>
+
+        <section class="bs-panel bs-weather">
+          <div class="bsp-title">🌦️ ${w.place} <em>实时天气</em><button class="bs-weather-refresh" id="bsWeatherRefresh" title="刷新真实天气">↻</button></div>
+          <div class="bs-w-main"><span id="bsWeatherIcon">${w.icon}</span><b id="bsWeatherTemp">${w.temp}℃</b></div>
+          <div class="bs-w-info" id="bsWeatherInfo">${w.text} · ${w.wind} · ${w.snow}</div>
+          <div class="bs-w-fc" id="bsWeatherForecast">
+            ${(w.forecast||[]).map(f=>`<div><span>${f.day}</span><b>${f.icon}${f.high}℃</b><i>${f.low}℃</i></div>`).join('')}
+          </div>
+          <div class="bs-w-source" id="bsWeatherSource">${w.source||'Open-Meteo'} · ${w.updated||'本地备份'}</div>
+        </section>
+
+        <section class="bs-panel bs-forage-panel">
+          <div class="bsp-title">🧊 饲草储备与冬储 <em>FORAGE</em></div>
+          <div class="bs-forage-head"><div><b>${c.foragePct}%</b><span>冬储完成率</span></div><small>天然草 · 青贮 · 精料</small></div>
+          <div class="bs-forage-list">
+            ${DB.forageInventory.map((x,i)=>{const pct=Math.max(2,Math.min(100,Math.round(x.stock/x.target*100)));return `<div class="bs-forage-row"><div><span>${x.name.replace('（打草场自产）','')}</span><b>${x.stock}/${x.target} ${x.unit}</b></div><div class="bs-forage-bar"><i style="width:${pct}%;--fc:${['#34d399','#22d3ee','#a78bfa','#f0b429'][i%4]}"></i></div></div>`}).join('')}
+          </div>
+        </section>
+
+        <section class="bs-panel bs-cow-health">
+          <div class="bsp-title">❤️ 牛只健康监测 <em>HERD HEALTH</em></div>
+          <div class="bs-cow-health-grid">
+            <div><b>38.6℃</b><span>平均体温</span></div>
+            <div><b>2</b><span>发情预警</span></div>
+            <div><b>3</b><span>待产母牛</span></div>
+            <div><b>98%</b><span>活动正常</span></div>
+          </div>
+          <div class="bs-health-spark">${Array.from({length:24},(_,i)=>`<i style="--i:${i};height:${32+((i*17)%58)}%"></i>`).join('')}</div>
+          <div class="bs-health-foot"><span>耳标测温在线</span><b>186 / 186 头</b></div>
+        </section>
+
+        <section class="bs-panel bs-equip-panel">
+          <div class="bsp-title">📡 智能装备在线状态 <em>SMART EQUIPMENT</em></div>
+          <div class="bs-equip-summary"><span><i class="ok"></i>在线 ${fmt(equipOnline)} 台</span><span><i class="off"></i>离线/检修 ${fmt(equipOffline)} 台</span><span>端口 ${c.portsOn}/${(DB.ports||[]).length}</span></div>
+          <div class="bs-equip-grid">
+            ${equipList.map(d=>{const on=String(d.state).includes('在线');return `<div class="bs-equip ${on?'is-online':'is-offline'}" title="${d.name} · ${d.state} · ${d.protocol}">${bigDeviceArt(d.name)}<div class="bs-equip-meta"><b>${devShortName(d.name)}</b><small>${fmt(d.count)}台 · ${d.state}</small></div><i class="bs-equip-dot"></i></div>`}).join('')}
+          </div>
+        </section>
+
+        <section class="bs-panel bs-season">
+          <div class="bsp-title">🍃 当前生产季 <em>SEASON</em></div>
+          <div class="bs-season-name" style="color:${se.color}">${m.season}季</div>
+          <div class="bs-season-focus">${monthName(demoMonth)} · ${m.name} — ${se.focus}</div>
+          <div class="year-cycle bs-yc">${DB.months.map((mm,i)=>`<div class="yc-cell ${i===demoMonth-1?'now':''}" style="--yc:${SEASON_COLOR[mm.season]}" data-m="${i+1}">${mm.m}</div>`).join('')}</div>
+          <div class="bs-tasks">${m.tasks.slice(0,2).map(t=>`<div class="bs-task"><span>◆</span>${t}</div>`).join('')}</div>
+        </section>
+
+        <section class="bs-panel bs-gov-panel">
+          <div class="bsp-title">🏛️ 政府数据接口 <em>GOV DATA</em></div>
+          <div class="bs-gov-metrics"><div><b>${(DB.gov.systems||[]).length}</b><span>已对接系统</span></div><div><b>${(DB.gov.reports||[]).length}</b><span>上报记录</span></div><div><b>100%</b><span>成功率</span></div></div>
+          <div class="bs-gov-list">${(DB.gov.systems||[]).slice(0,2).map(g=>`<span><i></i>${g.name.replace('动物','')}<b>${g.status}</b></span>`).join('')}</div>
+        </section>
       </div>
 
       <div class="bs-bottom bs-bottom-v18">
@@ -632,6 +634,57 @@
     return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', resize); ctx.clearRect(0,0,w,h); };
   }
 
+  function start3dRanch(){
+    const canvas = document.getElementById('bs3dCanvas');
+    const host = canvas && canvas.parentElement;
+    if (!canvas || !host || !window.THREE) return ()=>{};
+    const T = window.THREE;
+    const renderer = new T.WebGLRenderer({canvas, antialias:true, alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x031027, 0);
+    const scene = new T.Scene();
+    scene.fog = new T.FogExp2(0x031027, 0.018);
+    const camera = new T.PerspectiveCamera(42, 1, .1, 220);
+    camera.position.set(20, 24, 27); camera.lookAt(0, 0, 0);
+    scene.add(new T.HemisphereLight(0xa7f3ff, 0x061526, 2.2));
+    const sun = new T.DirectionalLight(0xfff1cf, 2.6); sun.position.set(18, 30, 15); scene.add(sun);
+    const rim = new T.DirectionalLight(0x3b82f6, 1.4); rim.position.set(-18, 16, -14); scene.add(rim);
+    const world = new T.Group(); scene.add(world);
+    const box=(w,h,d,color,x,y,z)=>{const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial({color,roughness:.72,metalness:.08}));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;world.add(m);return m;};
+    const label=(text,color,x,y,z,s=2.4)=>{const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);g.fillStyle='rgba(3,18,35,.86)';g.strokeStyle=color;g.lineWidth=3;g.beginPath();if(g.roundRect)g.roundRect(8,8,496,112,22);else g.rect(8,8,496,112);g.fill();g.stroke();g.font='bold 44px "PingFang SC","Microsoft YaHei",sans-serif';g.fillStyle='#e9fbff';g.textAlign='center';g.textBaseline='middle';g.fillText(text,256,64);const tex=new T.CanvasTexture(c);const sp=new T.Sprite(new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));sp.position.set(x,y,z);sp.scale.set(s,s/4,1);world.add(sp);return sp;};
+    const cattle=(x,z,scale=1)=>{const g=new T.Group();const body=new T.Mesh(new T.CapsuleGeometry(.34*scale,.78*scale,4,8),new T.MeshStandardMaterial({color:0xb97845,roughness:.86}));body.rotation.z=Math.PI/2;body.position.y=.55*scale;g.add(body);const head=new T.Mesh(new T.SphereGeometry(.28*scale,10,8),new T.MeshStandardMaterial({color:0xd39b6b,roughness:.86}));head.position.set(.72*scale,.63*scale,0);g.add(head);for(const dx of[-.28,.28])for(const dz of[-.22,.22]){const leg=box(.10*scale,.55*scale,.10*scale,0x8f5938,dx,.22*scale,dz);g.remove(leg);world.remove(leg);const l=new T.Mesh(new T.BoxGeometry(.09*scale,.55*scale,.09*scale),new T.MeshStandardMaterial({color:0x8f5938}));l.position.set(dx,.25*scale,dz);g.add(l);}g.position.set(x,0,z);g.rotation.y=(x+z)*.4;world.add(g);return g;};
+    // 地形底座与网格
+    box(38,.7,29,0x0b3a43,0,-.42,0);
+    const land=new T.Mesh(new T.PlaneGeometry(37,28),new T.MeshStandardMaterial({color:0x0d514b,roughness:.96,metalness:.02}));land.rotation.x=-Math.PI/2;land.position.y=.01;world.add(land);
+    const grid=new T.GridHelper(36,24,0x46d8e8,0x1e6682);grid.position.y=.035;grid.material.opacity=.28;grid.material.transparent=true;world.add(grid);
+    // 牧场道路
+    const roadPts=[new T.Vector3(-15,.08,10),new T.Vector3(-5,.08,8),new T.Vector3(1,.08,2),new T.Vector3(12,.08,-7),new T.Vector3(16,.08,-11)];
+    const road=new T.Line(new T.BufferGeometry().setFromPoints(roadPts),new T.LineBasicMaterial({color:0xb5f4ff,transparent:true,opacity:.72}));world.add(road);
+    // 棚圈、犊牛舍、生活区、饲草区、设备区
+    box(8,2.5,6,0x8f5d32,7,1.25,-6); box(8.6,.6,6.4,0x39c6db,7,2.82,-6); label('大牛棚圈','#5eead4',7,5.2,-6,3.5);
+    box(5.8,2.05,4.8,0x9b683f,-5.8,1.02,-7.5); box(6.2,.5,5.1,0xa3e635,-5.8,2.28,-7.5); label('犊牛舍','#a3e635',-5.8,4.25,-7.5,3.0);
+    box(5.5,2.8,4.5,0x334e72,-12,1.4,5.5); box(6,.55,5,0xf472b6,-12,3.15,5.5); label('生活区','#f472b6',-12,5.05,5.5,3.0);
+    for(let i=0;i<8;i++){const b=new T.Mesh(new T.CylinderGeometry(.62,.62,1.12,12),new T.MeshStandardMaterial({color:i%2?0xe1b85a:0xc99542,roughness:.94}));b.rotation.z=Math.PI/2;b.position.set(10+(i%4)*1.35,.78,5.4+Math.floor(i/4)*1.35);world.add(b);} label('饲草区','#f0b429',11.8,3.1,6.0,3.0);
+    box(5,1.2,3.5,0x6b7d92,-4,1.6,8.5); label('设备区','#a78bfa',-4,3.3,8.5,3.0);
+    // 牛只活动区
+    for(let i=0;i<12;i++) cattle(-7+(i%4)*3.2,2+Math.floor(i/4)*3.1,.78);
+    label('牛只活动区','#34d399',-5,3.7,4,4.1);
+    // 摄像头点位
+    const camPos=[[-13,10],[-4,11],[6,10],[13,-2],[-8,-1]];
+    camPos.forEach(([x,z],i)=>{const p=box(.18,1.5,.18,0x183c69,x,.75,z);p.geometry.dispose();p.geometry=new T.CylinderGeometry(.08,.12,1.5,8);const eye=new T.Mesh(new T.SphereGeometry(.25,10,8),new T.MeshStandardMaterial({color:i===4?0xf59e0b:0x5eead4,emissive:i===4?0x6b4a00:0x0b6b68,emissiveIntensity:1.2}));eye.position.set(x,1.55,z);world.add(eye);});
+    // 交互旋转 / 缩放
+    let rotY=0, rotX=0, targetY=0, targetX=0, distance=35, targetDistance=35, drag=false, lx=0, ly=0, raf=0, alive=true;
+    const resize=()=>{const r=host.getBoundingClientRect();const w=Math.max(2,Math.round(r.width)),h=Math.max(2,Math.round(r.height));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
+    const render=()=>{if(!alive)return;if(!drag){targetY+=.0014;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);raf=requestAnimationFrame(render);};
+    canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
+    canvas.addEventListener('pointermove',e=>{if(!drag)return;targetY+=(e.clientX-lx)*.008;targetX=Math.max(-.32,Math.min(.32,targetX+(e.clientY-ly)*.004));lx=e.clientX;ly=e.clientY;});
+    const end=e=>{drag=false;try{canvas.releasePointerCapture&&canvas.releasePointerCapture(e.pointerId);}catch(_){}};
+    canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);canvas.addEventListener('pointerleave',()=>{drag=false;});
+    canvas.addEventListener('wheel',e=>{e.preventDefault();targetDistance=Math.max(24,Math.min(48,targetDistance+e.deltaY*.018));},{passive:false});
+    window.addEventListener('resize',resize);resize();render();
+    return ()=>{alive=false;cancelAnimationFrame(raf);window.removeEventListener('resize',resize);renderer.dispose();scene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{if(m.map)m.map.dispose();m.dispose();});}});};
+  }
+
   function countUp(el, target, dur=1200, suffix=''){
     if (!el) return;
     const start = performance.now(), from = 0;
@@ -646,6 +699,7 @@
   function afterBigscreen(){
     /* 数据科技动态层 */
     const stopBigscreenCanvas = startBigscreenCanvas();
+    const stop3dRanch = start3dRanch();
     /* 数字计数 */
     countUp(document.querySelector('.bsp-big'), compute().totalAnimals, 1400);
     renderWeatherPanel();
@@ -673,46 +727,68 @@
     /* ⑤ 月份切换 */
     $('#content').querySelectorAll('.bs-yc .yc-cell').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
 
-    /* 监控大屏：直播 / 虚拟画面 + 画面控制 */
-    const camPanel = $('#bsCameraPanel');
-    const camNodes = camPanel ? [...camPanel.querySelectorAll('.bs-cam')] : [];
-    const camData = camNodes.map((b,i)=>({
-      name:b.dataset.cameraName || `监控${i+1}`,
-      note:b.dataset.cameraNote || '虚拟牧场实景',
-      img:(b.querySelector('.bs-cam-img')||{}).getAttribute ? b.querySelector('.bs-cam-img').getAttribute('src') : '',
-      liveUrl:b.dataset.liveUrl || ''
-    }));
-    let camScale = 1, camActive = 0, camAutoDir = 0, camAutoTimer = null;
-    const camWall = camPanel ? camPanel.querySelector('.bs-cams') : null;
+    /* 监控大屏：主画面 / 五路分画面 + 画面控制 */
+    const mainStage = $('#bsMainCamStage');
+    const smallBox = $('#bsSmallCams');
+    const mainPanel = $('#bsMainCamPanel');
+    const smallPanel = $('#bsSmallCamPanel');
+    const readCam = el=>({
+      name:el.dataset.cameraName || '监控画面',
+      note:el.dataset.cameraNote || '虚拟牧场实景',
+      img:el.dataset.cameraImg || (el.querySelector('img')||{}).src || '',
+      liveUrl:el.dataset.liveUrl || ''
+    });
+    let camData = [];
+    if (mainStage) camData.push(readCam(mainStage));
+    if (smallBox) [...smallBox.querySelectorAll('.bs-cam-mini')].forEach(el=>camData.push(readCam(el)));
+    let camScale = 1, camAutoDir = 0, camAutoTimer = null;
     const camZoomValue = $('#bsCamZoomValue');
     const setCamScale = v=>{
       camScale = Math.max(.8, Math.min(2, Math.round(v*10)/10));
-      if (camWall){ camWall.style.setProperty('--cam-wall-scale', camScale); }
+      document.documentElement.style.setProperty('--cam-wall-scale', camScale);
+      if (smallBox) smallBox.style.setProperty('--cam-wall-scale', camScale);
       if (camZoomValue) camZoomValue.textContent = Math.round(camScale*100)+'%';
     };
-    const setCamActive = i=>{
-      if (!camNodes.length) return;
-      camActive = ((i % camNodes.length)+camNodes.length)%camNodes.length;
-      camNodes.forEach((b,n)=>b.classList.toggle('active', n===camActive));
+    const miniMarkup = (x,i)=>`<button type="button" class="bs-cam bs-cam-mini ${x.cls||''} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-index="${i}" data-camera-name="${escTxt(x.name)}" data-camera-note="${escTxt(x.note)}" data-camera-img="${escTxt(x.img)}" title="点击放大为主画面">
+      <img class="bs-cam-img-fill" src="${escTxt(x.img)}" alt="" aria-hidden="true" loading="lazy">
+      <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
+      <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>点击放大为主画面</em></div>
+      <span class="bs-cam-scan"></span>
+      <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
+      <i class="bs-cam-action">点击放大</i>
+    </button>`;
+    const renderCameras = ()=>{
+      if (!camData.length) return;
+      const m=camData[0];
+      if (mainStage){
+        mainStage.dataset.cameraName=m.name; mainStage.dataset.cameraNote=m.note; mainStage.dataset.cameraImg=m.img;
+        mainStage.querySelector('#bsMainCamImg').src=m.img;
+        mainStage.querySelector('#bsMainCamFill').src=m.img;
+        mainStage.querySelector('#bsMainCamName').textContent=m.name;
+        mainStage.querySelector('#bsMainCamNote').textContent=m.note;
+      }
+      if (smallBox){
+        smallBox.innerHTML = camData.slice(1).map((x,i)=>miniMarkup(x,i+1)).join('') + `<div class="bs-cam-controlcell"><b>6 路轮巡</b><span>点击小画面可切换为主画面</span><em>6 / 6 在线</em></div>`;
+      }
+      if (mainStage) mainStage.style.setProperty('--cam-wall-scale', camScale);
+      if (smallBox) smallBox.style.setProperty('--cam-wall-scale', camScale);
     };
-    const stepCam = dir=>setCamActive(camActive+dir);
+    const promote = idx=>{
+      if (idx<=0 || idx>=camData.length) return;
+      const chosen=camData.splice(idx,1)[0]; camData.unshift(chosen); renderCameras();
+    };
+    const stepCam = dir=>{ if (dir<0) promote(camData.length-1); else promote(1); };
     const stopCamAuto = ()=>{ camAutoDir=0; if(camAutoTimer){clearInterval(camAutoTimer);camAutoTimer=null;} };
     const setCamAuto = dir=>{ stopCamAuto(); camAutoDir=dir; if(dir) camAutoTimer=setInterval(()=>stepCam(dir),1800); };
-    camNodes.forEach((b,i)=>{
-      b.addEventListener('click', ()=>{
-        setCamActive(i);
-        if (b.dataset.liveUrl) openCameraViewer(b.dataset.cameraName, b.dataset.liveUrl);
-        else openVirtualCameraViewer(camData, i);
-      });
-    });
-    setCamActive(0);
-    if (camPanel){
-      camPanel.querySelectorAll('[data-cam-step]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); stopCamAuto(); stepCam(Number(b.dataset.camStep)); });
-      camPanel.querySelectorAll('[data-cam-auto]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamAuto(Number(b.dataset.camAuto)); });
-      camPanel.querySelectorAll('[data-cam-zoom]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamScale(camScale+Number(b.dataset.camZoom)*.2); });
-      const camReset = camPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); setCamActive(0); };
+    if (smallBox) smallBox.addEventListener('click',e=>{ const tile=e.target.closest('.bs-cam-mini'); if(!tile) return; promote(Number(tile.dataset.cameraIndex)||0); });
+    if (mainStage) mainStage.addEventListener('click',()=>{ const c=camData[0]; if(c&&c.liveUrl) openCameraViewer(c.name,c.liveUrl); else if(c) openVirtualCameraViewer(camData,0); });
+    if (smallPanel){
+      smallPanel.querySelectorAll('[data-cam-step]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); stopCamAuto(); stepCam(Number(b.dataset.camStep)); });
+      smallPanel.querySelectorAll('[data-cam-auto]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamAuto(Number(b.dataset.camAuto)); });
+      smallPanel.querySelectorAll('[data-cam-zoom]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamScale(camScale+Number(b.dataset.camZoom)*.2); });
+      const camReset=smallPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); };
     }
-
+    renderCameras();
     /* ⑥ 全屏 */
     const syncBigscreenFullscreen = ()=>document.body.classList.toggle('bs-fullscreen', !!document.fullscreenElement);
     if (!window.__bsFullscreenBound){
@@ -807,17 +883,17 @@
       const sentences = (clean.match(/[^。！？!?；;]+[。！？!?；;]?/g) || [clean]).map(x=>x.trim()).filter(Boolean);
       const out = [];
       sentences.forEach(sentence=>{
-        if (sentence.length <= 38){ out.push(sentence); return; }
+        if (sentence.length <= 64){ out.push(sentence); return; }
         let buf = '';
         (sentence.match(/[^，,、；;]+[，,、；;]?/g) || [sentence]).forEach(part=>{
-          if (buf && (buf + part).length > 38){ out.push(buf.trim()); buf = part; }
+          if (buf && (buf + part).length > 64){ out.push(buf.trim()); buf = part; }
           else buf += part;
         });
         if (buf.trim()) out.push(buf.trim());
       });
       return out.length ? out : [clean];
     };
-    const pauseAfter = text=>/[！？!?]$/.test(text) ? 240 : /[。；;]$/.test(text) ? 210 : /[，,、]$/.test(text) ? 130 : 170;
+    const pauseAfter = text=>/[！？!?]$/.test(text) ? 210 : /[。；;]$/.test(text) ? 170 : /[，,、]$/.test(text) ? 85 : 120;
     setMotionFrame(IDLE_FRAME_START);
     const speak = (txt = profileIntro)=>{
       if (!window.speechSynthesis) { toast('当前浏览器不支持语音播报，请使用新版 Edge 或 Chrome'); return; }
@@ -831,8 +907,8 @@
         try {
           const u = new SpeechSynthesisUtterance(text);
           u.lang = (newsVoice && newsVoice.lang) || 'zh-CN';
-          u.rate = 0.96;
-          u.pitch = 1.02;
+          u.rate = 0.98;
+          u.pitch = 1.0;
           u.volume = 1;
           if (newsVoice) u.voice = newsVoice;
           u.onstart = startTalkMotion;
@@ -874,7 +950,7 @@
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stopSpeech(); stopCamAuto(); obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stop3dRanch(); stopSpeech(); stopCamAuto(); obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
