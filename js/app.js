@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v93';
+  const APP_VERSION = 'v93.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -784,9 +784,19 @@
       const camReset=monitorPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); };
     }
     renderCameras();
-    /* 数据大屏返回总览 */
+    /* 数据大屏返回总览：先退出全屏，再切回总览 */
     const bsBack = $('#bsBack');
-    if (bsBack) bsBack.addEventListener('click', ()=>render('dashboard'));
+    if (bsBack) bsBack.addEventListener('click', ()=>{
+      const goDashboard = ()=>{
+        document.body.classList.remove('bs-fullscreen');
+        render('dashboard');
+      };
+      if (document.fullscreenElement && document.exitFullscreen){
+        Promise.resolve(document.exitFullscreen()).catch(()=>{}).finally(goDashboard);
+      } else {
+        goDashboard();
+      }
+    });
 
     /* ⑥ 全屏 */
     const syncBigscreenFullscreen = ()=>document.body.classList.toggle('bs-fullscreen', !!document.fullscreenElement);
