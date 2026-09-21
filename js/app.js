@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v92';
+  const APP_VERSION = 'v92.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -3030,6 +3030,13 @@
   $('#menuBtn').addEventListener('click', ()=>{ $('#sidebar').classList.add('open'); $('#mask').classList.add('show'); });
   $('#mask').addEventListener('click', ()=>{ $('#sidebar').classList.remove('open'); $('#mask').classList.remove('show'); });
   $('#settingsBtn').addEventListener('click', openNavSettings);
+  const exitBtn = $('#exitBtn');
+  if (exitBtn) exitBtn.addEventListener('click', async ()=>{
+    if (!confirm('确定退出当前账号并返回总栏目吗？')) return;
+    try { localStorage.removeItem(AUTH_USER_KEY); } catch(e){}
+    try { await fetch('/api/auth/logout', {method:'POST', credentials:'include'}); } catch(e){}
+    location.href = 'login.html';
+  });
   /* 科技风主题切换（浅色 / 深色） */
   const THEME_KEY = 'yilate-theme';
   function applyTheme(t){

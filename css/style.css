@@ -3864,3 +3864,14 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
   body.bigscreen-active .bs-v8 .bs-map-3d{border-radius:14px}
   body.bigscreen-active .bs-v8 .bs-map-3d::after{content:"";position:absolute;inset:8px;border:1px solid rgba(94,234,212,.18);border-radius:12px;pointer-events:none;z-index:2}
 }
+
+/* v92.1 退出 / 返回总栏目 */
+.exit-btn{
+  border:1px solid rgba(100,116,139,.30);background:rgba(255,255,255,.86);color:#365565;
+  border-radius:9px;padding:6px 11px;font-size:12px;line-height:1;cursor:pointer;font-family:inherit;
+  transition:.18s;white-space:nowrap;
+}
+.exit-btn:hover{border-color:#d9534f;color:#b83d3d;background:#fff5f5}
+body[data-theme="dark"] .exit-btn{background:rgba(4,24,34,.86);color:#b9dce4;border-color:rgba(66,160,181,.30)}
+body[data-theme="dark"] .exit-btn:hover{border-color:#fb7185;color:#fecdd3;background:rgba(80,20,35,.38)}
+@media (max-width:700px){.exit-btn{padding:6px 8px;font-size:11px}}
