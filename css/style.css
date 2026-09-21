@@ -3451,7 +3451,7 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
 /* 监控墙：真实牧场素材做虚拟预览，支持后续直接切换直播地址 */
 .bs-cams{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);height:calc(100% - 21px);min-height:0}
 .bs-cam{height:100%!important;min-height:58px;border:1px solid rgba(73,174,194,.30);background:#061b26;isolation:isolate}
-.bs-cam-img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center;background:#020b13;filter:saturate(.92) brightness(.86) contrast(1.04);pointer-events:none}
+.bs-cam-img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center;background:#020b13;filter:saturate(.94) brightness(.90) contrast(1.05);pointer-events:none}
 .bs-cam-frame{position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;filter:saturate(.82) brightness(.58) contrast(1.06);transform:scale(1.02);animation:bsCamDrift 13s ease-in-out infinite alternate;pointer-events:none;display:none}
 .bs-cam.cam-life .bs-cam-frame{background-image:linear-gradient(180deg,rgba(2,15,24,.12),rgba(2,15,24,.60)),url("../assets/photos/yurts.jpg")}
 .bs-cam.cam-forage .bs-cam-frame{background-image:linear-gradient(180deg,rgba(2,15,24,.12),rgba(2,15,24,.60)),url("../assets/photos/grassland-hay.jpg")}
@@ -3541,9 +3541,9 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
   body.bigscreen-active .bs-v8 .bs-map-panel .map-zone{font-size:6px!important;padding:2px 4px!important;gap:2px!important}
   body.bigscreen-active .bs-v8 .bs-map-panel .map-zone i{font-size:8px!important}
   body.bigscreen-active .bs-v8 .bs-dh-center{top:2px!important}
-  body.bigscreen-active .bs-v8 .bs-dh-center .dh-human{width:clamp(150px,10.5vw,220px)!important;height:auto!important;min-height:96px!important}
-  body.bigscreen-active .bs-v8 .bs-dh-center .narrator-motion{width:100%!important;height:auto!important}
-  body.bigscreen-active .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:clamp(92px,7.5vw,148px)!important}
+  body.bigscreen-active .bs-v8 .bs-dh-center .dh-human{width:clamp(190px,13vw,260px)!important;height:clamp(108px,7.4vw,147px)!important;min-height:0!important}
+  body.bigscreen-active .bs-v8 .bs-dh-center .narrator-motion{width:100%!important;height:100%!important}
+  body.bigscreen-active .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:clamp(105px,8.8vw,168px)!important}
   body.bigscreen-active .bs-v8 .bs-body .bs-row{padding:1px 0!important;font-size:7.5px!important}
   body.bigscreen-active .bs-v8 .bs-body .bs-row b{font-size:8px!important}
   body.bigscreen-active .bs-v8 .bs-yc{gap:2px!important;margin:3px 0!important}
@@ -3609,8 +3609,8 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
       "balance shed gov energy ."!important;
   }
   body.bigscreen-active .bs-v8 .bs-dh-center{top:-4px!important}
-  body.bigscreen-active .bs-v8 .bs-dh-center .dh-human{width:148px!important;height:82px!important;min-height:0!important}
-  body.bigscreen-active .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:83px!important}
+  body.bigscreen-active .bs-v8 .bs-dh-center .dh-human{width:clamp(180px,13vw,220px)!important;height:clamp(96px,7.4vw,124px)!important;min-height:0!important}
+  body.bigscreen-active .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:102px!important}
   body.bigscreen-active .bs-v8 .bs-map-robot::before{top:42px!important;width:112px!important;height:112px!important}
   body.bigscreen-active .bs-v8 .bs-map-panel .map-zone{font-size:5.5px!important;padding:1px 3px!important}
 }
@@ -3636,6 +3636,6 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
   .bs-v8 .bs-col>.bs-camera-panel{display:flex!important;flex:0 0 390px!important;min-height:390px!important;flex-direction:column!important}
   .bs-v8 .bs-camera-panel .bs-cams{height:342px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important}
   .bs-v8 .bs-camera-panel .bs-cam{height:auto!important;min-height:0!important}
-  .bs-v8 .bs-dh-center .dh-human{width:160px!important;height:92px!important;min-height:0!important}
-  .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:92px!important}
+  .bs-v8 .bs-dh-center .dh-human{width:220px!important;height:124px!important;min-height:0!important}
+  .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:108px!important}
 }

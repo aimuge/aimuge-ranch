@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v89.5';
+  const APP_VERSION = 'v89.6';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -475,15 +475,15 @@
             </div>
           </section>
           <section class="bs-panel bs-camera-panel">
-            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'养殖基地实景接入'}</em></div>
+            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'虚拟牧场实景'}</em></div>
             <div class="bs-cams">
               ${cameraWall.map(x=>`<div class="bs-cam ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-name="${escTxt(x.name)}" title="${escTxt(x.source)}">
                 <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
                 <div class="bs-cam-frame" aria-hidden="true"></div>
-                <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'CAM'}</span><em>AI VIEW</em></div>
+                <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>AI VIEW</em></div>
                 <span class="bs-cam-scan"></span>
                 <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
-                <i class="bs-cam-action">${x.liveUrl?'点击直播':'实景预览'}</i>
+                <i class="bs-cam-action">${x.liveUrl?'点击直播':'虚拟预览'}</i>
               </div>`).join('')}
             </div>
           </section>
