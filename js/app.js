@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v93.3';
+  const APP_VERSION = 'v93.4';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -319,12 +319,12 @@
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const livePorts = (DB.ports||[]).filter(p=>p.liveUrl||p.streamUrl);
     const cameraProfiles = {
-      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别', img:'assets/photos/monitor-life.jpg' },
-      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别', img:'assets/photos/monitor-forage.jpg' },
-      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别', img:'assets/photos/monitor-equipment.jpg' },
-      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别', img:'assets/photos/monitor-calf.jpg' },
-      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别', img:'assets/photos/monitor-activity.jpg' },
-      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别', img:'assets/photos/monitor-barn.jpg' }
+      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别', img:'assets/photos/monitor-life.webp' },
+      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别', img:'assets/photos/monitor-forage.webp' },
+      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别', img:'assets/photos/monitor-equipment.webp' },
+      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别', img:'assets/photos/monitor-calf.webp' },
+      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别', img:'assets/photos/monitor-activity.webp' },
+      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别', img:'assets/photos/monitor-barn.webp' }
     };
     const cameraWall = ['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map((name,i)=>({
       name,
@@ -383,7 +383,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=89" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=89" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -2213,7 +2213,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=89" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=89" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
