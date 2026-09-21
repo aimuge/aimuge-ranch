@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v92.2';
+  const APP_VERSION = 'v93';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -74,7 +74,7 @@
     set('bsWeatherInfo', `${w.text} · ${w.wind} · ${w.snow} · 体感 ${Math.round(w.feels)}℃`);
     set('bsWeatherSource', `${w.source || 'Open-Meteo'} · ${w.updated || '本地备份'}`);
     const fc = document.getElementById('bsWeatherForecast');
-    if (fc) fc.innerHTML = (w.forecast || []).slice(0,3).map(f=>`<div><span>${f.day}</span><b>${f.icon}${Math.round(f.high)}℃</b><i>${Math.round(f.low)}℃</i></div>`).join('');
+    if (fc) fc.innerHTML = (w.forecast || []).slice(0,2).map(f=>`<div><span>${f.day}</span><b>${f.icon}${Math.round(f.high)}℃</b><i>${Math.round(f.low)}℃</i></div>`).join('');
   }
   async function refreshRealWeather(){
     if (weatherLoading) return;
@@ -269,7 +269,7 @@
   };
   const weatherHtml = () => {
     const w = DB.weather;
-    const fc = (w.forecast||[]).map(f=>`<div class="w-fc"><span>${f.day}</span><b>${f.icon} ${f.high}℃</b><i>${f.low}℃</i></div>`).join('');
+    const fc = (w.forecast||[]).slice(0,2).map(f=>`<div class="w-fc"><span>${f.day}</span><b>${f.icon} ${f.high}℃</b><i>${f.low}℃</i></div>`).join('');
     return `<div class="weather-card">
       <div class="w-main"><span class="w-ico">${w.icon}</span><span class="w-temp">${w.temp}℃</span></div>
       <div class="w-info"><div>${w.text} · 体感 ${w.feels}℃</div><div>${w.wind} · ${w.snow}</div><div class="w-range">最高 ${w.high}℃ / 最低 ${w.low}℃</div></div>
@@ -468,11 +468,16 @@
           </div>
         </section>
 
-        <section class="bs-panel bs-stock-panel">
-          <div class="bsp-title">🐂 牛群结构与存栏 <em>LIVESTOCK</em></div>
-          <div class="bsp-big">${fmt(c.totalAnimals)}</div>
-          <div class="bsp-sub">大牛 102 · 小牛 84</div>
-          <div id="bsStock" class="bs-chart"></div>
+        <section class="bs-panel bs-alert-panel">
+          <div class="bsp-title">🚨 实时预警与任务 <em>ALERTS</em></div>
+          <div class="bs-alert-kpis">
+            <div><b>${DB.tasks.filter(t=>t.level==='高').length}</b><span>高风险</span></div>
+            <div><b>${DB.tasks.length}</b><span>待处理</span></div>
+            <div><b>${c.devRate}%</b><span>设备在线</span></div>
+          </div>
+          <div class="bs-alert-list">
+            ${DB.tasks.slice(0,3).map(t=>`<div class="bs-alert-row"><i class="${t.level==='高'?'danger':t.level==='中'?'warn':'ok'}"></i><span>${t.text}</span><b>${t.time}</b></div>`).join('')}
+          </div>
         </section>
 
         <section class="bs-panel bs-gain-panel">
@@ -505,7 +510,7 @@
           <div class="bs-w-main"><span id="bsWeatherIcon">${w.icon}</span><b id="bsWeatherTemp">${w.temp}℃</b></div>
           <div class="bs-w-info" id="bsWeatherInfo">${w.text} · ${w.wind} · ${w.snow}</div>
           <div class="bs-w-fc" id="bsWeatherForecast">
-            ${(w.forecast||[]).map(f=>`<div><span>${f.day}</span><b>${f.icon}${f.high}℃</b><i>${f.low}℃</i></div>`).join('')}
+            ${(w.forecast||[]).slice(0,2).map(f=>`<div><span>${f.day}</span><b>${f.icon}${f.high}℃</b><i>${f.low}℃</i></div>`).join('')}
           </div>
           <div class="bs-w-source" id="bsWeatherSource">${w.source||'Open-Meteo'} · ${w.updated||'本地备份'}</div>
         </section>
@@ -514,7 +519,7 @@
           <div class="bsp-title">🧊 饲草储备与冬储 <em>FORAGE</em></div>
           <div class="bs-forage-head"><div><b>${c.foragePct}%</b><span>冬储完成率</span></div><small>天然草 · 青贮 · 精料</small></div>
           <div class="bs-forage-list">
-            ${DB.forageInventory.map((x,i)=>{const pct=Math.max(2,Math.min(100,Math.round(x.stock/x.target*100)));return `<div class="bs-forage-row"><div><span>${x.name.replace('（打草场自产）','')}</span><b>${x.stock}/${x.target} ${x.unit}</b></div><div class="bs-forage-bar"><i style="width:${pct}%;--fc:${['#34d399','#22d3ee','#a78bfa','#f0b429'][i%4]}"></i></div></div>`}).join('')}
+            ${DB.forageInventory.slice(0,3).map((x,i)=>{const pct=Math.max(2,Math.min(100,Math.round(x.stock/x.target*100)));return `<div class="bs-forage-row"><div><span>${x.name.replace('（打草场自产）','')}</span><b>${x.stock}/${x.target} ${x.unit}</b></div><div class="bs-forage-bar"><i style="width:${pct}%;--fc:${['#34d399','#22d3ee','#a78bfa','#f0b429'][i%4]}"></i></div></div>`}).join('')}
           </div>
         </section>
 
@@ -526,7 +531,7 @@
             <div><b>3</b><span>待产母牛</span></div>
             <div><b>98%</b><span>活动正常</span></div>
           </div>
-          <div class="bs-health-spark">${Array.from({length:24},(_,i)=>`<i style="--i:${i};height:${32+((i*17)%58)}%"></i>`).join('')}</div>
+          <div class="bs-health-spark">${Array.from({length:16},(_,i)=>`<i style="--i:${i};height:${32+((i*17)%58)}%"></i>`).join('')}</div>
           <div class="bs-health-foot"><span>耳标测温在线</span><b>186 / 186 头</b></div>
         </section>
 
@@ -543,7 +548,7 @@
           <div class="bs-season-name" style="color:${se.color}">${m.season}季</div>
           <div class="bs-season-focus">${monthName(demoMonth)} · ${m.name} — ${se.focus}</div>
           <div class="year-cycle bs-yc">${DB.months.map((mm,i)=>`<div class="yc-cell ${i===demoMonth-1?'now':''}" style="--yc:${SEASON_COLOR[mm.season]}" data-m="${i+1}">${mm.m}</div>`).join('')}</div>
-          <div class="bs-tasks">${m.tasks.slice(0,2).map(t=>`<div class="bs-task"><span>◆</span>${t}</div>`).join('')}</div>
+          <div class="bs-tasks">${m.tasks.slice(0,1).map(t=>`<div class="bs-task"><span>◆</span>${t}</div>`).join('')}</div>
         </section>
 
         <section class="bs-panel bs-gov-panel">
@@ -705,16 +710,12 @@
     const wRefresh = $('#bsWeatherRefresh');
     if (wRefresh) wRefresh.addEventListener('click', ()=>{ toast('正在获取牧场实时天气…'); refreshRealWeather(); });
 
-    /* ① 牛群结构 */
-    Charts.donut($('#bsStock'), { size:112, thickness:14, centerValue:fmt(compute().totalAnimals), centerTitle:'存栏',
-      segments: DB.species.map(x=>({ label:x.name, value:x.count, color:x.color })) });
-
     /* ② 增重趋势 */
     const g = DB.growth;
     if ($('#bsGain') && g){
       const days = g.animals[0].days;
       Charts.line($('#bsGain'), {
-        labels: days.map(d=>d+'天'), height:104, yFormat:v=>Math.round(v),
+        labels: days.map(d=>d+'天'), height:84, yFormat:v=>Math.round(v),
         series: g.animals.slice(0,4).map((a,i)=>({ name:a.tag, color:['#5eead4','#38bdf8','#f0b429','#a78bfa'][i], values:a.weights }))
       });
     }

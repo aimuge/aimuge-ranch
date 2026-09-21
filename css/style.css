@@ -3875,3 +3875,55 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
 body[data-theme="dark"] .exit-btn{background:rgba(4,24,34,.86);color:#b9dce4;border-color:rgba(66,160,181,.30)}
 body[data-theme="dark"] .exit-btn:hover{border-color:#fb7185;color:#fecdd3;background:rgba(80,20,35,.38)}
 @media (max-width:700px){.exit-btn{padding:6px 8px;font-size:11px}}
+
+/* v93 对称四区布局 + 实时预警替代牛群结构 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-v8 .bs-body{
+    grid-template-columns:repeat(12,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;
+    grid-template-areas:none!important;grid-auto-columns:0!important;grid-auto-rows:0!important;grid-auto-flow:row!important;gap:7px!important;
+  }
+  body.bigscreen-active .bs-v8 .bs-monitor-panel{grid-column:1/5!important;grid-row:1/5!important}
+  body.bigscreen-active .bs-v8 .bs-map-panel{grid-column:5/9!important;grid-row:1/5!important}
+  body.bigscreen-active .bs-v8 .bs-alert-panel{grid-column:9/13!important;grid-row:1/4!important}
+  body.bigscreen-active .bs-v8 .bs-equip-panel{grid-column:9/13!important;grid-row:4/7!important}
+  body.bigscreen-active .bs-v8 .bs-gain-panel{grid-column:1/3!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-breed-panel{grid-column:3/5!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-balance-panel{grid-column:5/7!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-weather{grid-column:7/9!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-forage-panel{grid-column:1/3!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-cow-health{grid-column:3/5!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-season{grid-column:5/7!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-gov-panel{grid-column:7/9!important;grid-row:6/7!important}
+}
+.bs-alert-panel{display:flex;flex-direction:column;min-height:0}
+.bs-alert-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:2px 0 8px}
+.bs-alert-kpis>div{padding:7px 5px;border-radius:8px;text-align:center;background:rgba(251,113,133,.09);border:1px solid rgba(251,113,133,.22)}
+.bs-alert-kpis>div:nth-child(2){background:rgba(240,180,41,.10);border-color:rgba(240,180,41,.24)}
+.bs-alert-kpis>div:nth-child(3){background:rgba(52,211,153,.10);border-color:rgba(52,211,153,.24)}
+.bs-alert-kpis b{display:block;font-size:18px;line-height:1;color:#f8fbff}.bs-alert-kpis span{display:block;margin-top:4px;font-size:8px;color:#8fb0cf}
+.bs-alert-list{display:flex;flex-direction:column;gap:5px;min-height:0}
+.bs-alert-row{display:flex;align-items:center;gap:6px;padding:6px 7px;border-radius:8px;background:rgba(255,255,255,.045);border:1px solid rgba(125,211,252,.12);font-size:9px;color:#c7ddef;min-width:0}
+.bs-alert-row i{width:6px;height:6px;flex:none;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+.bs-alert-row i.danger{background:#fb7185;box-shadow:0 0 8px #fb7185}.bs-alert-row i.warn{background:#f0b429;box-shadow:0 0 8px #f0b429}
+.bs-alert-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bs-alert-row b{margin-left:auto;flex:none;color:#6f94b5;font-size:7.5px}
+/* 统一卡片视觉层级 */
+body.bigscreen-active .bs-v8 .bs-panel{padding:10px 11px!important;border-radius:11px!important;background:linear-gradient(150deg,rgba(9,35,53,.94),rgba(5,20,34,.97))!important}
+body.bigscreen-active .bs-v8 .bsp-title{font-size:9.5px!important;color:#9ed9e5!important;margin-bottom:6px!important}
+body.bigscreen-active .bs-v8 .bsp-title em{font-size:6px!important;color:#5f8796!important}
+body.bigscreen-active .bs-v8 .bs-panel::before{border-radius:10px!important}
+body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
+
+/* v93b 底部卡片统一压缩，保证内容完整 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-weather .bsp-title{margin-bottom:2px!important;line-height:1.15!important}
+  body.bigscreen-active .bs-weather .bs-w-main{font-size:18px!important;line-height:1!important;height:20px!important}
+  body.bigscreen-active .bs-weather .bs-w-main span{font-size:18px!important}
+  body.bigscreen-active .bs-weather .bs-w-info{font-size:6.5px!important;line-height:1.2!important;margin-top:0!important}
+  body.bigscreen-active .bs-weather .bs-w-fc{margin-top:2px!important;gap:2px!important}
+  body.bigscreen-active .bs-weather .bs-w-fc div{padding:1px 2px!important;font-size:6px!important;line-height:1.15!important}
+  body.bigscreen-active .bs-weather .bs-w-fc b{font-size:7px!important;margin:0!important}.bs-weather .bs-w-fc i{font-size:6px!important}
+  body.bigscreen-active .bs-cow-health .bs-health-spark{display:none!important}
+  body.bigscreen-active .bs-cow-health .bs-health-foot{font-size:7px!important;margin-top:2px!important}
+  body.bigscreen-active .bs-gov-panel .bs-gov-list{gap:1px!important}
+  body.bigscreen-active .bs-gov-panel .bs-gov-list span{font-size:7.5px!important}
+}
