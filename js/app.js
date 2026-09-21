@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v89';
+  const APP_VERSION = 'v89.5';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -313,17 +313,18 @@
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const livePorts = (DB.ports||[]).filter(p=>p.liveUrl||p.streamUrl);
     const cameraProfiles = {
-      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别' },
-      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别' },
-      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别' },
-      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别' },
-      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别' },
-      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别' }
+      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别', img:'assets/photos/yurts.jpg' },
+      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别', img:'assets/photos/grassland-hay.jpg' },
+      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别', img:'assets/photos/ranch-winter.jpg' },
+      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别', img:'assets/photos/ranch-herd.jpg' },
+      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别', img:'assets/photos/grassland-summer.jpg' },
+      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别', img:'assets/photos/ranch-herd.jpg' }
     };
     const cameraWall = ['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map((name,i)=>({
       name,
       cls:(cameraProfiles[name]||{}).cls || 'cam-default',
       note:(cameraProfiles[name]||{}).note || '智能视频识别',
+      img:(cameraProfiles[name]||{}).img || 'assets/photos/ranch-herd.jpg',
       liveUrl:(livePorts[i]&&(livePorts[i].liveUrl||livePorts[i].streamUrl))||'',
       source:(livePorts[i]&&livePorts[i].name)||'虚拟画面预览'
     }));
@@ -474,14 +475,15 @@
             </div>
           </section>
           <section class="bs-panel bs-camera-panel">
-            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'虚拟画面预览'}</em></div>
+            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'养殖基地实景接入'}</em></div>
             <div class="bs-cams">
               ${cameraWall.map(x=>`<div class="bs-cam ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-name="${escTxt(x.name)}" title="${escTxt(x.source)}">
+                <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
                 <div class="bs-cam-frame" aria-hidden="true"></div>
-                <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'SIM'}</span><em>AI VIEW</em></div>
+                <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'CAM'}</span><em>AI VIEW</em></div>
                 <span class="bs-cam-scan"></span>
                 <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
-                <i class="bs-cam-action">${x.liveUrl?'点击直播':'虚拟画面'}</i>
+                <i class="bs-cam-action">${x.liveUrl?'点击直播':'实景预览'}</i>
               </div>`).join('')}
             </div>
           </section>
