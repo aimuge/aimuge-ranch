@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v88';
+  const APP_VERSION = 'v89';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -312,9 +312,20 @@
     const ps = pageSetting('bigscreen');
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const livePorts = (DB.ports||[]).filter(p=>p.liveUrl||p.streamUrl);
+    const cameraProfiles = {
+      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别' },
+      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别' },
+      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别' },
+      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别' },
+      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别' },
+      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别' }
+    };
     const cameraWall = ['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map((name,i)=>({
-      name, liveUrl:(livePorts[i]&&(livePorts[i].liveUrl||livePorts[i].streamUrl))||'',
-      source:(livePorts[i]&&livePorts[i].name)||'待接入监控网关'
+      name,
+      cls:(cameraProfiles[name]||{}).cls || 'cam-default',
+      note:(cameraProfiles[name]||{}).note || '智能视频识别',
+      liveUrl:(livePorts[i]&&(livePorts[i].liveUrl||livePorts[i].streamUrl))||'',
+      source:(livePorts[i]&&livePorts[i].name)||'虚拟画面预览'
     }));
     const w = DB.weather;
     const intro = `${DB.meta.name}位于${DB.meta.location.replace('内蒙古 · ','')}，由牧场主${DB.meta.owner}经营，现养西门塔尔牛${fmt(c.cattle)}头。`;
@@ -365,7 +376,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo.png?v=88" alt="YILATE">
+          <img src="assets/logo.png?v=89" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -396,18 +407,18 @@
 
       <div class="bs-body">
         <div class="bs-col">
-          <section class="bs-panel">
+          <section class="bs-panel bs-stock-panel">
             <div class="bsp-title">🐂 牛群结构与存栏 <em>LIVESTOCK</em></div>
             <div class="bsp-big">${fmt(c.totalAnimals)}</div>
             <div class="bsp-sub">大牛 102 · 小牛 84</div>
             <div id="bsStock" class="bs-chart"></div>
           </section>
-          <section class="bs-panel">
+          <section class="bs-panel bs-gain-panel">
             <div class="bsp-title">⚖️ 增重趋势（kg） <em>WEIGHT GAIN</em></div>
             <div id="bsGain" class="bs-chart"></div>
             <div class="bsp-sub">数据来源：三分群全自动保定称</div>
           </section>
-          <section class="bs-panel">
+          <section class="bs-panel bs-pasture-panel">
             <div class="bsp-title">🌾 草场载畜利用 <em>GRASSLAND</em></div>
             <div id="bsPasture" class="bs-chart"></div>
             <div class="bsp-sub">自有 3,850 亩 · 租赁 9,440 亩 · 打草 1,500 亩</div>
@@ -462,10 +473,16 @@
               </div>
             </div>
           </section>
-          <section class="bs-panel">
-            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播':'待接网关'}</em></div>
+          <section class="bs-panel bs-camera-panel">
+            <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'虚拟画面预览'}</em></div>
             <div class="bs-cams">
-              ${cameraWall.map(x=>`<div class="bs-cam ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-name="${escTxt(x.name)}" title="${escTxt(x.source)}"><span>●</span>${escTxt(x.name)}<i>${x.liveUrl?'点击直播':'待接网关'}</i></div>`).join('')}
+              ${cameraWall.map(x=>`<div class="bs-cam ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-name="${escTxt(x.name)}" title="${escTxt(x.source)}">
+                <div class="bs-cam-frame" aria-hidden="true"></div>
+                <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'SIM'}</span><em>AI VIEW</em></div>
+                <span class="bs-cam-scan"></span>
+                <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
+                <i class="bs-cam-action">${x.liveUrl?'点击直播':'虚拟画面'}</i>
+              </div>`).join('')}
             </div>
           </section>
           <section class="bs-panel bs-season">
@@ -697,6 +714,12 @@
     $('#content').querySelectorAll('.bs-cam[data-live-url]').forEach(b=>b.addEventListener('click', ()=>openCameraViewer(b.dataset.cameraName, b.dataset.liveUrl)));
 
     /* ⑥ 全屏 */
+    const syncBigscreenFullscreen = ()=>document.body.classList.toggle('bs-fullscreen', !!document.fullscreenElement);
+    if (!window.__bsFullscreenBound){
+      window.__bsFullscreenBound = true;
+      document.addEventListener('fullscreenchange', syncBigscreenFullscreen);
+    }
+    syncBigscreenFullscreen();
     const fs = $('#bsFull');
     if (fs) fs.addEventListener('click', ()=>{
       if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
@@ -1990,7 +2013,7 @@
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo.png?v=88" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo.png?v=89" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -2522,7 +2545,7 @@
         ${statCard({icon:'🗂️', label:'数据表', value:'20+ 张', sub:'牲畜/草场/装备/账本/订单', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🧾', label:'记录总数', value:dbCount()+' 条', sub:'可增删改 · 本机保存', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'👥', label:'账号角色', value:'4 类', sub:'场主/兽医/牧工/客服', color:'#f59e0b', bg:'#fef3c7'})}
-        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-19 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
+        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-21 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
       </div>
       <div class="grid-3">
         <div class="col2">
@@ -2808,6 +2831,7 @@
   }
   function render(name){
     current = name;
+    document.body.classList.toggle('bigscreen-active', name === 'bigscreen');
     const p = pages[name];
     const ps = pageSetting(name);
     crumb.textContent = ps.title || p.title;
