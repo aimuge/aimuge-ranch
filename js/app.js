@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v89.7';
+  const APP_VERSION = 'v89.8';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -313,12 +313,12 @@
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const livePorts = (DB.ports||[]).filter(p=>p.liveUrl||p.streamUrl);
     const cameraProfiles = {
-      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别', img:'assets/photos/yurts.jpg' },
-      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别', img:'assets/photos/grassland-hay.jpg' },
-      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别', img:'assets/photos/ranch-winter.jpg' },
-      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别', img:'assets/photos/ranch-herd.jpg' },
-      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别', img:'assets/photos/grassland-summer.jpg' },
-      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别', img:'assets/photos/ranch-herd.jpg' }
+      '生活区':   { cls:'cam-life',     note:'人员 · 车辆识别', img:'assets/photos/monitor-life.jpg' },
+      '饲草区':   { cls:'cam-forage',   note:'草捆 · 饲草储量识别', img:'assets/photos/monitor-forage.jpg' },
+      '设备区':   { cls:'cam-device',   note:'农机 · 设备状态识别', img:'assets/photos/monitor-equipment.jpg' },
+      '犊牛舍':   { cls:'cam-calf',     note:'犊牛 · 保温环境识别', img:'assets/photos/monitor-calf.jpg' },
+      '牛只活动区':{ cls:'cam-activity', note:'牛群 · 活动轨迹识别', img:'assets/photos/monitor-activity.jpg' },
+      '牛舍内':   { cls:'cam-barn',     note:'牛舍 · 健康行为识别', img:'assets/photos/monitor-barn.jpg' }
     };
     const cameraWall = ['生活区','饲草区','设备区','犊牛舍','牛只活动区','牛舍内'].map((name,i)=>({
       name,
