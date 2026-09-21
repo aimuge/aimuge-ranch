@@ -3794,3 +3794,51 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
 .bs-3d-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;border-radius:inherit;cursor:grab;touch-action:none}.bs-3d-canvas:active{cursor:grabbing}
 .map3d-status{position:absolute;z-index:5;left:9px;top:8px;padding:3px 6px;border-radius:999px;background:rgba(3,20,32,.72);border:1px solid rgba(94,234,212,.28);font-size:7px;color:#9ce1ec;letter-spacing:.6px}
 .map3d-status i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#5eead4;box-shadow:0 0 8px #5eead4;margin-right:4px;animation:bsDotPulse 1.4s infinite}
+
+/* v91b 统一监控中心 + 企业级满版布局 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-v8 .bs-body{
+    grid-template-columns:repeat(14,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;
+    grid-template-areas:none!important;grid-auto-columns:0!important;grid-auto-rows:0!important;gap:7px!important;
+  }
+  body.bigscreen-active .bs-v8 .bs-monitor-panel{grid-column:1/5!important;grid-row:1/5!important}
+  body.bigscreen-active .bs-v8 .bs-map-panel{grid-column:5/11!important;grid-row:1/5!important}
+  body.bigscreen-active .bs-v8 .bs-stock-panel{grid-column:11/15!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-v8 .bs-equip-panel{grid-column:11/15!important;grid-row:3/5!important}
+  body.bigscreen-active .bs-v8 .bs-weather{grid-column:11/15!important;grid-row:5/7!important}
+  body.bigscreen-active .bs-v8 .bs-gain-panel{grid-column:1/4!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-breed-panel{grid-column:4/7!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-balance-panel{grid-column:7/11!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-forage-panel{grid-column:1/3!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-cow-health{grid-column:3/5!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-season{grid-column:5/7!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-gov-panel{grid-column:7/11!important;grid-row:6/7!important}
+}
+.bs-monitor-panel{display:flex!important;flex-direction:column!important;min-height:0!important}
+.bs-monitor-main{flex:1.16 1 0;min-height:0;display:flex}
+.bs-monitor-main .bs-maincam-stage{height:100%;flex:1}
+.bs-monitor-panel .bs-cam-toolbar{flex:0 0 auto;margin:4px 0!important}
+.bs-monitor-panel .bs-smallcams{flex:.84 1 0;min-height:0;height:auto!important}
+.bs-monitor-panel .bs-cam-controlcell{padding:6px}
+.bs-monitor-panel .bs-cam-controlcell b{font-size:11px}
+.bs-monitor-panel .bs-cam-controlcell span{font-size:7px}
+@media (max-width:1099px), (max-height:879px){
+  .bs-monitor-panel{display:flex!important;flex-direction:column!important;min-height:0!important}
+  .bs-monitor-main{flex:none!important}
+  .bs-monitor-panel .bs-maincam-stage{height:260px!important}
+  .bs-monitor-panel .bs-smallcams{height:280px!important;flex:none!important}
+}
+@media (min-width:1100px) and (max-height:879px){
+  .bs-monitor-panel .bs-maincam-stage{height:390px!important}
+  .bs-monitor-panel .bs-smallcams{height:390px!important}
+}
+
+/* v91b 数据板块完整显示微调 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-forage-panel .bs-forage-list{gap:2px!important}
+  body.bigscreen-active .bs-forage-panel .bs-forage-row>div:first-child{font-size:7px!important}
+  body.bigscreen-active .bs-forage-panel .bs-forage-bar{height:2px!important;margin-top:1px!important}
+  body.bigscreen-active .bs-cow-health .bs-health-spark{height:20px!important;margin-top:2px!important}
+  body.bigscreen-active .bs-gov-panel .bs-gov-metrics{margin-bottom:2px!important}
+  body.bigscreen-active .bs-gov-panel .bs-gov-list{gap:2px!important}
+}

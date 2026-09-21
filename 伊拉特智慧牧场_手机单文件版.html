@@ -3806,6 +3806,54 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
 .map3d-status{position:absolute;z-index:5;left:9px;top:8px;padding:3px 6px;border-radius:999px;background:rgba(3,20,32,.72);border:1px solid rgba(94,234,212,.28);font-size:7px;color:#9ce1ec;letter-spacing:.6px}
 .map3d-status i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#5eead4;box-shadow:0 0 8px #5eead4;margin-right:4px;animation:bsDotPulse 1.4s infinite}
 
+/* v91b 统一监控中心 + 企业级满版布局 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-v8 .bs-body{
+    grid-template-columns:repeat(14,minmax(0,1fr))!important;grid-template-rows:repeat(6,minmax(0,1fr))!important;
+    grid-template-areas:none!important;grid-auto-columns:0!important;grid-auto-rows:0!important;gap:7px!important;
+  }
+  body.bigscreen-active .bs-v8 .bs-monitor-panel{grid-column:1/5!important;grid-row:1/5!important}
+  body.bigscreen-active .bs-v8 .bs-map-panel{grid-column:5/11!important;grid-row:1/5!important}
+  body.bigscreen-active .bs-v8 .bs-stock-panel{grid-column:11/15!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-v8 .bs-equip-panel{grid-column:11/15!important;grid-row:3/5!important}
+  body.bigscreen-active .bs-v8 .bs-weather{grid-column:11/15!important;grid-row:5/7!important}
+  body.bigscreen-active .bs-v8 .bs-gain-panel{grid-column:1/4!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-breed-panel{grid-column:4/7!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-balance-panel{grid-column:7/11!important;grid-row:5/6!important}
+  body.bigscreen-active .bs-v8 .bs-forage-panel{grid-column:1/3!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-cow-health{grid-column:3/5!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-season{grid-column:5/7!important;grid-row:6/7!important}
+  body.bigscreen-active .bs-v8 .bs-gov-panel{grid-column:7/11!important;grid-row:6/7!important}
+}
+.bs-monitor-panel{display:flex!important;flex-direction:column!important;min-height:0!important}
+.bs-monitor-main{flex:1.16 1 0;min-height:0;display:flex}
+.bs-monitor-main .bs-maincam-stage{height:100%;flex:1}
+.bs-monitor-panel .bs-cam-toolbar{flex:0 0 auto;margin:4px 0!important}
+.bs-monitor-panel .bs-smallcams{flex:.84 1 0;min-height:0;height:auto!important}
+.bs-monitor-panel .bs-cam-controlcell{padding:6px}
+.bs-monitor-panel .bs-cam-controlcell b{font-size:11px}
+.bs-monitor-panel .bs-cam-controlcell span{font-size:7px}
+@media (max-width:1099px), (max-height:879px){
+  .bs-monitor-panel{display:flex!important;flex-direction:column!important;min-height:0!important}
+  .bs-monitor-main{flex:none!important}
+  .bs-monitor-panel .bs-maincam-stage{height:260px!important}
+  .bs-monitor-panel .bs-smallcams{height:280px!important;flex:none!important}
+}
+@media (min-width:1100px) and (max-height:879px){
+  .bs-monitor-panel .bs-maincam-stage{height:390px!important}
+  .bs-monitor-panel .bs-smallcams{height:390px!important}
+}
+
+/* v91b 数据板块完整显示微调 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-forage-panel .bs-forage-list{gap:2px!important}
+  body.bigscreen-active .bs-forage-panel .bs-forage-row>div:first-child{font-size:7px!important}
+  body.bigscreen-active .bs-forage-panel .bs-forage-bar{height:2px!important;margin-top:1px!important}
+  body.bigscreen-active .bs-cow-health .bs-health-spark{height:20px!important;margin-top:2px!important}
+  body.bigscreen-active .bs-gov-panel .bs-gov-metrics{margin-bottom:2px!important}
+  body.bigscreen-active .bs-gov-panel .bs-gov-list{gap:2px!important}
+}
+
 </style>
 </head>
 <body>
@@ -4911,15 +4959,40 @@ const Charts = (() => {
       </div>
 
       <div class="bs-body">
-        <section class="bs-panel bs-maincam-panel" id="bsMainCamPanel">
-          <div class="bsp-title">🎥 主监控画面 <em>MAIN VIEW</em></div>
-          <button class="bs-maincam-stage" id="bsMainCamStage" type="button" data-camera-index="0" data-camera-name="${escTxt(cameraWall[0].name)}" data-camera-note="${escTxt(cameraWall[0].note)}" data-camera-img="${escTxt(cameraWall[0].img)}" title="点击放大查看主监控">
-            <img class="bs-maincam-img-fill" id="bsMainCamFill" src="${escTxt(cameraWall[0].img)}" alt="" aria-hidden="true" loading="lazy">
-            <img class="bs-maincam-img" id="bsMainCamImg" src="${escTxt(cameraWall[0].img)}" alt="${escTxt(cameraWall[0].name)}实景画面" loading="lazy">
-            <span class="bs-cam-scan"></span>
-            <div class="bs-maincam-meta"><b id="bsMainCamName">${escTxt(cameraWall[0].name)}</b><small id="bsMainCamNote">${escTxt(cameraWall[0].note)}</small></div>
-            <i class="bs-maincam-action">主画面 · 点击放大查看</i>
-          </button>
+        <section class="bs-panel bs-monitor-panel" id="bsMonitorPanel">
+          <div class="bsp-title">🎥 牧场监控中心 <em>6 CAMERAS</em></div>
+          <div class="bs-monitor-main">
+            <button class="bs-maincam-stage" id="bsMainCamStage" type="button" data-camera-index="0" data-camera-name="${escTxt(cameraWall[0].name)}" data-camera-note="${escTxt(cameraWall[0].note)}" data-camera-img="${escTxt(cameraWall[0].img)}" title="点击放大查看主监控">
+              <img class="bs-maincam-img-fill" id="bsMainCamFill" src="${escTxt(cameraWall[0].img)}" alt="" aria-hidden="true" loading="lazy">
+              <img class="bs-maincam-img" id="bsMainCamImg" src="${escTxt(cameraWall[0].img)}" alt="${escTxt(cameraWall[0].name)}实景画面" loading="lazy">
+              <span class="bs-cam-scan"></span>
+              <div class="bs-maincam-meta"><b id="bsMainCamName">${escTxt(cameraWall[0].name)}</b><small id="bsMainCamNote">${escTxt(cameraWall[0].note)}</small></div>
+              <i class="bs-maincam-action">主画面 · 点击放大查看</i>
+            </button>
+          </div>
+          <div class="bs-cam-toolbar" aria-label="监控画面控制">
+            <button type="button" data-cam-step="-1" title="上一路">◀</button>
+            <button type="button" data-cam-auto="-1" title="倒序轮巡">倒退</button>
+            <button type="button" data-cam-auto="0" title="暂停轮巡">暂停</button>
+            <button type="button" data-cam-auto="1" title="正序轮巡">正放</button>
+            <button type="button" data-cam-step="1" title="下一路">▶</button>
+            <span class="bs-cam-tool-sep"></span>
+            <button type="button" data-cam-zoom="-1" title="缩小画面">−</button>
+            <b id="bsCamZoomValue">100%</b>
+            <button type="button" data-cam-zoom="1" title="放大画面">＋</button>
+            <button type="button" data-cam-reset title="恢复原始比例">1:1</button>
+          </div>
+          <div class="bs-smallcams" id="bsSmallCams" style="--cam-wall-scale:1">
+            ${cameraWall.slice(1).map((x,i)=>`<button type="button" class="bs-cam bs-cam-mini ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-index="${i+1}" data-camera-name="${escTxt(x.name)}" data-camera-note="${escTxt(x.note)}" data-camera-img="${escTxt(x.img)}" title="点击放大为主画面">
+              <img class="bs-cam-img-fill" src="${escTxt(x.img)}" alt="" aria-hidden="true" loading="lazy">
+              <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
+              <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>点击放大为主画面</em></div>
+              <span class="bs-cam-scan"></span>
+              <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
+              <i class="bs-cam-action">点击放大</i>
+            </button>`).join('')}
+            <div class="bs-cam-controlcell"><b>6 路轮巡</b><span>点击小画面可切换为主画面</span><em>6 / 6 在线</em></div>
+          </div>
         </section>
 
         <section class="bs-panel bs-map-panel">
@@ -4942,37 +5015,6 @@ const Charts = (() => {
                 </div>
                 <div class="dh-text" id="dhText">牧场简介</div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="bs-panel bs-smallcam-panel" id="bsSmallCamPanel">
-          <div class="bsp-title">📹 分路监控（5 路） <em>MULTI VIEW</em></div>
-          <div class="bs-cam-toolbar" aria-label="监控画面控制">
-            <button type="button" data-cam-step="-1" title="上一路">◀</button>
-            <button type="button" data-cam-auto="-1" title="倒序轮巡">倒退</button>
-            <button type="button" data-cam-auto="0" title="暂停轮巡">暂停</button>
-            <button type="button" data-cam-auto="1" title="正序轮巡">正放</button>
-            <button type="button" data-cam-step="1" title="下一路">▶</button>
-            <span class="bs-cam-tool-sep"></span>
-            <button type="button" data-cam-zoom="-1" title="缩小画面">−</button>
-            <b id="bsCamZoomValue">100%</b>
-            <button type="button" data-cam-zoom="1" title="放大画面">＋</button>
-            <button type="button" data-cam-reset title="恢复原始比例">1:1</button>
-          </div>
-          <div class="bs-smallcams" id="bsSmallCams" style="--cam-wall-scale:1">
-            ${cameraWall.slice(1).map((x,i)=>`<button type="button" class="bs-cam bs-cam-mini ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-index="${i+1}" data-camera-name="${escTxt(x.name)}" data-camera-note="${escTxt(x.note)}" data-camera-img="${escTxt(x.img)}" title="${escTxt(x.source)}">
-              <img class="bs-cam-img-fill" src="${escTxt(x.img)}" alt="" aria-hidden="true" loading="lazy">
-              <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
-              <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>点击放大为主画面</em></div>
-              <span class="bs-cam-scan"></span>
-              <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
-              <i class="bs-cam-action">点击放大</i>
-            </button>`).join('')}
-            <div class="bs-cam-controlcell">
-              <b>6 路轮巡</b>
-              <span>点击小画面可切换为主画面</span>
-              <em>6 / 6 在线</em>
             </div>
           </div>
         </section>
@@ -5234,8 +5276,7 @@ const Charts = (() => {
     /* 监控大屏：主画面 / 五路分画面 + 画面控制 */
     const mainStage = $('#bsMainCamStage');
     const smallBox = $('#bsSmallCams');
-    const mainPanel = $('#bsMainCamPanel');
-    const smallPanel = $('#bsSmallCamPanel');
+    const monitorPanel = $('#bsMonitorPanel');
     const readCam = el=>({
       name:el.dataset.cameraName || '监控画面',
       note:el.dataset.cameraNote || '虚拟牧场实景',
@@ -5286,11 +5327,11 @@ const Charts = (() => {
     const setCamAuto = dir=>{ stopCamAuto(); camAutoDir=dir; if(dir) camAutoTimer=setInterval(()=>stepCam(dir),1800); };
     if (smallBox) smallBox.addEventListener('click',e=>{ const tile=e.target.closest('.bs-cam-mini'); if(!tile) return; promote(Number(tile.dataset.cameraIndex)||0); });
     if (mainStage) mainStage.addEventListener('click',()=>{ const c=camData[0]; if(c&&c.liveUrl) openCameraViewer(c.name,c.liveUrl); else if(c) openVirtualCameraViewer(camData,0); });
-    if (smallPanel){
-      smallPanel.querySelectorAll('[data-cam-step]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); stopCamAuto(); stepCam(Number(b.dataset.camStep)); });
-      smallPanel.querySelectorAll('[data-cam-auto]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamAuto(Number(b.dataset.camAuto)); });
-      smallPanel.querySelectorAll('[data-cam-zoom]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamScale(camScale+Number(b.dataset.camZoom)*.2); });
-      const camReset=smallPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); };
+    if (monitorPanel){
+      monitorPanel.querySelectorAll('[data-cam-step]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); stopCamAuto(); stepCam(Number(b.dataset.camStep)); });
+      monitorPanel.querySelectorAll('[data-cam-auto]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamAuto(Number(b.dataset.camAuto)); });
+      monitorPanel.querySelectorAll('[data-cam-zoom]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamScale(camScale+Number(b.dataset.camZoom)*.2); });
+      const camReset=monitorPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); };
     }
     renderCameras();
     /* ⑥ 全屏 */
