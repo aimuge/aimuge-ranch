@@ -3451,7 +3451,7 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
 /* 监控墙：真实牧场素材做虚拟预览，支持后续直接切换直播地址 */
 .bs-cams{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);height:calc(100% - 21px);min-height:0}
 .bs-cam{height:100%!important;min-height:58px;border:1px solid rgba(73,174,194,.30);background:#061b26;isolation:isolate}
-.bs-cam-img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center;background:#020b13;filter:saturate(.94) brightness(.90) contrast(1.05);pointer-events:none}
+.bs-cam-img-fill{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(9px) brightness(.38) saturate(.82);transform:scale(1.10);pointer-events:none}.bs-cam-img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center;background:transparent;filter:saturate(.96) brightness(.94) contrast(1.04);pointer-events:none;transform:scale(var(--cam-wall-scale,1));transition:transform .22s ease}
 .bs-cam-frame{position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;filter:saturate(.82) brightness(.58) contrast(1.06);transform:scale(1.02);animation:bsCamDrift 13s ease-in-out infinite alternate;pointer-events:none;display:none}
 .bs-cam.cam-life .bs-cam-frame{background-image:linear-gradient(180deg,rgba(2,15,24,.12),rgba(2,15,24,.60)),url("../assets/photos/yurts.jpg")}
 .bs-cam.cam-forage .bs-cam-frame{background-image:linear-gradient(180deg,rgba(2,15,24,.12),rgba(2,15,24,.60)),url("../assets/photos/grassland-hay.jpg")}
@@ -3470,6 +3470,15 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
 .bs-cam-action{position:absolute!important;z-index:5;right:5px!important;bottom:5px!important;font-size:6px!important;color:rgba(171,222,235,.75)!important;letter-spacing:.2px!important;text-shadow:0 1px 4px #000}
 .bs-cam.has-live .bs-cam-copy b{color:#ccfff0}
 .bs-cam.has-live .bs-cam-action{color:#7ff3cf!important}
+.bs-cam.active{border-color:#5eead4!important;box-shadow:0 0 0 1px rgba(94,234,212,.35),0 0 24px -8px #5eead4!important}
+.bs-cam.active .bs-cam-head span{color:#fff!important}
+.bs-cam-toolbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:0 0 4px;position:relative;z-index:5}
+.bs-cam-toolbar button{border:1px solid rgba(71,178,203,.34);background:rgba(5,34,49,.78);color:#bcecf5;border-radius:6px;padding:2px 6px;font-size:7px;line-height:1.2;cursor:pointer;font-family:inherit;white-space:nowrap}
+.bs-cam-toolbar button:hover{border-color:#5eead4;color:#fff;background:rgba(13,148,136,.22)}
+.bs-cam-toolbar b{min-width:31px;text-align:center;font-size:7px;color:#7ff3cf}
+.bs-cam-tool-sep{width:1px;height:14px;background:rgba(94,234,212,.22);margin:0 2px}
+.bs-camera-panel{display:flex!important;flex-direction:column!important}
+.bs-camera-panel .bs-cams{height:calc(100% - 48px);min-height:0}
 @keyframes bsCamDrift{0%{transform:scale(1.02) translate3d(0,0,0)}100%{transform:scale(1.08) translate3d(-1%,-1%,0)}}
 @keyframes bsCamScan{0%{top:-40%}100%{top:110%}}
 
@@ -3505,10 +3514,10 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
     flex:1 1 auto;min-height:0;display:grid!important;gap:6px!important;align-items:stretch!important;margin-top:2px;
     grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;
     grid-template-areas:
-      "map map camera camera camera camera"
-      "map map camera camera camera camera"
-      "stock gain breed balance condition shed"
-      "cowhealth season equip weather forage gov"!important;
+      "camera camera camera camera camera map"
+      "camera camera camera camera camera map"
+      "stock stock gain breed balance weather"
+      "forage forage cowhealth equipment season gov"!important;
   }
   body.bigscreen-active .bs-v8 .bs-body>.bs-col{display:contents!important}
   body.bigscreen-active .bs-v8 .bs-panel{height:100%!important;min-height:0!important;padding:5px 7px!important;border-radius:10px!important;overflow:hidden!important}
@@ -3601,10 +3610,10 @@ body[data-theme="dark"] .tbl td{color:#c9e5e9;border-bottom-color:rgba(55,179,20
   body.bigscreen-active .bs-v8 .bs-body{
     grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;
     grid-template-areas:
-      "map map camera camera camera camera"
-      "map map camera camera camera camera"
-      "stock gain breed balance condition shed"
-      "cowhealth season equip weather forage gov"!important;
+      "camera camera camera camera camera map"
+      "camera camera camera camera camera map"
+      "stock stock gain breed balance weather"
+      "forage forage cowhealth equipment season gov"!important;
   }
   body.bigscreen-active .bs-v8 .bs-dh-center{top:-4px!important}
   body.bigscreen-active .bs-v8 .bs-dh-center .dh-human{width:clamp(200px,14vw,240px)!important;height:clamp(113px,7.9vw,135px)!important;min-height:0!important}
@@ -3642,4 +3651,99 @@ body.bs-fullscreen .bigscreen{height:100vh!important;border-radius:0!important}
   .bs-v8 .bs-camera-panel .bs-cam{height:auto!important;min-height:0!important}
   .bs-v8 .bs-dh-center .dh-human{width:220px!important;height:124px!important;min-height:0!important}
   .bs-v8 .bs-dh-center .dh-bubble.dh-line{top:108px!important}
+}
+
+/* ============ v90 大屏重构：超大监控 + 3D牧场态势 + 监控控制 ============ */
+/* 3D 牧场态势 */
+.bs-map-3d{
+  background:
+    radial-gradient(circle at 50% 42%,rgba(34,211,238,.22),transparent 38%),
+    linear-gradient(rgba(68,154,255,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(68,154,255,.08) 1px,transparent 1px),
+    linear-gradient(180deg,#031027,#071b3d 58%,#020a1c);
+  background-size:auto,22px 22px,22px 22px,auto;
+  perspective:900px;
+}
+.bs-map-3d .map3d-stage{
+  position:absolute;left:10%;right:10%;top:15%;bottom:15%;transform:rotateX(61deg) rotateZ(-19deg) scale(.90);
+  transform-style:preserve-3d;transform-origin:50% 55%;
+  border:1px solid rgba(94,234,212,.42);border-radius:18px;
+  background:linear-gradient(145deg,rgba(15,73,92,.40),rgba(6,30,74,.54));
+  box-shadow:0 0 0 1px rgba(34,211,238,.10),0 30px 60px -28px #000,inset 0 0 40px rgba(34,211,238,.10);
+}
+.bs-map-3d .map3d-stage::before{
+  content:"";position:absolute;inset:-5%;border-radius:24px;border:1px solid rgba(56,189,248,.22);
+  background:linear-gradient(135deg,rgba(34,211,238,.10),transparent 42%,rgba(167,139,250,.10));
+  transform:translateZ(-8px);box-shadow:0 0 34px rgba(34,211,238,.12);
+}
+.bs-map-3d .map3d-grid{
+  position:absolute;inset:5%;border-radius:12px;transform:translateZ(2px);
+  background-image:linear-gradient(rgba(92,196,255,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(92,196,255,.18) 1px,transparent 1px);
+  background-size:13% 13%;box-shadow:inset 0 0 32px rgba(34,211,238,.12);
+}
+.bs-map-3d .map3d-roads{position:absolute;inset:0;width:100%;height:100%;opacity:.88;transform:translateZ(5px);overflow:visible}
+.bs-map-3d .map3d-roads path{fill:rgba(16,92,196,.18);stroke:rgba(92,225,255,.90);stroke-width:.72;filter:drop-shadow(0 0 4px rgba(34,211,238,.65))}
+.bs-map-3d .map-zone{
+  z-index:5;transform:translateZ(34px) rotateZ(19deg) rotateX(-61deg) scale(.82);transform-origin:center bottom;
+  border-width:1px;box-shadow:0 9px 16px -9px #000,0 0 18px -7px var(--mc);
+  backdrop-filter:blur(4px);font-size:7px
+}
+.bs-map-3d .map-zone::before{
+  content:"";position:absolute;left:50%;bottom:-5px;width:7px;height:7px;transform:translateX(-50%) rotateX(61deg);border-radius:50%;background:var(--mc);box-shadow:0 0 12px var(--mc);
+}
+.bs-map-3d .map3d-beacon{position:absolute;width:7px;height:7px;border-radius:50%;background:#5eead4;box-shadow:0 0 18px #5eead4;transform:translateZ(28px);animation:map3dPulse 2.2s ease-in-out infinite}
+.bs-map-3d .map3d-beacon.b1{left:22%;top:28%}.bs-map-3d .map3d-beacon.b2{left:68%;top:35%;animation-delay:.5s}.bs-map-3d .map3d-beacon.b3{left:48%;top:72%;animation-delay:1s;background:#f0b429;box-shadow:0 0 18px #f0b429}
+@keyframes map3dPulse{0%,100%{opacity:.45;transform:translateZ(28px) scale(.75)}50%{opacity:1;transform:translateZ(38px) scale(1.25)}}
+
+/* 监控卡片控制条 */
+.bs-camera-panel{display:flex!important;flex-direction:column!important;min-height:0!important}
+.bs-camera-panel .bs-cams{flex:1 1 auto;min-height:0;height:auto}
+.bs-cam.active{border-color:#5eead4!important;box-shadow:0 0 0 1px rgba(94,234,212,.42),0 0 26px -7px #5eead4!important}
+.bs-cam.active .bs-cam-copy b{color:#8fffe1}
+.bs-camera-panel .bs-cam-img{transform-origin:center;will-change:transform}
+.bs-cam-toolbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:0 0 5px;position:relative;z-index:8}
+.bs-cam-toolbar button{border:1px solid rgba(71,178,203,.38);background:rgba(5,34,49,.82);color:#c8f2f8;border-radius:6px;padding:3px 7px;font-size:7px;line-height:1.15;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.16s}
+.bs-cam-toolbar button:hover{border-color:#5eead4;color:#fff;background:rgba(13,148,136,.28)}
+.bs-cam-toolbar b{min-width:34px;text-align:center;font-size:7px;color:#7ff3cf}
+.bs-cam-tool-sep{width:1px;height:15px;background:rgba(94,234,212,.22);margin:0 2px}
+
+/* 单路放大查看器 */
+.virtual-camera-modal{height:min(820px,94vh)!important}
+.virtual-camera-stage{position:relative;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at 50% 50%,#0a2533,#01070d 72%)}
+.virtual-camera-image{display:block;width:100%;height:100%;object-fit:contain;transform-origin:center;transition:transform .24s ease;filter:saturate(1.03) contrast(1.04)}
+.virtual-camera-grid{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 80px rgba(0,0,0,.65)}
+.virtual-camera-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid rgba(94,234,212,.22);background:rgba(3,21,30,.96)}
+.virtual-camera-tools button{border:1px solid rgba(71,178,203,.40);background:rgba(7,38,53,.88);color:#c8f2f8;border-radius:7px;padding:5px 9px;font-size:10px;cursor:pointer;font-family:inherit}
+.virtual-camera-tools button:hover{border-color:#5eead4;color:#fff;background:rgba(13,148,136,.28)}
+.virtual-camera-tools b{min-width:48px;text-align:center;color:#7ff3cf;font-size:11px}
+.vc-tool-sep{width:1px;height:20px;background:rgba(94,234,212,.22);margin:0 2px}
+
+@media (max-width:1099px), (max-height:879px){
+  .bs-cam-toolbar button{padding:3px 5px;font-size:6.5px}
+  .bs-map-3d .map3d-stage{left:7%;right:7%;top:14%;bottom:14%}
+  .bs-map-3d .map-zone{font-size:6px}
+}
+
+/* v90 最终栅格：用数值定位，避免旧栏目名产生隐式轨道 */
+@media (min-width:1100px) and (min-height:880px){
+  body.bigscreen-active .bs-v8 .bs-body{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    grid-template-rows:repeat(4,minmax(0,1fr))!important;
+    grid-template-areas:none!important;
+    grid-auto-columns:0!important;
+    grid-auto-rows:0!important;
+    grid-auto-flow:row!important;
+  }
+  body.bigscreen-active .bs-v8 .bs-camera-panel{grid-area:auto!important;grid-column:1/6!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-v8 .bs-map-panel{grid-area:auto!important;grid-column:6/7!important;grid-row:1/3!important}
+  body.bigscreen-active .bs-stock-panel{grid-area:auto!important;grid-column:1/3!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-gain-panel{grid-area:auto!important;grid-column:3/4!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-breed-panel{grid-area:auto!important;grid-column:4/5!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-balance-panel{grid-area:auto!important;grid-column:5/6!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-weather{grid-area:auto!important;grid-column:6/7!important;grid-row:3/4!important}
+  body.bigscreen-active .bs-forage-panel{grid-area:auto!important;grid-column:1/3!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-cow-health{grid-area:auto!important;grid-column:3/4!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-equip-panel{grid-area:auto!important;grid-column:4/5!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-season{grid-area:auto!important;grid-column:5/6!important;grid-row:4/5!important}
+  body.bigscreen-active .bs-gov-panel{grid-area:auto!important;grid-column:6/7!important;grid-row:4/5!important}
 }

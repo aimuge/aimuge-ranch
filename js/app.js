@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v89.9';
+  const APP_VERSION = 'v90';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -436,21 +436,18 @@
             <div class="bs-balance-bar"><i style="width:${Math.min(100,DB.grassland.balance.rate)}%"></i></div>
             <div class="bs-balance-note">标准家畜单位 ${fmt(DB.grassland.balance.actual)} / 承载上限 ${fmt(DB.grassland.balance.capacity)}</div>
           </section>
-          <section class="bs-panel bs-condition-panel">
-            <div class="bsp-title">📊 牛只体况分级 <em>BODY CONDITION</em></div>
-            <div class="bs-condition-grid">
-              ${[['特级',18,'#5eead4'],['一级',44,'#7dd3fc'],['二级',28,'#a78bfa'],['三级',10,'#f59e0b']].map(x=>`<div style="--cc:${x[2]}"><span>${x[0]}</span><b>${x[1]}%</b><i><em style="width:${x[1]}%"></em></i></div>`).join('')}
-            </div>
-            <div class="bs-condition-wave">${Array.from({length:18},(_,i)=>`<i style="height:${28+((i*17)%58)}%;--i:${i}"></i>`).join('')}</div>
-          </section>
         </div>
 
         <div class="bs-col bs-mid">
           <section class="bs-panel bs-map-panel">
-            <div class="bsp-title">🗺️ 牧场空间态势 <em>RANCH MAP</em></div>
-            <div class="bs-map bs-map-robot">
-              ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🏘️','生活区','z4'],['🔧','设备存放区','z5'],['🧊','饲草区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f472b6','#a78bfa','#f59e0b'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
-              <svg viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
+            <div class="bsp-title">🧭 牧场空间态势（3D） <em>3D DIGITAL TWIN</em></div>
+            <div class="bs-map bs-map-robot bs-map-3d" id="bs3dMap">
+              <div class="map3d-stage" aria-hidden="true">
+                <div class="map3d-grid"></div>
+                ${[['🏠','大牛棚圈','z1'],['🐮','犊牛舍','z2'],['🌾','牛只活动区','z3'],['🏘️','生活区','z4'],['🔧','设备存放区','z5'],['🧊','饲草区','z6']].map((x,i)=>`<span class="map-zone ${x[2]}" style="--mc:${['#22d3ee','#a3e635','#34d399','#f472b6','#a78bfa','#f59e0b'][i]}"><i>${x[0]}</i>${x[1]}<b></b></span>`).join('')}
+                <svg class="map3d-roads" viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M18 19 L42 13 L67 21 L83 42 L58 49 L28 43 Z M42 13 L58 49 M18 19 L58 49 M67 21 L28 43"/></svg>
+                <i class="map3d-beacon b1"></i><i class="map3d-beacon b2"></i><i class="map3d-beacon b3"></i>
+              </div>
               <div class="bs-dh bs-dh-center" id="dhBox" title="点击AI机器人听牧场简介">
                 <div class="dh-avatar dh-human">
                   <div class="human-photo-wrap video-wrap">
@@ -469,16 +466,29 @@
               </div>
             </div>
           </section>
-          <section class="bs-panel bs-camera-panel">
+          <section class="bs-panel bs-camera-panel" id="bsCameraPanel">
             <div class="bsp-title">🎥 监控画面（6 路） <em>${livePorts.length?'直播已接入':'虚拟牧场实景'}</em></div>
-            <div class="bs-cams">
-              ${cameraWall.map(x=>`<div class="bs-cam ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-name="${escTxt(x.name)}" title="${escTxt(x.source)}">
+            <div class="bs-cam-toolbar" aria-label="监控画面控制">
+              <button type="button" data-cam-step="-1" title="上一路">◀</button>
+              <button type="button" data-cam-auto="-1" title="倒序轮巡">倒退</button>
+              <button type="button" data-cam-auto="0" title="暂停轮巡">暂停</button>
+              <button type="button" data-cam-auto="1" title="正序轮巡">正放</button>
+              <button type="button" data-cam-step="1" title="下一路">▶</button>
+              <span class="bs-cam-tool-sep"></span>
+              <button type="button" data-cam-zoom="-1" title="缩小画面">−</button>
+              <b id="bsCamZoomValue">100%</b>
+              <button type="button" data-cam-zoom="1" title="放大画面">＋</button>
+              <button type="button" data-cam-reset title="恢复原始比例">1:1</button>
+            </div>
+            <div class="bs-cams" style="--cam-wall-scale:1">
+              ${cameraWall.map((x,i)=>`<div class="bs-cam ${x.cls} ${x.liveUrl?'has-live':''}" ${x.liveUrl?`data-live-url="${escTxt(x.liveUrl)}"`:''} data-camera-index="${i}" data-camera-name="${escTxt(x.name)}" data-camera-note="${escTxt(x.note)}" title="${escTxt(x.source)}">
+                <img class="bs-cam-img-fill" src="${escTxt(x.img)}" alt="" aria-hidden="true" loading="lazy">
                 <img class="bs-cam-img" src="${escTxt(x.img)}" alt="${escTxt(x.name)}实景画面" loading="lazy">
                 <div class="bs-cam-frame" aria-hidden="true"></div>
                 <div class="bs-cam-head"><span><i></i>${x.liveUrl?'LIVE':'VIR'}</span><em>AI VIEW</em></div>
                 <span class="bs-cam-scan"></span>
                 <div class="bs-cam-copy"><b>${escTxt(x.name)}</b><small>${escTxt(x.note)}</small></div>
-                <i class="bs-cam-action">${x.liveUrl?'点击直播':'虚拟预览'}</i>
+                <i class="bs-cam-action">${x.liveUrl?'点击直播':'点击放大查看'}</i>
               </div>`).join('')}
             </div>
           </section>
@@ -504,13 +514,6 @@
                 </div>`;
               }).join('')}
             </div>
-          </section>
-          <section class="bs-panel bs-shed-panel">
-            <div class="bsp-title">🏠 棚圈环境与设施 <em>FACILITY</em></div>
-            <div class="bs-shed-grid">
-              ${(DB.meta.facilities||[]).slice(0,2).map((f,i)=>`<div><span>${f.icon}</span><div><b>${f.name}</b><em>${i===0?'102 头 · 保温正常':'84 头 · 恒温 22℃'}</em></div></div>`).join('')}
-            </div>
-            <div class="bs-shed-env"><span>🌡️ 犊牛舍 22℃</span><span>💧 饮水 12℃</span><span>🌬️ 通风正常</span></div>
           </section>
           <section class="bs-panel bs-cow-health">
             <div class="bsp-title">❤️ 牛只健康监测 <em>HERD HEALTH</em></div>
@@ -670,8 +673,45 @@
     /* ⑤ 月份切换 */
     $('#content').querySelectorAll('.bs-yc .yc-cell').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
 
-    /* 监控大屏直播 */
-    $('#content').querySelectorAll('.bs-cam[data-live-url]').forEach(b=>b.addEventListener('click', ()=>openCameraViewer(b.dataset.cameraName, b.dataset.liveUrl)));
+    /* 监控大屏：直播 / 虚拟画面 + 画面控制 */
+    const camPanel = $('#bsCameraPanel');
+    const camNodes = camPanel ? [...camPanel.querySelectorAll('.bs-cam')] : [];
+    const camData = camNodes.map((b,i)=>({
+      name:b.dataset.cameraName || `监控${i+1}`,
+      note:b.dataset.cameraNote || '虚拟牧场实景',
+      img:(b.querySelector('.bs-cam-img')||{}).getAttribute ? b.querySelector('.bs-cam-img').getAttribute('src') : '',
+      liveUrl:b.dataset.liveUrl || ''
+    }));
+    let camScale = 1, camActive = 0, camAutoDir = 0, camAutoTimer = null;
+    const camWall = camPanel ? camPanel.querySelector('.bs-cams') : null;
+    const camZoomValue = $('#bsCamZoomValue');
+    const setCamScale = v=>{
+      camScale = Math.max(.8, Math.min(2, Math.round(v*10)/10));
+      if (camWall){ camWall.style.setProperty('--cam-wall-scale', camScale); }
+      if (camZoomValue) camZoomValue.textContent = Math.round(camScale*100)+'%';
+    };
+    const setCamActive = i=>{
+      if (!camNodes.length) return;
+      camActive = ((i % camNodes.length)+camNodes.length)%camNodes.length;
+      camNodes.forEach((b,n)=>b.classList.toggle('active', n===camActive));
+    };
+    const stepCam = dir=>setCamActive(camActive+dir);
+    const stopCamAuto = ()=>{ camAutoDir=0; if(camAutoTimer){clearInterval(camAutoTimer);camAutoTimer=null;} };
+    const setCamAuto = dir=>{ stopCamAuto(); camAutoDir=dir; if(dir) camAutoTimer=setInterval(()=>stepCam(dir),1800); };
+    camNodes.forEach((b,i)=>{
+      b.addEventListener('click', ()=>{
+        setCamActive(i);
+        if (b.dataset.liveUrl) openCameraViewer(b.dataset.cameraName, b.dataset.liveUrl);
+        else openVirtualCameraViewer(camData, i);
+      });
+    });
+    setCamActive(0);
+    if (camPanel){
+      camPanel.querySelectorAll('[data-cam-step]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); stopCamAuto(); stepCam(Number(b.dataset.camStep)); });
+      camPanel.querySelectorAll('[data-cam-auto]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamAuto(Number(b.dataset.camAuto)); });
+      camPanel.querySelectorAll('[data-cam-zoom]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); setCamScale(camScale+Number(b.dataset.camZoom)*.2); });
+      const camReset = camPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); setCamActive(0); };
+    }
 
     /* ⑥ 全屏 */
     const syncBigscreenFullscreen = ()=>document.body.classList.toggle('bs-fullscreen', !!document.fullscreenElement);
@@ -719,27 +759,39 @@
     const resetVoiceButton = ()=>{ if (voiceBtn) voiceBtn.textContent = '🔊 语音讲解'; };
     const humanRoot = document.querySelector('.dh-human');
     const motionEl = document.getElementById('narratorMotion');
-    let talkTimer = null, motionTimer = null, motionFrame = 0, speechGapTimer = null, speechRunId = 0;
+    let talkTimer = null, motionTimer = null, motionFrame = 22, speechGapTimer = null, speechRunId = 0, motionStarted = false;
+    const WAVE_FRAME_END = 16, IDLE_FRAME_START = 22, IDLE_FRAME_END = 57;
     const setMotionFrame = (frame)=>{
-      motionFrame = ((frame % 61) + 61) % 61;
+      motionFrame = Math.max(0, Math.min(60, Math.round(frame)));
       if (!motionEl) return;
       const col = motionFrame % 10, row = Math.floor(motionFrame / 10);
       motionEl.style.backgroundPosition = `${(col * 100 / 9).toFixed(4)}% ${(row * 100 / 9).toFixed(4)}%`;
     };
+    const advanceMotion = ()=>{
+      if (!motionStarted) return;
+      if (motionFrame < WAVE_FRAME_END) setMotionFrame(motionFrame + 1);
+      else if (motionFrame >= IDLE_FRAME_END) setMotionFrame(IDLE_FRAME_START);
+      else setMotionFrame(motionFrame + 1);
+    };
     const stopTalkMotion = ()=>{
+      motionStarted = false;
       if (talkTimer){ clearInterval(talkTimer); talkTimer = null; }
       if (motionTimer){ clearInterval(motionTimer); motionTimer = null; }
-      setMotionFrame(0);
+      setMotionFrame(IDLE_FRAME_START);
       if (humanRoot){ humanRoot.classList.remove('is-speaking'); humanRoot.dataset.talk = '0'; }
     };
     const startTalkMotion = ()=>{
       if (!humanRoot) return;
       humanRoot.classList.add('is-speaking');
+      if (!motionStarted){
+        motionStarted = true;
+        setMotionFrame(0);
+      }
       if (!talkTimer){
         let phase = 0;
         talkTimer = setInterval(()=>{ humanRoot.dataset.talk = String(phase++ % 3); }, 220);
       }
-      if (motionEl && !motionTimer) motionTimer = setInterval(()=>setMotionFrame(motionFrame + 1), 167);
+      if (motionEl && !motionTimer) motionTimer = setInterval(advanceMotion, 167);
     };
     const stopSpeech = ()=>{
       speechRunId += 1;
@@ -766,7 +818,7 @@
       return out.length ? out : [clean];
     };
     const pauseAfter = text=>/[！？!?]$/.test(text) ? 240 : /[。；;]$/.test(text) ? 210 : /[，,、]$/.test(text) ? 130 : 170;
-    setMotionFrame(0);
+    setMotionFrame(IDLE_FRAME_START);
     const speak = (txt = profileIntro)=>{
       if (!window.speechSynthesis) { toast('当前浏览器不支持语音播报，请使用新版 Edge 或 Chrome'); return; }
       stopSpeech();
@@ -822,7 +874,7 @@
     });
     /* 离开大屏时停止朗读与轮播 */
     const obs = new MutationObserver(()=>{
-      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stopSpeech(); obs.disconnect(); }
+      if (!document.querySelector('.bs-v8')){ clearInterval(paletteTimer); stopBigscreenCanvas(); stopSpeech(); stopCamAuto(); obs.disconnect(); }
     });
     obs.observe(content, { childList: true });
 
@@ -1696,6 +1748,54 @@
     ov.addEventListener('click',e=>{if(e.target===ov)close()});
     ov.querySelector('.modal-x').onclick=close;
     ov.querySelector('[data-close]').onclick=close;
+  }
+  function openVirtualCameraViewer(cameras, startIndex=0){
+    if (!cameras || !cameras.length) return;
+    let index = ((Number(startIndex)||0) % cameras.length + cameras.length) % cameras.length;
+    let scale = 1, autoDir = 0, autoTimer = null;
+    const ov = document.createElement('div'); ov.className='modal-overlay camera-viewer-overlay';
+    ov.innerHTML = `<div class="modal camera-viewer-modal virtual-camera-modal">
+      <div class="camera-viewer-head"><div><b>🎥 <span class="vc-title">监控画面</span></b><span class="vc-note">虚拟牧场实景 · 可缩放 / 可前后切换</span></div><button class="modal-x" type="button">×</button></div>
+      <div class="virtual-camera-stage"><img class="virtual-camera-image" alt="监控画面"><div class="virtual-camera-grid" aria-hidden="true"></div></div>
+      <div class="virtual-camera-tools">
+        <button type="button" data-vc-step="-1">⏮ 上一路</button>
+        <button type="button" data-vc-auto="-1">◀ 倒退轮巡</button>
+        <button type="button" data-vc-auto="0">暂停</button>
+        <button type="button" data-vc-auto="1">正向轮巡 ▶</button>
+        <button type="button" data-vc-step="1">下一路 ⏭</button>
+        <span class="vc-tool-sep"></span>
+        <button type="button" data-vc-zoom="-1">− 缩小</button>
+        <b class="vc-zoom-value">100%</b>
+        <button type="button" data-vc-zoom="1">＋ 放大</button>
+        <button type="button" data-vc-reset>恢复 1:1</button>
+      </div>
+      <div class="modal-foot"><a class="btn ghost vc-open-link" href="javascript:void(0)">↗ 新窗口查看</a><button class="btn solid" data-close>关闭</button></div>
+    </div>`;
+    document.body.appendChild(ov);
+    const img=ov.querySelector('.virtual-camera-image');
+    const render=()=>{
+      const c=cameras[index]||{};
+      ov.querySelector('.vc-title').textContent=c.name||'监控画面';
+      ov.querySelector('.vc-note').textContent=`${c.note||'虚拟牧场实景'} · 第 ${index+1} / ${cameras.length} 路`;
+      img.src=c.img||''; img.alt=`${c.name||'监控'}实景画面`;
+      img.style.transform=`scale(${scale})`;
+      ov.querySelector('.vc-zoom-value').textContent=Math.round(scale*100)+'%';
+      const link=ov.querySelector('.vc-open-link'); if(link) link.href=c.img||c.liveUrl||'#';
+    };
+    const step=dir=>{ index=((index+dir)%cameras.length+cameras.length)%cameras.length; scale=1; render(); };
+    const stopAuto=()=>{ autoDir=0; if(autoTimer){clearInterval(autoTimer);autoTimer=null;} };
+    const setAuto=dir=>{ stopAuto(); autoDir=dir; if(dir) autoTimer=setInterval(()=>step(dir),1800); };
+    const close=()=>{ stopAuto(); document.removeEventListener('keydown',keyHandler); ov.remove(); };
+    const keyHandler=e=>{ if(e.key==='ArrowLeft') step(-1); if(e.key==='ArrowRight') step(1); if(e.key==='Escape') close(); };
+    ov.addEventListener('click',e=>{ if(e.target===ov) close(); });
+    ov.querySelector('.modal-x').onclick=close;
+    ov.querySelector('[data-close]').onclick=close;
+    ov.querySelectorAll('[data-vc-step]').forEach(b=>b.onclick=()=>step(Number(b.dataset.vcStep)));
+    ov.querySelectorAll('[data-vc-auto]').forEach(b=>b.onclick=()=>setAuto(Number(b.dataset.vcAuto)));
+    ov.querySelectorAll('[data-vc-zoom]').forEach(b=>b.onclick=()=>{ scale=Math.max(.8,Math.min(3,scale+Number(b.dataset.vcZoom)*.2)); render(); });
+    ov.querySelector('[data-vc-reset]').onclick=()=>{ scale=1; render(); };
+    document.addEventListener('keydown',keyHandler);
+    render();
   }
   const DEVICE_ONBOARD_PRESETS = [
     {key:'camera', name:'监控摄像头', icon:'🎥', cat:'D1', portKind:'监控端口', brands:['海康威视','大华','宇视','天地伟业'], protocols:['ONVIF','RTSP','GB28181'], protocol:'ONVIF / RTSP / GB28181', endpoint:'rtsp://设备IP:554/Streaming/Channels/101', where:'生活区 / 饲草区 / 设备区 / 犊牛舍 / 活动区 / 牛舍内', battery:'市电 + UPS', prefixes:['CAM','HK','DH','YS']},
