@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v92.1';
+  const APP_VERSION = 'v92.2';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -385,6 +385,7 @@
           <div class="bs-title-en">${ps.subtitle || 'SMART RANCH DATA COMMAND CENTER'}</div>
         </div>
         <div class="bs-tools">
+          <button class="btn ghost sm bs-back" id="bsBack" title="返回数据总览">← 返回总览</button>
           <button class="btn ghost sm bs-voice" id="bsVoice">🔊 语音讲解</button>
           <div class="bs-time" id="bsTime"></div>
           <button class="btn ghost sm bs-full" id="bsFull">⛶ 全屏</button>
@@ -782,6 +783,10 @@
       const camReset=monitorPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); };
     }
     renderCameras();
+    /* 数据大屏返回总览 */
+    const bsBack = $('#bsBack');
+    if (bsBack) bsBack.addEventListener('click', ()=>render('dashboard'));
+
     /* ⑥ 全屏 */
     const syncBigscreenFullscreen = ()=>document.body.classList.toggle('bs-fullscreen', !!document.fullscreenElement);
     if (!window.__bsFullscreenBound){
