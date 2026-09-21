@@ -10,7 +10,7 @@
 .hero{position:relative;padding:48px 56px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(90deg,rgba(3,15,43,.88),rgba(4,25,63,.62)),url('/assets/login-cover.webp') center/cover}
 .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(94,234,212,.12) 58%,transparent 74%);animation:scan 8s linear infinite;pointer-events:none}
 @keyframes scan{0%{transform:translateX(-70%)}100%{transform:translateX(70%)}}
-.logo{display:flex;align-items:center;gap:14px;position:relative;z-index:2}.logo img{width:68px;height:68px;border-radius:17px;background:#fff;padding:5px;box-shadow:0 0 30px rgba(94,234,212,.35)}
+.logo{display:flex;align-items:center;gap:12px;position:relative;z-index:2}.logo img{width:190px;height:66px;border-radius:12px;background:#fff;padding:3px 7px;object-fit:contain;box-shadow:0 0 28px rgba(94,234,212,.28)}
 .logo b{display:block;font-size:26px;letter-spacing:1px}.logo span{display:block;margin-top:5px;color:#73d9e8;font-size:11px;letter-spacing:3px}
 .hero-copy{position:relative;z-index:2;max-width:650px}.hero-copy h1{font-size:48px;line-height:1.16;margin:0 0 16px;letter-spacing:2px;background:linear-gradient(100deg,#fff,#7dd3fc,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero-copy p{font-size:15px;line-height:1.9;color:#bcd6ee;margin:0}.stats{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap}.stats span{padding:9px 13px;border-radius:9px;border:1px solid rgba(94,234,212,.28);background:rgba(5,22,53,.66);font-size:12px;color:#cbefff}.stats b{color:#5eead4;margin-right:4px}
@@ -27,7 +27,7 @@
 .wechat{margin-top:11px;width:100%;height:42px;border-radius:10px;border:1px solid rgba(94,234,212,.26);background:rgba(94,234,212,.06);color:#a5efe8;font-size:12px;cursor:pointer}
 .notice{margin-top:16px;padding:11px 12px;border-radius:9px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.20);font-size:10px;line-height:1.6;color:#d8b977}
 .help{margin-top:17px;text-align:center;font-size:10px;color:#6d91b2}
-@media(max-width:820px){.login{grid-template-columns:1fr}.hero{min-height:270px;padding:28px 22px}.hero-copy h1{font-size:31px}.hero-copy p{font-size:13px}.stats{display:none}.panel{padding:28px 16px 36px;align-items:flex-start}.card{padding:24px 18px}.hero-foot{display:none}}
+@media(max-width:820px){.login{grid-template-columns:1fr}.logo img{width:150px;height:54px;padding:2px 5px}.hero{min-height:270px;padding:28px 22px}.hero-copy h1{font-size:31px}.hero-copy p{font-size:13px}.stats{display:none}.panel{padding:28px 16px 36px;align-items:flex-start}.card{padding:24px 18px}.hero-foot{display:none}}
 
 .hero-kicker{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:2.8px;color:#8ed7e5;margin-bottom:12px}.hero-kicker:before{content:"";width:28px;height:1px;background:linear-gradient(90deg,#c39a55,#8ed7e5)}.hero-copy{padding-left:20px;border-left:2px solid rgba(195,154,85,.72)}.hero-copy h1{margin:0 0 10px!important;line-height:1.08!important}.hero-copy h1>span{display:inline-block;font-size:.62em;line-height:1;letter-spacing:.11em;color:#8ed7e5;-webkit-text-fill-color:#8ed7e5;margin-bottom:10px}.hero-copy h1 small{display:block;margin-top:8px;font-size:.62em;line-height:1.2;letter-spacing:.13em;font-weight:750;color:#eaf7ff;-webkit-text-fill-color:#eaf7ff}.hero-en{font-size:10px;letter-spacing:2.1px;color:#77a8bb;margin:0 0 16px;white-space:nowrap}.stats span{backdrop-filter:blur(9px);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
 @media(max-width:820px){.hero-copy{padding-left:14px}.hero-kicker{font-size:9px;letter-spacing:2px;margin-bottom:9px}.hero-copy h1{font-size:29px!important}.hero-copy h1>span{font-size:.64em;margin-bottom:7px}.hero-copy h1 small{font-size:.62em;letter-spacing:.08em}.hero-en{font-size:8px;letter-spacing:1.2px;white-space:normal}}
@@ -37,7 +37,7 @@
 <body>
 <div class="login">
   <section class="hero">
-    <div class="logo"><img src="/assets/logo.png" alt="伊拉特智慧牧场"><div><b>伊拉特智慧牧场</b><span>YILATE SMART RANCH</span></div></div>
+    <div class="logo"><img src="/assets/aimugo-logo.webp" alt="Aimugo艾牧戈"><div><b>伊拉特智慧牧场</b><span>YILATE SMART RANCH</span></div></div>
     <div class="hero-copy">
       <div class="hero-kicker">AIMUGO · SMART RANCH OS</div>
       <h1><span>Aimugo</span><br>智慧牧场<small>一体化管理平台</small></h1>
