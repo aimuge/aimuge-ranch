@@ -3957,3 +3957,10 @@ body[data-theme="dark"] .livestock-growth-card .chart-box{background:linear-grad
   .livestock-growth-card .c-axis{font-size:8.5px!important}
   .livestock-growth-card .gain-kpis .gk b{font-size:15px!important}
 }
+
+/* v94.3 取消左右大走光，降低视觉干扰 */
+.bigscreen::before{display:none!important;animation:none!important}
+.bs-v8 .bs-sweeps{display:none!important}
+.bs-v8 .bs-colorwash{opacity:.30!important;mix-blend-mode:normal!important}
+.bs-v8 .bs-colorwash i{animation:none!important;filter:blur(72px)!important;opacity:.45!important;transform:none!important}
+.bs-v8 .bs-panel::after{opacity:.30!important}
