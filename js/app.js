@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v95';
+  const APP_VERSION = 'v95.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -996,7 +996,7 @@
       <div class="quick-entry-bar" aria-label="牧民常用功能">
         <span class="qe-label">常用功能</span>
         <button type="button" data-quick="log">📒 写牧事</button>
-        <button type="button" data-quick="livestock">🐂 盘点牛只</button>
+        <button type="button" data-quick="livestock">🏷️ 耳标建档/盘点</button>
         <button type="button" data-quick="forage">🧊 饲草出入库</button>
         <button type="button" data-quick="vaccine">💉 防疫登记</button>
         <button type="button" data-quick="devices">📡 设备接入</button>
@@ -1091,7 +1091,8 @@
       ${pageHeader('四季循环生产 · 全年生产模拟', '从产犊到出栏、从打草到牧游，一个家庭牧场的完整年度循环', `
         <button class="btn solid sm" data-cycle="prev">◀ 上个月</button>
         <button class="btn solid sm" data-cycle="next">下个月 ▶</button>
-        <button class="btn ghost sm" data-cycle="today">回到本月</button>`)}
+        <button class="btn ghost sm" data-cycle="today">回到本月</button>
+        <button class="btn ghost sm" data-cycle-edit>✏️ 编辑本季任务</button>`)}
       <div class="cycle-board" style="--cb:${SEASON_COLOR[m.season]}">
         <div class="cycle-meta">
           <div class="cycle-month">${demoMonth}<small>月</small></div>
@@ -1182,14 +1183,39 @@
 function afterCycle(){
     bindCycleNav($('#content'));
     $('#content').querySelectorAll('.wheel-seg').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
+    const cycleEdit=$('[data-cycle-edit]');
+    if(cycleEdit) cycleEdit.addEventListener('click',()=>{
+      const m=DB.months[demoMonth-1];
+      openModal(`${monthName(demoMonth)} · 编辑生产任务`,[
+        {name:'name',label:'营盘/阶段名称',type:'text',value:m.name||''},
+        {name:'tasks',label:'生产任务（每行一项）',type:'textarea',value:(m.tasks||[]).join('\n')}
+      ],v=>{
+        m.name=v.name||m.name;
+        m.tasks=String(v.tasks||'').split('\n').map(x=>x.trim()).filter(Boolean);
+        saveDB();toast('本季生产任务已更新');render(current);
+      });
+    });
   }
 
   /* ================= 养殖管理 ================= */
+  const animalFields = [
+    {name:'id', label:'耳标号 / 电子标识', type:'text', required:true, placeholder:'例：YL-0008 或 15 位耳标号'},
+    {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+    {name:'breed', label:'品种', type:'text', value:'西门塔尔牛'},
+    {name:'sex', label:'性别', type:'select', options:['母','公'].map(v=>({v}))},
+    {name:'age', label:'年龄', type:'text', placeholder:'例：2岁'},
+    {name:'weight', label:'当前体重', type:'text', placeholder:'例：536kg'},
+    {name:'health', label:'健康状况', type:'select', options:['健康','发情预警','待产','待驱虫','观察'].map(v=>({v}))},
+    {name:'location', label:'所在位置', type:'text', placeholder:'例：大牛棚圈 / 牛只活动区'},
+    {name:'temp', label:'体温', type:'text', placeholder:'例：38.6℃'},
+    {name:'device', label:'绑定设备', type:'select', options:['电子耳标 · 在线','北斗项圈 · 在线','自动称重 · 已过称','监控 · 在线','未绑定'].map(v=>({v}))},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
   function pageLivestock() {
     const c = compute();
     return `
     <div class="page livestock-page">
-      ${pageHeader('养殖管理', '西门塔尔牛分群 · 电子档案 · 繁殖动态 · 智能监测', addBtn('登记牲畜个体'))}
+      ${pageHeader('养殖管理', '西门塔尔牛分群 · 耳标建档 · 称重关联 · 繁殖与健康监测', addBtn('耳标建档/登记牲畜'))}
       <div class="kpi-grid kpi-4 livestock-kpis">
         ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'标准家畜单位 '+fmt(c.sheepUnits), color:'#0f766e', bg:'#e7f7f3'})}
         ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 186 头 · 200 枚含备件', color:'#0891b2', bg:'#e0f7fb'})}
@@ -1235,9 +1261,9 @@ function afterCycle(){
         ['耳标号','畜种','品种','性别','年龄','体重','健康','位置','体温','设备','操作'],
         DB.animals.map(a=>[`<code>${a.id}</code>`, a.species, a.breed, a.sex, a.age, a.weight,
           pill(a.health, a.health==='健康'?'ok':a.health==='发情预警'?'danger':'warn'),
-          a.location, a.temp, `<span class="dev-on">${a.device}</span>`, delBtn('animals', a.id)]),
+          a.location, a.temp, `<span class="dev-on">${a.device}</span>`, editBtn('animals', a.id) + delBtn('animals', a.id)]),
         'animal-archive-tbl'
-      ) + `<div class="card-actions">${addBtn('登记牲畜个体')}</div>`, 'animal-archive-card')}
+      ) + `<div class="card-actions">${addBtn('耳标建档/登记牲畜')}</div>`, 'animal-archive-card')}
     </div>`;
   }
   function renderSpeciesGrid(){
@@ -1310,7 +1336,8 @@ function afterCycle(){
           </tbody>
         </table>
       </div>
-      <div class="card-note">⚖️ 数据来源：${st.g.weighDevice}（RS485 / Modbus RTU）自动过称采集；日增重 = 阶段增重 ÷ 天数，增重加速度 = 后半段日增重 − 前半段日增重（正值表示增重越来越快）。目标出栏体重 ${st.g.targetWeight} kg。</div>
+      <div class="card-actions"><button class="btn solid sm" data-add="称重记录">＋ 新增耳标称重</button></div>
+      <div class="card-note">⚖️ 数据来源：${st.g.weighDevice}（RS485 / Modbus RTU）自动过称采集；录入耳标号和体重后，自动关联个体档案、增重趋势和出栏预测。目标出栏体重 ${st.g.targetWeight} kg。</div>
     `;
   }
   function afterLivestock(){
@@ -1338,23 +1365,31 @@ function afterCycle(){
       renderSpeciesGrid();
     });
     bindDel($('#content'));
-    $('#content').querySelectorAll('[data-add="登记牲畜个体"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('登记牲畜个体', [
-        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
-        {name:'breed', label:'品种', type:'text', value:'西门塔尔牛'},
-        {name:'sex', label:'性别', type:'select', options:['母','公'].map(v=>({v}))},
-        {name:'age', label:'年龄', type:'text', placeholder:'例：2岁'},
-        {name:'weight', label:'体重', type:'text', placeholder:'例：56kg'},
-        {name:'health', label:'健康状况', type:'select', options:['健康','发情预警','待产','待驱虫','观察'].map(v=>({v}))},
-        {name:'location', label:'所在位置', type:'text', placeholder:'例：冬营盘·东区'},
-        {name:'temp', label:'体温', type:'text', placeholder:'例：38.6℃'},
-        {name:'device', label:'监测设备', type:'select', options:['GPS · 在线','耳标 · 在线','GPS · 离线'].map(v=>({v}))},
-        {name:'note', label:'备注', type:'textarea'}
+    $('#content').querySelectorAll('[data-add="耳标建档/登记牲畜"]').forEach(b=>b.addEventListener('click', ()=>{
+      openModal('登记耳标 / 牲畜个体', animalFields, v=>{
+        const tag=(v.id||'').trim();
+        if(!tag){ toast('请填写耳标号','warn'); return false; }
+        if(DB.animals.some(a=>String(a.id).toLowerCase()===tag.toLowerCase())){ toast('该耳标号已存在','warn'); return false; }
+        v.id=tag; addRecord('animals',v);
+        const kg=parseFloat(String(v.weight||'').replace(/[^\d.]/g,''));
+        if(kg>0){ DB.growth.animals=DB.growth.animals||[]; DB.growth.animals.push({tag,breed:v.breed||'西门塔尔',sex:v.sex||'母',stage:/犊/.test(v.species)||/月龄/.test(v.age||'')?'犊牛':'育肥',start:kg,weights:[kg],days:[0],current:kg,dailyGain:0,note:'首次建档称重'}); saveDB(); }
+        toast(`耳标 ${tag} 已建档${kg>0?'，称重数据已关联':''}`); render(current);
+      });
+    }));
+    bindEdit($('#content'), { 'animals': { title:'编辑牲畜个体', fields: animalFields } });
+    $('#content').querySelectorAll('[data-add="称重记录"]').forEach(b=>b.addEventListener('click', ()=>{
+      openModal('新增耳标称重记录', [
+        {name:'tag', label:'耳标号', type:'select', options:DB.animals.map(a=>({v:a.id,t:a.id+' · '+a.breed}))},
+        {name:'weight', label:'本次体重（kg）', type:'number', required:true, placeholder:'例：512'},
+        {name:'date', label:'称重日期', type:'date', value:new Date().toISOString().slice(0,10)},
+        {name:'note', label:'备注', type:'text', placeholder:'自动保定称采集'}
       ], v=>{
-        v.id = 'AN-' + uid('AN').slice(-6);
-        addRecord('animals', v);
-        toast(`已登记 ${v.species} ${v.id}`);
-        render(current);
+        const kg=+v.weight; if(!v.tag||!kg){toast('请选择耳标并填写体重','warn');return false;}
+        const a=DB.animals.find(x=>x.id===v.tag); if(a)updateRecord('animals',a.id,{weight:kg+'kg',device:'自动称重 · 已过称',health:a.health||'健康'});
+        let g=(DB.growth.animals||[]).find(x=>x.tag===v.tag);
+        if(!g){g={tag:v.tag,breed:a?a.breed:'西门塔尔',sex:a?a.sex:'母',stage:'育肥',start:kg,weights:[kg],days:[0],current:kg,dailyGain:0,note:v.note||'新增称重'};DB.growth.animals.push(g);}
+        else{const lastDay=g.days[g.days.length-1]||0;const prev=g.current||g.weights[g.weights.length-1]||kg;g.weights.push(kg);g.days.push(lastDay+14);g.current=kg;g.dailyGain=+((kg-prev)/14).toFixed(2);g.note=v.note||g.note;}
+        saveDB();toast(`耳标 ${v.tag} 称重已关联增重分析`);render(current);
       });
     }));
     const birthBtn = $('#content').querySelector('[data-modal="birth"]');
@@ -1436,6 +1471,21 @@ function afterCycle(){
   }
 
   /* ================= 饲草管理 ================= */
+  const forageInventoryFields = [
+    {name:'name', label:'饲草品项', type:'text', required:true},
+    {name:'target', label:'目标库存', type:'number', required:true},
+    {name:'stock', label:'当前库存', type:'number', required:true},
+    {name:'unit', label:'单位', type:'text', value:'吨'},
+    {name:'note', label:'备注', type:'text'}
+  ];
+  const forageRecordFields = [
+    {name:'date', label:'日期', type:'date', required:true},
+    {name:'type', label:'类型', type:'select', options:['打草入库','青贮制作','领用','采购入库'].map(v=>({v}))},
+    {name:'item', label:'品项', type:'select', options:DB.forageInventory.map(x=>({v:x.name}))},
+    {name:'qty', label:'数量', type:'number', required:true, placeholder:'吨'},
+    {name:'operator', label:'负责人', type:'text'},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
   function pageForage() {
     const inv = DB.forageInventory, rec = DB.forageRecords;
     return `
@@ -1449,14 +1499,14 @@ function afterCycle(){
       </div>
       <div class="grid-3">
         <div class="col2">
-          ${card('饲草库存台账', tableHtml(['品类','目标','当前库存','缺口/余量','状态','备注'],
+          ${card('饲草库存台账', tableHtml(['品类','目标','当前库存','缺口/余量','状态','备注','操作'],
             inv.map(x=>{
               const gap = +(x.target-x.stock).toFixed(1); const pct = Math.round(x.stock/x.target*100);
               return [`<b>${x.name}</b>`, x.target+' '+x.unit, `<b>${x.stock}</b> ${x.unit}`,
-                (gap>0?gap+' 待补':'余 '+Math.abs(gap)), pill(pct>=80?'充足':pct>=60?'正常':'偏少', pct>=80?'ok':pct>=60?'warn':'danger'), x.note];
+                (gap>0?gap+' 待补':'余 '+Math.abs(gap)), pill(pct>=80?'充足':pct>=60?'正常':'偏少', pct>=80?'ok':pct>=60?'warn':'danger'), x.note, editBtn('forageInventory',x.id)];
             })))}
-          ${card('出入库记录（可新增/删除）', tableHtml(['日期','类型','品项','数量','负责人','备注','操作'],
-            rec.map(r=>[r.date, pill(r.type, r.type==='打草入库'||r.type==='青贮制作'?'ok':'warn'), r.item, r.qty+' '+r.unit, r.operator, r.note, delBtn('forageRecords', r.id)])))}
+          ${card('出入库记录（可新增/编辑/删除）', tableHtml(['日期','类型','品项','数量','负责人','备注','操作'],
+            rec.map(r=>[r.date, pill(r.type, r.type==='打草入库'||r.type==='青贮制作'?'ok':'warn'), r.item, r.qty+' '+r.unit, r.operator, r.note, editBtn('forageRecords', r.id) + delBtn('forageRecords', r.id)])))}
           <div style="margin-top:12px">${addBtn('饲草出入库')}</div>
         </div>
         <div class="col1">
@@ -1479,15 +1529,9 @@ function afterCycle(){
   }
   function afterForage(){
     bindDel($('#content'));
+    bindEdit($('#content'), { 'forageRecords': { title:'编辑饲草出入库', fields:forageRecordFields }, 'forageInventory': { title:'编辑饲草库存', fields:forageInventoryFields } });
     $('#content').querySelectorAll('[data-add="饲草出入库"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('饲草出入库登记', [
-        {name:'date', label:'日期', type:'date', value:'2026-02-16', required:true},
-        {name:'type', label:'类型', type:'select', options:[{v:'打草入库'},{v:'青贮制作'},{v:'领用'},{v:'采购入库'}]},
-        {name:'item', label:'品项', type:'select', options: DB.forageInventory.map(x=>({v:x.name}))},
-        {name:'qty', label:'数量', type:'number', placeholder:'吨', required:true},
-        {name:'operator', label:'负责人', type:'text'},
-        {name:'note', label:'备注', type:'textarea'}
-      ], v=>{
+      openModal('饲草出入库登记', forageRecordFields, v=>{
         if (!v.qty) { toast('请填写数量','warn'); return false; }
         const inv = DB.forageInventory.find(x=>x.name===v.item);
         if (inv) { const q = +v.qty; if (v.type==='领用') inv.stock = Math.max(0, +(inv.stock-q).toFixed(1)); else inv.stock = +(inv.stock+q).toFixed(1); saveDB(); }
@@ -1498,6 +1542,21 @@ function afterCycle(){
   }
 
   /* ================= 屠宰加工 ================= */
+  const slaughterPlanFields = [
+    {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+    {name:'head', label:'计划出栏头数', type:'number', required:true},
+    {name:'note', label:'说明', type:'text'}
+  ];
+  const slaughterFields = [
+    {name:'date', label:'日期', type:'date', required:true},
+    {name:'earTagBatch', label:'耳标号 / 耳标批次', type:'text', placeholder:'可填写单头耳标号或批次说明'},
+    {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+    {name:'head', label:'头数', type:'number', required:true},
+    {name:'weight', label:'出肉量', type:'text', placeholder:'例：1.2吨'},
+    {name:'inspector', label:'检疫机构', type:'text', value:'旗动物检疫所'},
+    {name:'status', label:'状态', type:'select', options:['检疫合格','检疫中'].map(v=>({v}))},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
   function pageSlaughter() {
     const sl = DB.slaughterRecords, sp = DB.slaughterPlans;
     return `
@@ -1511,12 +1570,12 @@ function afterCycle(){
       </div>
       <div class="grid-3">
         <div class="col2">
-          ${card('屠宰记录（可新增/删除）', tableHtml(['日期','畜种','头数','出肉量','检疫机构','状态','备注','操作'],
-            sl.map(r=>[r.date, r.species, r.head+' 头只', r.weight, r.inspector, pill(r.status, r.status==='检疫合格'?'ok':'warn'), r.note, delBtn('slaughterRecords', r.id)])))}
+          ${card('屠宰记录（可新增/编辑/删除）', tableHtml(['日期','耳标/批次','畜种','头数','出肉量','检疫机构','状态','备注','操作'],
+            sl.map(r=>[r.date, r.earTagBatch||'—', r.species, r.head+' 头只', r.weight, r.inspector, pill(r.status, r.status==='检疫合格'?'ok':'warn'), r.note, editBtn('slaughterRecords', r.id)+delBtn('slaughterRecords', r.id)])))}
           <div style="margin-top:12px">${addBtn('登记屠宰记录')}</div>
         </div>
         <div class="col1">
-          ${card('秋冬季出栏计划', tableHtml(['畜种','计划出栏','说明'], sp.map(x=>[`<b>${x.species}</b>`, x.head+' 头只', x.note])))}
+          ${card('秋冬季出栏计划', tableHtml(['畜种','计划出栏','说明','操作'], sp.map(x=>[`<b>${x.species}</b>`, x.head+' 头只', x.note, editBtn('slaughterPlans',x.id)+delBtn('slaughterPlans',x.id)])) + `<div class="card-actions">${addBtn('新增出栏计划','slaughterPlans')}</div>`)}
           ${card('屠宰流程规范', `
             <div class="flow-vert">
               <div class="fv"><b>1</b><span>出栏前 14 天停用药物</span></div>
@@ -1532,26 +1591,45 @@ function afterCycle(){
   }
   function afterSlaughter(){
     bindDel($('#content'));
+    bindEdit($('#content'), { 'slaughterRecords': { title:'编辑屠宰记录', fields:slaughterFields }, 'slaughterPlans': { title:'编辑出栏计划', fields:slaughterPlanFields } });
+    $('#content').querySelectorAll('[data-add="slaughterPlans"]').forEach(b=>b.addEventListener('click',()=>openModal('新增出栏计划',slaughterPlanFields,v=>{addRecord('slaughterPlans',{...v,head:+v.head||0});toast('出栏计划已新增');render(current)})));
     $('#content').querySelectorAll('[data-add="登记屠宰记录"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('登记屠宰记录', [
-        {name:'date', label:'日期', type:'date', value:'2026-02-16', required:true},
-        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
-        {name:'head', label:'头数', type:'number', required:true},
-        {name:'weight', label:'出肉量', type:'text', placeholder:'例：1.2吨'},
-        {name:'inspector', label:'检疫机构', type:'text', value:'旗动物检疫所'},
-        {name:'status', label:'状态', type:'select', options:[{v:'检疫合格'},{v:'检疫中'}]},
-        {name:'note', label:'备注', type:'textarea'}
-      ], v=>{
+      openModal('登记屠宰记录', slaughterFields, v=>{
         if (!v.head) { toast('请填写头数','warn'); return false; }
         addRecord('slaughterRecords', {...v, head:+v.head});
-        addRecord('productRecords', { date:v.date, type:'入库', product:'冷鲜'+v.species+'肉',
-          qty:v.weight, unit:'吨', amount:'—', customer:'屠宰分割（'+v.head+' 头只）' });
+        addRecord('productRecords', { date:v.date, type:'入库', product:'冷鲜'+v.species+'肉', qty:v.weight, unit:'吨', amount:'—', customer:'屠宰分割（'+v.head+' 头只）', sourceTag:v.earTagBatch||'' });
         toast('屠宰记录已保存，产品已联动入库'); render(current);
       });
     }));
   }
 
   /* ================= 防疫管理 ================= */
+  const vaccinePlanFields = [
+    {name:'season', label:'防疫季节/程序', type:'text', required:true},
+    {name:'vaccine', label:'疫苗/项目', type:'text', required:true},
+    {name:'species', label:'畜种', type:'text', value:'牛'},
+    {name:'rate', label:'要求', type:'text', placeholder:'例：应免尽免'}
+  ];
+  const vaccineRecordFields = [
+    {name:'date', label:'日期', type:'date', required:true},
+    {name:'earTag', label:'耳标号（个体防疫时填写）', type:'text', placeholder:'例：YL-0008；群体防疫可留空'},
+    {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+    {name:'group', label:'群体', type:'text', placeholder:'例：全群 / 犊牛'},
+    {name:'vaccine', label:'疫苗/项目', type:'select', options:['口蹄疫 O 型','口蹄疫 A 型','炭疽','布病监测','犊牛腹泻疫苗','出栏前检疫'].map(v=>({v}))},
+    {name:'dose', label:'剂量', type:'text', placeholder:'例：1,200 头份'},
+    {name:'operator', label:'操作人', type:'text'},
+    {name:'status', label:'状态', type:'select', options:[{v:'完成'},{v:'计划中'}]}
+  ];
+  const medicineFields = [
+    {name:'date', label:'日期', type:'date'},
+    {name:'earTag', label:'耳标号（个体用药时填写）', type:'text'},
+    {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
+    {name:'group', label:'群体', type:'text', placeholder:'例：育肥牛 60 头'},
+    {name:'drug', label:'药品', type:'text', required:true, placeholder:'例：伊维菌素（驱虫）'},
+    {name:'withdrawal', label:'休药期（天）', type:'number', placeholder:'例：21'},
+    {name:'operator', label:'兽医', type:'text'},
+    {name:'note', label:'备注', type:'text'}
+  ];
   function pageVaccine() {
     const vr = DB.vaccineRecords, ds = DB.disinfect, done = vr.filter(r=>r.status==='完成').length;
     return `
@@ -1565,10 +1643,10 @@ function afterCycle(){
       </div>
       <div class="grid-3">
         <div class="col2">
-          ${card('免疫程序（年度）', tableHtml(['程序','疫苗','畜种','要求'],
-            DB.vaccinePlans.map(x=>[`<b>${x.season}</b>`, x.vaccine, x.species, pill(x.rate,'info')])))}
-          ${card('防疫记录台账（可新增/删除）', tableHtml(['日期','畜种','群体','疫苗','剂量','操作人','状态','操作'],
-            vr.map(r=>[r.date, r.species, r.group, r.vaccine, r.dose, r.operator, pill(r.status,'ok'), delBtn('vaccineRecords', r.id)])))}
+          ${card('免疫程序（年度）', tableHtml(['程序','疫苗','畜种','要求','操作'],
+            DB.vaccinePlans.map(x=>[`<b>${x.season}</b>`, x.vaccine, x.species, pill(x.rate,'info'), editBtn('vaccinePlans',x.id)+delBtn('vaccinePlans',x.id)])) + `<div class="card-actions">${addBtn('新增免疫程序','vaccinePlans')}</div>`)}
+          ${card('防疫记录台账（可新增/编辑/删除）', tableHtml(['日期','耳标号','畜种','群体','疫苗','剂量','操作人','状态','操作'],
+            vr.map(r=>[r.date, r.earTag||'—', r.species, r.group, r.vaccine, r.dose, r.operator, pill(r.status,'ok'), editBtn('vaccineRecords', r.id)+delBtn('vaccineRecords', r.id)])))}
           <div style="margin-top:12px">${addBtn('登记防疫记录')}</div>
         </div>
         <div class="col1">
@@ -1583,36 +1661,22 @@ function afterCycle(){
             </div>`)}
         </div>
       </div>
-      ${card('兽药使用与休药期（食品安全红线）', tableHtml(['日期','畜种','群体','药品','休药期(天)','兽医','备注','操作'],
-        DB.medicines.map(md=>[md.date, md.species, md.group, `<b>${md.drug}</b>`, pill(md.withdrawal+' 天','danger'), md.operator, md.note, delBtn('medicines', md.id)])))}
+      ${card('兽药使用与休药期（食品安全红线）', tableHtml(['日期','耳标号','畜种','群体','药品','休药期(天)','兽医','备注','操作'],
+        DB.medicines.map(md=>[md.date, md.earTag||'—', md.species, md.group, `<b>${md.drug}</b>`, pill(md.withdrawal+' 天','danger'), md.operator, md.note, editBtn('medicines', md.id)+delBtn('medicines', md.id)])))}
       <div style="margin-top:12px"><button class="btn solid sm" data-modal="med">＋ 登记用药</button></div>
       <div class="card-note">⚠️ 休药期是出栏安全的底线：出栏前必须停药（伊维菌素 21 天、土霉素 28 天…），违禁药一律不用；用药记录与检疫出证联动，政府可查。</div>
     </div>`;
   }
   function afterVaccine(){
     bindDel($('#content'));
+    bindEdit($('#content'), { 'vaccineRecords': { title:'编辑防疫记录', fields:vaccineRecordFields }, 'medicines': { title:'编辑用药记录', fields:medicineFields }, 'vaccinePlans': { title:'编辑免疫程序', fields:vaccinePlanFields } });
+    $('#content').querySelectorAll('[data-add="vaccinePlans"]').forEach(b=>b.addEventListener('click',()=>openModal('新增免疫程序',vaccinePlanFields,v=>{addRecord('vaccinePlans',v);toast('免疫程序已新增');render(current)})));
     $('#content').querySelectorAll('[data-add="登记防疫记录"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('登记防疫记录', [
-        {name:'date', label:'日期', type:'date', value:'2026-02-16', required:true},
-        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
-        {name:'group', label:'群体', type:'text', placeholder:'例：全群 / 犊牛'},
-        {name:'vaccine', label:'疫苗/项目', type:'select', options:['口蹄疫 O 型','口蹄疫 A 型','炭疽','布病监测','犊牛腹泻疫苗','出栏前检疫'].map(v=>({v}))},
-        {name:'dose', label:'剂量', type:'text', placeholder:'例：1,200 头份'},
-        {name:'operator', label:'操作人', type:'text'},
-        {name:'status', label:'状态', type:'select', options:[{v:'完成'},{v:'计划中'}]}
-      ], v=>{ addRecord('vaccineRecords', v); toast('防疫记录已保存'); render(current); });
+      openModal('登记防疫记录', vaccineRecordFields, v=>{ addRecord('vaccineRecords', v); toast('防疫记录已保存'); render(current); });
     }));
     const medBtn = $('#content').querySelector('[data-modal="med"]');
     if (medBtn) medBtn.addEventListener('click', ()=>{
-      openModal('登记用药（含休药期）', [
-        {name:'date', label:'日期', type:'date', value:'2026-02-16'},
-        {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
-        {name:'group', label:'群体', type:'text', placeholder:'例：育肥牛 60 头'},
-        {name:'drug', label:'药品', type:'text', required:true, placeholder:'例：伊维菌素（驱虫）'},
-        {name:'withdrawal', label:'休药期（天）', type:'number', placeholder:'例：21'},
-        {name:'operator', label:'兽医', type:'text'},
-        {name:'note', label:'备注', type:'text'}
-      ], v=>{
+      openModal('登记用药（含休药期）', medicineFields, v=>{
         if (!v.drug) { toast('请填写药品','warn'); return false; }
         addRecord('medicines', {...v, withdrawal:+v.withdrawal||0});
         toast('用药已登记，休药期已计入'); render(current);
@@ -2029,7 +2093,7 @@ function afterCycle(){
               <div class="dsc-head">${devIcon(d.name)}<div><b>${d.name}</b><span>${d.where}</span></div>${pill(d.state,on?'ok':d.state==='检修'?'warn':'danger')}</div>
               <div class="dsc-live"><span>${live.metric}</span><b>${live.value}${live.unit||''}</b><i>${live.extra||live.range||''}</i></div>
               <div class="dsc-foot"><span>端口 ${port?(port.status==='已连接'?'已连接':'未连接'):'未配置'}</span><span>上报 ${live.time||'—'}</span>${al.length?'<em>'+al.length+' 条预警</em>':''}</div>
-              <div class="dsc-actions"><button data-device-detail="${d.id}">查看数据</button>${port?`<button data-device-link="${d.id}">${port.status==='已连接'?'断开':'连接'}</button><button data-port-edit="${port.id}">协议</button>`:'<button data-device-scan>配置端口</button>'}</div>
+              <div class="dsc-actions"><button data-device-detail="${d.id}">查看数据</button>${d.id==='DV2'?'<button data-ear-tag-entry>录入耳标</button>':''}${port?`<button data-device-link="${d.id}">${port.status==='已连接'?'断开':'连接'}</button><button data-port-edit="${port.id}">协议</button>`:'<button data-device-scan>配置端口</button>'}</div>
             </div>`;
           }).join('')}
         </div>`, 'device-status-card-wrap')}
@@ -2077,6 +2141,7 @@ function afterCycle(){
     $('#content').querySelectorAll('[data-device-scan]').forEach(b=>b.addEventListener('click',()=>openDeviceOnboardModal('')));
     $('#content').querySelectorAll('[data-device-discover]').forEach(b=>b.addEventListener('click',()=>{toast('正在扫描设备…');setTimeout(()=>openDeviceOnboardModal('camera','discover'),600)}));
     $('#content').querySelectorAll('[data-device-detail]').forEach(b=>b.addEventListener('click',()=>{const d=DB.deviceList.find(x=>x.id===b.dataset.deviceDetail);if(d)openDeviceDataModal(d)}));
+    $('#content').querySelectorAll('[data-ear-tag-entry]').forEach(b=>b.addEventListener('click',()=>{render('livestock');setTimeout(()=>document.querySelector('[data-add="耳标建档/登记牲畜"]')?.click(),180)}));
     const togglePort=pid=>{const p=(DB.ports||[]).find(x=>x.id===pid);if(!p)return;const on=p.status==='已连接',now=new Date().toLocaleString('zh-CN',{hour12:false});updateRecord('ports',p.id,{status:on?'未连接':'已连接',last:on?'':now});const did=Object.keys(DEVICE_PORT_IDS).find(k=>DEVICE_PORT_IDS[k]===p.id);if(did){const d=DB.deviceList.find(x=>x.id===did);if(d)updateRecord('deviceList',d.id,{state:on?(d.state==='检修'?'检修':'离线'):'在线',last:now});}toast(on?'端口已断开':'端口连接成功，开始接收数据');render(current);};
     $('#content').querySelectorAll('[data-device-link]').forEach(b=>b.addEventListener('click',()=>{const p=devicePort(DB.deviceList.find(x=>x.id===b.dataset.deviceLink));if(p)togglePort(p.id)}));
     $('#content').querySelectorAll('[data-port-link]').forEach(b=>b.addEventListener('click',()=>togglePort(b.dataset.portLink)));
@@ -2097,6 +2162,23 @@ function afterCycle(){
   }
 
   /* ================= 产品中心 ================= */
+  const productInventoryFields = [
+    {name:'name', label:'产品名称', type:'text', required:true},
+    {name:'unit', label:'单位', type:'text', required:true},
+    {name:'stock', label:'库存', type:'number', required:true},
+    {name:'price', label:'参考价格', type:'text'},
+    {name:'note', label:'备注', type:'text'}
+  ];
+  const productRecordFields = [
+    {name:'date', label:'日期', type:'date', required:true},
+    {name:'type', label:'类型', type:'select', options:[{v:'销售'},{v:'入库'}]},
+    {name:'product', label:'产品', type:'select', options: DB.productInventory.map(x=>({v:x.name}))},
+    {name:'qty', label:'数量', type:'number', required:true},
+    {name:'unit', label:'单位', type:'text', placeholder:'吨/盒/件'},
+    {name:'amount', label:'金额', type:'text', placeholder:'例：¥12,800'},
+    {name:'customer', label:'客户/来源', type:'text'},
+    {name:'sourceTag', label:'关联耳标/屠宰批次', type:'text'}
+  ];
   function pageProducts() {
     const pr = DB.productRecords, inv = DB.productInventory;
     const sales = pr.filter(r=>r.type==='销售').reduce((a,r)=>a+(parseInt(String(r.amount).replace(/[^\d]/g,''))||0),0);
@@ -2114,26 +2196,19 @@ function afterCycle(){
         <div class="prod-stock">
           ${inv.map(x=>`<div class="ps-item"><div class="ps-ico">${x.name.includes('肉')?'🥩':x.name.includes('奶')||x.name.includes('奶酪')?'🧀':x.name.includes('绒')?'🧣':'🎁'}</div>
             <div class="ps-name">${x.name}</div><div class="ps-price">${x.price}</div>
-            <div class="ps-stock"><b>${x.stock}</b> ${x.unit}</div><div class="ps-note">${x.note}</div></div>`).join('')}
+            <div class="ps-stock"><b>${x.stock}</b> ${x.unit}</div><div class="ps-note">${x.note}</div><div class="ps-actions">${editBtn('productInventory',x.id)}</div></div>`).join('')}
         </div>
       </div>
-      ${card('出入库 / 销售记录（可新增/删除）', tableHtml(['日期','类型','产品','数量','金额','客户/来源','操作'],
-        pr.map(r=>[r.date, pill(r.type, r.type==='销售'?'warn':'info'), r.product, r.qty+' '+r.unit, r.amount==='—'?'—':r.amount, r.customer, delBtn('productRecords', r.id)])))}
+      ${card('出入库 / 销售记录（可新增/编辑/删除）', tableHtml(['日期','类型','产品','数量','金额','客户/来源','耳标/批次','操作'],
+        pr.map(r=>[r.date, pill(r.type, r.type==='销售'?'warn':'info'), r.product, r.qty+' '+r.unit, r.amount==='—'?'—':r.amount, r.customer, r.sourceTag||'—', editBtn('productRecords',r.id)+delBtn('productRecords', r.id)])))}
       <div style="margin:0 0 18px">${addBtn('产品出入库')}</div>
     </div>`;
   }
   function afterProducts(){
     bindDel($('#content'));
+    bindEdit($('#content'), { 'productRecords': { title:'编辑产品出入库记录', fields:productRecordFields }, 'productInventory': { title:'编辑产品库存', fields:productInventoryFields } });
     $('#content').querySelectorAll('[data-add="产品出入库"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('产品出入库登记', [
-        {name:'date', label:'日期', type:'date', value:'2026-02-16', required:true},
-        {name:'type', label:'类型', type:'select', options:[{v:'销售'},{v:'入库'}]},
-        {name:'product', label:'产品', type:'select', options: DB.productInventory.map(x=>({v:x.name}))},
-        {name:'qty', label:'数量', type:'number', required:true},
-        {name:'unit', label:'单位', type:'text', placeholder:'吨/盒/件'},
-        {name:'amount', label:'金额', type:'text', placeholder:'例：¥12,800'},
-        {name:'customer', label:'客户/来源', type:'text'}
-      ], v=>{
+      openModal('产品出入库登记', productRecordFields, v=>{
         if (!v.qty) { toast('请填写数量','warn'); return false; }
         addRecord('productRecords', {...v, qty:+v.qty});
         toast('产品记录已保存'); render(current);
@@ -2178,7 +2253,7 @@ function afterCycle(){
       ${card('订单管理', tableHtml(
         ['订单号','项目','游客','时间','金额','状态','操作'],
         t.orders.map(o=>[`<code>${o.id}</code>`, o.item, o.guest, o.date, o.amount,
-          pill(o.status, o.status==='已付款'?'ok':o.status==='已确认'?'info':'warn'), delBtn('tourism.orders', o.id)]),
+          pill(o.status, o.status==='已付款'?'ok':o.status==='已确认'?'info':'warn'), editBtn('tourism.orders',o.id)+delBtn('tourism.orders', o.id)]),
         'tourism-orders-tbl'
       ) + `<div class="card-actions">${addBtn('新增订单')}</div>`, 'tourism-orders-card')}
 
@@ -2202,23 +2277,24 @@ function afterCycle(){
     {name:'status', label:'状态', type:'select', options:[{v:'计划'},{v:'筹备'},{v:'进行中'},{v:'已完成'}]},
     {name:'note', label:'说明', type:'text'}
   ];
+  const tourismOrderFields = [
+    {name:'item', label:'项目', type:'text', placeholder:'例：蒙古包住宿 ×2', required:true},
+    {name:'guest', label:'游客', type:'text', placeholder:'例：王先生 · 北京'},
+    {name:'date', label:'时间', type:'text', placeholder:'例：2/17 14:00'},
+    {name:'amount', label:'金额', type:'text', placeholder:'例：¥1,360'},
+    {name:'status', label:'状态', type:'select', options:[{v:'待付款'},{v:'已付款'},{v:'已确认'},{v:'待接待'}]}
+  ];
   function afterTourism(){
     Charts.line($('#chRev'), { labels:['2/10','2/11','2/12','2/13','2/14','2/15','2/16'], unit:'元',
       series:[{ name:'收入', color:'#f59e0b', values:[3260,4180,5230,6110,7480,8920,12680] }],
       height:210, yFormat:v=>'¥'+fmt(Math.round(v)) });
     bindDel($('#content'));
-    bindEdit($('#content'), { 'hulunbuir.events': { title:'编辑节庆活动', fields: eventFields } });
+    bindEdit($('#content'), { 'hulunbuir.events': { title:'编辑节庆活动', fields: eventFields }, 'tourism.orders': { title:'编辑牧游订单', fields:tourismOrderFields } });
     $('#content').querySelectorAll('[data-add="hulunbuir.events"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('新增节庆活动', eventFields, v=>{ addRecord('hulunbuir.events', v); toast('活动已新增'); render(current); });
     }));
     $('#content').querySelectorAll('[data-add="新增订单"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('新增牧游订单', [
-        {name:'item', label:'项目', type:'text', placeholder:'例：蒙古包住宿 ×2', required:true},
-        {name:'guest', label:'游客', type:'text', placeholder:'例：王先生 · 北京'},
-        {name:'date', label:'时间', type:'text', placeholder:'例：2/17 14:00'},
-        {name:'amount', label:'金额', type:'text', placeholder:'例：¥1,360'},
-        {name:'status', label:'状态', type:'select', options:[{v:'待付款'},{v:'已付款'},{v:'已确认'},{v:'待接待'}]}
-      ], v=>{ addRecord('tourism.orders', v); toast('订单已新增'); render(current); });
+      openModal('新增牧游订单', tourismOrderFields, v=>{ addRecord('tourism.orders', v); toast('订单已新增'); render(current); });
     }));
   }
 
