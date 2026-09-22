@@ -3936,3 +3936,24 @@ body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
 body[data-theme="dark"] .quick-entry-bar{background:rgba(4,25,35,.72);border-color:rgba(55,179,200,.18)}
 body[data-theme="dark"] .quick-entry-bar button{background:rgba(7,38,53,.88);border-color:rgba(55,179,200,.28);color:#c9e5e9}
 @media(max-width:700px){.quick-entry-bar{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quick-entry-bar .qe-label{grid-column:1/-1}.quick-entry-bar button{width:100%;padding:8px 6px;font-size:11px}}
+
+/* v94.2 增重分析图表尺寸统一 */
+.livestock-growth-card .chart-box{
+  width:min(760px,100%)!important;
+  margin:0 auto 12px!important;
+  padding:8px 10px 4px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(248,251,252,.9),rgba(255,255,255,.98));
+}
+.livestock-growth-card .chart-svg{width:100%;height:auto}
+.livestock-growth-card .c-axis{font-size:9px!important}
+.livestock-growth-card .chart-legend{gap:10px;margin-top:7px;font-size:10.5px}
+.livestock-growth-card .gain-kpis .gk b{font-size:17px!important}
+.livestock-growth-card .gain-kpis{margin-bottom:12px}
+body[data-theme="dark"] .livestock-growth-card .chart-box{background:linear-gradient(180deg,rgba(7,31,42,.92),rgba(4,20,29,.96));border-color:rgba(55,179,200,.18)}
+@media(max-width:700px){
+  .livestock-growth-card .chart-box{padding:5px 6px 2px;margin-bottom:10px!important}
+  .livestock-growth-card .c-axis{font-size:8.5px!important}
+  .livestock-growth-card .gain-kpis .gk b{font-size:15px!important}
+}
