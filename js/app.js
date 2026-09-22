@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v94';
+  const APP_VERSION = 'v94.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -790,18 +790,13 @@
       const camReset=monitorPanel.querySelector('[data-cam-reset]'); if(camReset) camReset.onclick=e=>{ e.stopPropagation(); stopCamAuto(); setCamScale(1); };
     }
     renderCameras();
-    /* 数据大屏返回总览：先退出全屏，再切回总览 */
+    /* 数据大屏返回总览：直接进入日常总览，浏览器会同步退出全屏 */
     const bsBack = $('#bsBack');
-    if (bsBack) bsBack.addEventListener('click', ()=>{
-      const goDashboard = ()=>{
-        document.body.classList.remove('bs-fullscreen');
-        render('dashboard');
-      };
-      if (document.fullscreenElement && document.exitFullscreen){
-        Promise.resolve(document.exitFullscreen()).catch(()=>{}).finally(goDashboard);
-      } else {
-        goDashboard();
-      }
+    if (bsBack) bsBack.addEventListener('click', e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      document.body.classList.remove('bs-fullscreen');
+      location.href = 'index.html?page=dashboard';
     });
 
     /* ⑥ 全屏 */
@@ -3101,7 +3096,8 @@
   window.addEventListener('ranch-cloud-data', ()=>{ renderNav(); render(current); initWeatherChip(); renderLive(); });
   initWeatherChip();
   renderNav();
-  render('bigscreen');   /* 默认打开数据大屏（看板优先） */
+  const initialPage = new URLSearchParams(location.search).get('page');
+  render(pages[initialPage] ? initialPage : 'bigscreen');   /* 默认打开数据大屏，返回时恢复日常总览 */
   renderLive();
   refreshAuth();
   const userBox = document.querySelector('.user');
