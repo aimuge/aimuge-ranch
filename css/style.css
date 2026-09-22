@@ -4008,3 +4008,10 @@ body[data-theme="dark"] .dsc-live{background:rgba(27,145,168,.10);border-color:r
 .ps-actions{position:absolute;right:8px;top:8px}
 .ps-actions .mini-btn{padding:3px 6px;font-size:9px}
 @media(max-width:640px){.ps-actions{position:static;margin-top:6px}}
+
+/* v95.2 耳标统一对外端口 */
+.ear-gateway{display:grid;grid-template-columns:1.1fr repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
+.ear-gateway>div{padding:12px;border:1px solid var(--line);border-radius:11px;background:linear-gradient(145deg,#fff,#f7fbfb)}
+.eg-main{background:linear-gradient(145deg,#e9f8fa,#f7fdfc)!important;border-color:#c8e8ec!important}.eg-main span,.eg-stat span{display:block;font-size:10.5px;color:#728a93}.eg-main b,.eg-stat b{display:block;font-size:16px;color:#0d6678;margin:3px 0;word-break:break-all}.eg-main i,.eg-stat i{display:block;font-style:normal;font-size:9.5px;color:#82969d;word-break:break-all}.eg-main b{font-size:23px}.eg-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;background:transparent!important;border:0!important;padding:0!important}.eg-actions button{border:1px solid rgba(17,107,123,.24);background:#fff;color:#0f6678;border-radius:9px;padding:7px 11px;font-size:11px;font-family:inherit;cursor:pointer}.eg-actions button:hover{border-color:#168198;background:#f3fbfc}
+body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(7,31,42,.94),rgba(4,20,29,.97));border-color:rgba(55,179,200,.18)}body[data-theme="dark"] .eg-main{background:linear-gradient(145deg,rgba(9,57,68,.94),rgba(4,25,35,.98))!important}body[data-theme="dark"] .eg-main b,body[data-theme="dark"] .eg-stat b{color:#bcecf5}body[data-theme="dark"] .eg-actions button{background:rgba(7,38,53,.9);color:#c9e5e9;border-color:rgba(55,179,200,.28)}
+@media(max-width:900px){.ear-gateway{grid-template-columns:1fr 1fr}}@media(max-width:600px){.ear-gateway{grid-template-columns:1fr}}

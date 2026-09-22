@@ -4020,6 +4020,13 @@ body[data-theme="dark"] .dsc-live{background:rgba(27,145,168,.10);border-color:r
 .ps-actions .mini-btn{padding:3px 6px;font-size:9px}
 @media(max-width:640px){.ps-actions{position:static;margin-top:6px}}
 
+/* v95.2 耳标统一对外端口 */
+.ear-gateway{display:grid;grid-template-columns:1.1fr repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
+.ear-gateway>div{padding:12px;border:1px solid var(--line);border-radius:11px;background:linear-gradient(145deg,#fff,#f7fbfb)}
+.eg-main{background:linear-gradient(145deg,#e9f8fa,#f7fdfc)!important;border-color:#c8e8ec!important}.eg-main span,.eg-stat span{display:block;font-size:10.5px;color:#728a93}.eg-main b,.eg-stat b{display:block;font-size:16px;color:#0d6678;margin:3px 0;word-break:break-all}.eg-main i,.eg-stat i{display:block;font-style:normal;font-size:9.5px;color:#82969d;word-break:break-all}.eg-main b{font-size:23px}.eg-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;background:transparent!important;border:0!important;padding:0!important}.eg-actions button{border:1px solid rgba(17,107,123,.24);background:#fff;color:#0f6678;border-radius:9px;padding:7px 11px;font-size:11px;font-family:inherit;cursor:pointer}.eg-actions button:hover{border-color:#168198;background:#f3fbfc}
+body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(7,31,42,.94),rgba(4,20,29,.97));border-color:rgba(55,179,200,.18)}body[data-theme="dark"] .eg-main{background:linear-gradient(145deg,rgba(9,57,68,.94),rgba(4,25,35,.98))!important}body[data-theme="dark"] .eg-main b,body[data-theme="dark"] .eg-stat b{color:#bcecf5}body[data-theme="dark"] .eg-actions button{background:rgba(7,38,53,.9);color:#c9e5e9;border-color:rgba(55,179,200,.28)}
+@media(max-width:900px){.ear-gateway{grid-template-columns:1fr 1fr}}@media(max-width:600px){.ear-gateway{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -4036,7 +4043,7 @@ body[data-theme="dark"] .dsc-live{background:rgba(27,145,168,.10);border-color:r
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
       <div class="wx-mini">📱 牧民端小程序 · 游客端小程序</div>
-      <div class="sys-info">平台 v95.1 · 2026-09-21 · 呼伦贝尔</div>
+      <div class="sys-info">平台 v95.2 · 2026-09-21 · 呼伦贝尔</div>
     </div>
   </aside>
   <div class="mask" id="mask"></div>
@@ -4046,7 +4053,7 @@ body[data-theme="dark"] .dsc-live{background:rgba(27,145,168,.10);border-color:r
     <header class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
       <div class="crumb" id="crumb">数据总览</div>
-      <span class="ver-badge" title="当前版本">v95.1 · 09-21</span>
+      <span class="ver-badge" title="当前版本">v95.2 · 09-21</span>
       <div class="topbar-right">
         <div class="iot-chip" id="iotChip" title="点击开/关智能硬件实时采集">● 实时采集</div>
         <button class="gear-btn" id="themeBtn" title="切换科技深色 / 浅色">🌙</button>
@@ -4065,7 +4072,7 @@ body[data-theme="dark"] .dsc-live{background:rgba(27,145,168,.10);border-color:r
     </header>
     <nav class="mnav" id="mnav"></nav>
     <section class="content" id="content"></section>
-    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v95.1 · 2026-09-21</footer>
+    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v95.2 · 2026-09-21</footer>
   </main>
 </div>
 <button class="fab" id="fabBtn" title="智能服务小伊">👩‍🌾</button>
@@ -4311,6 +4318,22 @@ const DEFAULT_DATA = {
     { id:'DA5', deviceId:'DV6', level:'低', title:'TMR 液压油温偏高', detail:'建议作业间歇降温并检查液压油。', value:'78℃', threshold:'<75℃', time:'昨天 17:20', status:'已处理' }
   ],
 
+  /* ---------- 耳标统一对外接入 ---------- */
+  earTagGateway: {
+    name:'耳标统一接入网关',
+    deviceCount:200,
+    onlineCount:186,
+    localProtocol:'RFID 134.2kHz / BLE',
+    localEndpoint:'tcp://192.168.1.80:8000',
+    externalSystem:'政府耳标溯源 / 牧场云平台',
+    externalProtocol:'HTTPS JSON / MQTT',
+    externalEndpoint:'https://api.example.cn/v1/ear-tag/push',
+    apiKey:'••••••••',
+    frequency:'实时上报',
+    status:'未连接',
+    last:''
+  },
+
   /* ---------- 产品 ---------- */
   productInventory: [
     { id:'P1', name:'冷鲜草原牛肉', unit:'吨', stock:1.6, price:'¥76/kg', note:'冷链 0-4℃ · 订单式分割' },
@@ -4524,6 +4547,7 @@ function loadDB(){
         if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
         if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
         if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
+        if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
         return merged;
       }
     }
@@ -4758,7 +4782,7 @@ const Charts = (() => {
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v95.1';
+  const APP_VERSION = 'v95.2';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -6837,6 +6861,19 @@ function afterCycle(){
         ${statCard({icon:'🚨', label:'待处理预警', value:pendingAlerts.length+' 条', sub:'异常报警自动进入预警中心', color:'#ef4444', bg:'#fdeeee'})}
       </div>
 
+      ${card('耳标统一接入端口 · 200 枚耳标只保留一个对外接口', `
+        <div class="ear-gateway">
+          <div class="eg-main">
+            <span>统一网关</span><b>1 个端口</b><i>200 枚耳标 → 牧场网关 → 外部系统</i>
+          </div>
+          <div class="eg-stat"><span>耳标总数</span><b>${DB.earTagGateway.deviceCount} 枚</b><i>其中在线 ${DB.earTagGateway.onlineCount} 枚</i></div>
+          <div class="eg-stat"><span>牧场内网</span><b>${DB.earTagGateway.localProtocol}</b><i>${DB.earTagGateway.localEndpoint}</i></div>
+          <div class="eg-stat"><span>对外系统</span><b>${DB.earTagGateway.externalSystem}</b><i>${DB.earTagGateway.externalProtocol}</i></div>
+          <div class="eg-stat"><span>对外地址</span><b>${DB.earTagGateway.externalEndpoint}</b><i>${DB.earTagGateway.frequency} · ${DB.earTagGateway.status}</i></div>
+          <div class="eg-actions"><button data-gateway-edit>配置对外端口</button><button data-gateway-test>测试推送</button><button data-gateway-connect>${DB.earTagGateway.status==='已连接'?'断开':'连接'}</button></div>
+        </div>
+        <div class="card-note">🔗 多个耳标不再逐个对外连接，只保留一个统一网关端口，外部系统只需对接一个地址即可获取全部耳标数据。</div>`, 'ear-tag-gateway-card')}
+
       ${card('设备运行总览 · 点击查看实时数据', `
         <div class="device-status-grid">
           ${DB.deviceList.map(d=>{
@@ -6893,6 +6930,18 @@ function afterCycle(){
     $('#content').querySelectorAll('[data-device-scan]').forEach(b=>b.addEventListener('click',()=>openDeviceOnboardModal('')));
     $('#content').querySelectorAll('[data-device-discover]').forEach(b=>b.addEventListener('click',()=>{toast('正在扫描设备…');setTimeout(()=>openDeviceOnboardModal('camera','discover'),600)}));
     $('#content').querySelectorAll('[data-device-detail]').forEach(b=>b.addEventListener('click',()=>{const d=DB.deviceList.find(x=>x.id===b.dataset.deviceDetail);if(d)openDeviceDataModal(d)}));
+    const eg=DB.earTagGateway;
+    const egEdit=$('[data-gateway-edit]'); if(egEdit)egEdit.addEventListener('click',()=>openModal('配置耳标统一对外端口',[
+      {name:'localProtocol',label:'牧场内网协议',type:'text',value:eg.localProtocol},
+      {name:'localEndpoint',label:'耳标读写器/网关地址',type:'text',value:eg.localEndpoint},
+      {name:'externalSystem',label:'外部系统名称',type:'text',value:eg.externalSystem},
+      {name:'externalProtocol',label:'对外协议',type:'select',options:['HTTPS JSON','MQTT','HTTPS JSON / MQTT','WebSocket'].map(v=>({v})),value:eg.externalProtocol},
+      {name:'externalEndpoint',label:'对外接口地址',type:'text',value:eg.externalEndpoint},
+      {name:'apiKey',label:'接口密钥/Token',type:'text',value:eg.apiKey||''},
+      {name:'frequency',label:'上报频率',type:'select',options:['实时上报','5分钟','15分钟','1小时'].map(v=>({v})),value:eg.frequency}
+    ],v=>{DB.earTagGateway=Object.assign({},eg,v);saveDB();toast('耳标统一对外端口已保存');render(current)}));
+    const egTest=$('[data-gateway-test]'); if(egTest)egTest.addEventListener('click',()=>{const now=new Date().toLocaleString('zh-CN',{hour12:false});DB.earTagGateway.status='已连接';DB.earTagGateway.last=now;saveDB();toast('测试推送成功，外部系统已收到耳标数据样本');render(current)});
+    const egConnect=$('[data-gateway-connect]'); if(egConnect)egConnect.addEventListener('click',()=>{const on=DB.earTagGateway.status==='已连接';DB.earTagGateway.status=on?'未连接':'已连接';DB.earTagGateway.last=on?'':new Date().toLocaleString('zh-CN',{hour12:false});const pt=(DB.ports||[]).find(p=>p.id==='PT2');if(pt)updateRecord('ports','PT2',{status:on?'未连接':'已连接',last:DB.earTagGateway.last});saveDB();toast(on?'耳标对外端口已断开':'耳标统一端口已连接');render(current)});
     $('#content').querySelectorAll('[data-ear-tag-entry]').forEach(b=>b.addEventListener('click',()=>{render('livestock');setTimeout(()=>document.querySelector('[data-add="耳标建档/登记牲畜"]')?.click(),180)}));
     const togglePort=pid=>{const p=(DB.ports||[]).find(x=>x.id===pid);if(!p)return;const on=p.status==='已连接',now=new Date().toLocaleString('zh-CN',{hour12:false});updateRecord('ports',p.id,{status:on?'未连接':'已连接',last:on?'':now});const did=Object.keys(DEVICE_PORT_IDS).find(k=>DEVICE_PORT_IDS[k]===p.id);if(did){const d=DB.deviceList.find(x=>x.id===did);if(d)updateRecord('deviceList',d.id,{state:on?(d.state==='检修'?'检修':'离线'):'在线',last:now});}toast(on?'端口已断开':'端口连接成功，开始接收数据');render(current);};
     $('#content').querySelectorAll('[data-device-link]').forEach(b=>b.addEventListener('click',()=>{const p=devicePort(DB.deviceList.find(x=>x.id===b.dataset.deviceLink));if(p)togglePort(p.id)}));

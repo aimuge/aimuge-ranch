@@ -229,6 +229,22 @@ const DEFAULT_DATA = {
     { id:'DA5', deviceId:'DV6', level:'低', title:'TMR 液压油温偏高', detail:'建议作业间歇降温并检查液压油。', value:'78℃', threshold:'<75℃', time:'昨天 17:20', status:'已处理' }
   ],
 
+  /* ---------- 耳标统一对外接入 ---------- */
+  earTagGateway: {
+    name:'耳标统一接入网关',
+    deviceCount:200,
+    onlineCount:186,
+    localProtocol:'RFID 134.2kHz / BLE',
+    localEndpoint:'tcp://192.168.1.80:8000',
+    externalSystem:'政府耳标溯源 / 牧场云平台',
+    externalProtocol:'HTTPS JSON / MQTT',
+    externalEndpoint:'https://api.example.cn/v1/ear-tag/push',
+    apiKey:'••••••••',
+    frequency:'实时上报',
+    status:'未连接',
+    last:''
+  },
+
   /* ---------- 产品 ---------- */
   productInventory: [
     { id:'P1', name:'冷鲜草原牛肉', unit:'吨', stock:1.6, price:'¥76/kg', note:'冷链 0-4℃ · 订单式分割' },
@@ -442,6 +458,7 @@ function loadDB(){
         if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
         if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
         if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
+        if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
         return merged;
       }
     }
