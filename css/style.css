@@ -4015,3 +4015,24 @@ body[data-theme="dark"] .dsc-live{background:rgba(27,145,168,.10);border-color:r
 .eg-main{background:linear-gradient(145deg,#e9f8fa,#f7fdfc)!important;border-color:#c8e8ec!important}.eg-main span,.eg-stat span{display:block;font-size:10.5px;color:#728a93}.eg-main b,.eg-stat b{display:block;font-size:16px;color:#0d6678;margin:3px 0;word-break:break-all}.eg-main i,.eg-stat i{display:block;font-style:normal;font-size:9.5px;color:#82969d;word-break:break-all}.eg-main b{font-size:23px}.eg-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;background:transparent!important;border:0!important;padding:0!important}.eg-actions button{border:1px solid rgba(17,107,123,.24);background:#fff;color:#0f6678;border-radius:9px;padding:7px 11px;font-size:11px;font-family:inherit;cursor:pointer}.eg-actions button:hover{border-color:#168198;background:#f3fbfc}
 body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(7,31,42,.94),rgba(4,20,29,.97));border-color:rgba(55,179,200,.18)}body[data-theme="dark"] .eg-main{background:linear-gradient(145deg,rgba(9,57,68,.94),rgba(4,25,35,.98))!important}body[data-theme="dark"] .eg-main b,body[data-theme="dark"] .eg-stat b{color:#bcecf5}body[data-theme="dark"] .eg-actions button{background:rgba(7,38,53,.9);color:#c9e5e9;border-color:rgba(55,179,200,.28)}
 @media(max-width:900px){.ear-gateway{grid-template-columns:1fr 1fr}}@media(max-width:600px){.ear-gateway{grid-template-columns:1fr}}
+
+/* v96 极速演示模式：彻底取消整页彩色走光和重背景动画 */
+.bs-v8 .bs-fx-canvas,
+.bs-v8 .bs-colorwash,
+.bs-v8 .bs-sweeps,
+.bs-v8 .bs-globe,
+.bs-v8 .bs-shapefield,
+.bs-v8 .bs-radar,
+.bs-v8 .bs-particles,
+.bs-v8 .bs-bits,
+.bs-v8 .bs-metric-stream::before{display:none!important;animation:none!important}
+.bigscreen::before{display:none!important;animation:none!important}
+.bs-v8 .bs-letters{opacity:.18!important}
+.bs-v8 .bs-letters span{animation-duration:18s!important}
+.bs-v8 .bs-panel,
+.bs-v8 .bs-kpi,
+.bs-v8 .bs-season-name,
+.bs-v8 .bs-yc .yc-cell.now{animation:none!important}
+.bs-v8 .bs-panel::after{animation:none!important;opacity:.18!important}
+.bs-v8 .bs-kpi::after{animation:none!important;opacity:.24!important}
+.bs-cam-scan{animation-duration:7s!important}

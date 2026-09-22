@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v95.2';
+  const APP_VERSION = 'v96';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -645,8 +645,8 @@
     const host = canvas && canvas.parentElement;
     if (!canvas || !host || !window.THREE) return ()=>{};
     const T = window.THREE;
-    const renderer = new T.WebGLRenderer({canvas, antialias:true, alpha:true});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const renderer = new T.WebGLRenderer({canvas, antialias:false, alpha:true, powerPreference:'high-performance'});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     renderer.setClearColor(0x031027, 0);
     const scene = new T.Scene();
     scene.fog = new T.FogExp2(0x031027, 0.018);
@@ -679,9 +679,9 @@
     const camPos=[[-13,10],[-4,11],[6,10],[13,-2],[-8,-1]];
     camPos.forEach(([x,z],i)=>{const p=box(.18,1.5,.18,0x183c69,x,.75,z);p.geometry.dispose();p.geometry=new T.CylinderGeometry(.08,.12,1.5,8);const eye=new T.Mesh(new T.SphereGeometry(.25,10,8),new T.MeshStandardMaterial({color:i===4?0xf59e0b:0x5eead4,emissive:i===4?0x6b4a00:0x0b6b68,emissiveIntensity:1.2}));eye.position.set(x,1.55,z);world.add(eye);});
     // 交互旋转 / 缩放
-    let rotY=0, rotX=0, targetY=0, targetX=0, distance=35, targetDistance=35, drag=false, lx=0, ly=0, raf=0, alive=true;
+    let rotY=0, rotX=0, targetY=0, targetX=0, distance=35, targetDistance=35, drag=false, lx=0, ly=0, raf=0, alive=true, lastFrame=0;
     const resize=()=>{const r=host.getBoundingClientRect();const w=Math.max(2,Math.round(r.width)),h=Math.max(2,Math.round(r.height));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
-    const render=()=>{if(!alive)return;if(!drag){targetY+=.0014;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);raf=requestAnimationFrame(render);};
+    const render=(now=0)=>{if(!alive)return;raf=requestAnimationFrame(render);if(now-lastFrame<33)return;lastFrame=now;if(!drag){targetY+=.0014;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);};
     canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
     canvas.addEventListener('pointermove',e=>{if(!drag)return;targetY+=(e.clientX-lx)*.008;targetX=Math.max(-.32,Math.min(.32,targetX+(e.clientY-ly)*.004));lx=e.clientX;ly=e.clientY;});
     const end=e=>{drag=false;try{canvas.releasePointerCapture&&canvas.releasePointerCapture(e.pointerId);}catch(_){}};
@@ -704,7 +704,7 @@
   }
   function afterBigscreen(){
     /* 数据科技动态层 */
-    const stopBigscreenCanvas = startBigscreenCanvas();
+    const stopBigscreenCanvas = ()=>{};
     const stop3dRanch = start3dRanch();
     /* 数字计数 */
     countUp(document.querySelector('.bsp-big'), compute().totalAnimals, 1400);
