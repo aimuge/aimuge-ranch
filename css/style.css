@@ -3964,3 +3964,17 @@ body[data-theme="dark"] .livestock-growth-card .chart-box{background:linear-grad
 .bs-v8 .bs-colorwash{opacity:.30!important;mix-blend-mode:normal!important}
 .bs-v8 .bs-colorwash i{animation:none!important;filter:blur(72px)!important;opacity:.45!important;transform:none!important}
 .bs-v8 .bs-panel::after{opacity:.30!important}
+
+/* v94.4 四季生产左右均衡布局 */
+.cycle-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.cycle-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.cycle-grid .card{margin-bottom:0}
+.cycle-grid .wheel-wrap{min-height:330px}
+.cycle-grid .flow-node{min-width:92px}
+@media(max-width:980px){.cycle-grid{grid-template-columns:1fr}.cycle-grid .card{margin-bottom:0}}
+
+/* 四季生产：右侧营盘改为2×2，左右高度更均衡 */
+.cycle-grid .season-grid.col{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+.cycle-grid .season-card{padding:12px!important}
+.cycle-grid .season-card .sc-status{font-size:11.5px;line-height:1.5}
+@media(max-width:700px){.cycle-grid .season-grid.col{grid-template-columns:1fr!important}}

@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v94.3';
+  const APP_VERSION = 'v94.4';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -1087,7 +1087,7 @@
   function pageCycle() {
     const m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     return `
-    <div class="page">
+    <div class="page cycle-page">
       ${pageHeader('四季循环生产 · 全年生产模拟', '从产犊到出栏、从打草到牧游，一个家庭牧场的完整年度循环', `
         <button class="btn solid sm" data-cycle="prev">◀ 上个月</button>
         <button class="btn solid sm" data-cycle="next">下个月 ▶</button>
@@ -1103,8 +1103,8 @@
           ${m.tasks.map((t,i)=>`<div class="ct"><span>${['①','②','③'][i]||'·'}</span>${t}</div>`).join('')}
         </div>
       </div>
-      <div class="grid-3">
-        <div class="col2">
+      <div class="cycle-grid">
+        <div class="cycle-col">
           ${card('年度生产轮盘 · 12 个月', `
             <div class="wheel-wrap">
               <div class="wheel" style="background:conic-gradient(${DB.months.map((mm,i)=>`${SEASON_COLOR[mm.season]} ${i*30}deg ${(i+1)*30}deg`).join(',')})">
@@ -1125,7 +1125,7 @@
                 ['🌱','天然草场','种草改良 · 以草定畜'],
                 ['🐑','放牧轮牧','四季营盘 · 分区轮牧'],
                 ['🌾','打草储备','夏秋打草 · 饲草入库'],
-                ['🍼','繁殖饲养','产犊产犊 · 暖棚越冬'],
+                ['🍼','繁殖饲养','产犊繁育 · 暖棚越冬'],
                 ['⚖️','育肥管理','称重分群 · 智能补饲'],
                 ['🍖','出栏屠宰','定点屠宰 · 检疫合格'],
                 ['📦','产品加工','分割冷藏 · 品牌销售'],
@@ -1136,18 +1136,7 @@
                 </div>${i<7?'<div class="flow-arrow">→</div>':''}`).join('')}
             </div>
             <div class="card-note">💡 一年四季闭环：春产犊防疫 → 夏轮牧打草 → 秋防疫出栏 → 冬补饲牧游，收入反哺草场与智慧装备，草原越养越好。</div>`)}
-        </div>
-        <div class="col1">
-          ${card('四季营盘档案', `
-            <div class="season-grid col">
-              ${DB.seasons.map(x=>`
-                <div class="season-card ${x.key===m.season?'on':''}" style="--sc:${x.color}">
-                  <div class="sc-top"><span class="sc-emoji">${x.key==='春'?'🌱':x.key==='夏'?'🌿':x.key==='秋'?'🍂':'❄️'}</span>
-                  <div><div class="sc-name">${x.key}季 · ${x.name}</div><div class="sc-months">${x.months} · ${fmt(x.area)}亩</div></div></div>
-                  <div class="sc-status">${x.focus}</div>
-                </div>`).join('')}
-            </div>`)}
-          ${card('季度工作任务计划（按月做计划）', `
+          ${card('季度工作任务计划', `
             <div class="quarter-list">
               ${[1,2,3,4].map(q=>{
                 const ms = DB.months.slice((q-1)*3, q*3);
@@ -1157,6 +1146,17 @@
                   ${ms.map(m=>`<div class="q-row"><span class="q-m">${m.m}月</span><span>${m.tasks[0]}</span></div>`).join('')}
                 </div>`;
               }).join('')}
+            </div>`)}
+        </div>
+        <div class="cycle-col">
+          ${card('四季营盘档案', `
+            <div class="season-grid col">
+              ${DB.seasons.map(x=>`
+                <div class="season-card ${x.key===m.season?'on':''}" style="--sc:${x.color}">
+                  <div class="sc-top"><span class="sc-emoji">${x.key==='春'?'🌱':x.key==='夏'?'🌿':x.key==='秋'?'🍂':'❄️'}</span>
+                  <div><div class="sc-name">${x.key}季 · ${x.name}</div><div class="sc-months">${x.months} · ${fmt(x.area)}亩</div></div></div>
+                  <div class="sc-status">${x.focus}</div>
+                </div>`).join('')}
             </div>`)}
           ${card('按季经营重点', `
             <div class="season-list">
@@ -1179,7 +1179,7 @@
       </div>
     </div>`;
   }
-  function afterCycle(){
+function afterCycle(){
     bindCycleNav($('#content'));
     $('#content').querySelectorAll('.wheel-seg').forEach(c=>c.addEventListener('click', ()=>{ demoMonth=+c.dataset.m; render(current); }));
   }
@@ -2997,7 +2997,7 @@
     admin:      { title:'后台管理', render:pageAdmin, after:afterAdmin },
     gallery:    { title:'牧场相册', render:pageGallery, after:afterGallery },
     agent:      { title:'智能服务小伊', render:pageAgent, after:afterAgent },
-    cycle:      { title:'四季循环', render:pageCycle, after:afterCycle },
+    cycle:      { title:'四季生产', render:pageCycle, after:afterCycle },
     livestock:  { title:'养殖管理', render:pageLivestock, after:afterLivestock },
     grassland:  { title:'草场分类', render:pageGrassland, after:afterGrassland },
     forage:     { title:'饲草管理', render:pageForage, after:afterForage },
