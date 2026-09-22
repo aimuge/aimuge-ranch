@@ -3939,6 +3939,15 @@ body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
   body.bigscreen-active .bs-gov-panel .bs-gov-list span{font-size:7.5px!important}
 }
 
+/* v94 牧民常用功能快捷入口 */
+.quick-entry-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(135deg,rgba(17,107,123,.055),rgba(27,145,168,.035));box-shadow:0 8px 22px -22px rgba(8,42,56,.55)}
+.quick-entry-bar .qe-label{font-size:12px;font-weight:700;color:#0f766e;margin-right:2px}
+.quick-entry-bar button{border:1px solid rgba(17,107,123,.20);background:#fff;color:#244d59;border-radius:999px;padding:7px 12px;font-size:12px;font-family:inherit;cursor:pointer;transition:.16s}
+.quick-entry-bar button:hover{border-color:#168198;color:#0d6678;background:#f3fbfc;transform:translateY(-1px)}
+body[data-theme="dark"] .quick-entry-bar{background:rgba(4,25,35,.72);border-color:rgba(55,179,200,.18)}
+body[data-theme="dark"] .quick-entry-bar button{background:rgba(7,38,53,.88);border-color:rgba(55,179,200,.28);color:#c9e5e9}
+@media(max-width:700px){.quick-entry-bar{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quick-entry-bar .qe-label{grid-column:1/-1}.quick-entry-bar button{width:100%;padding:8px 6px;font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -3955,7 +3964,7 @@ body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
       <div class="wx-mini">📱 牧民端小程序 · 游客端小程序</div>
-      <div class="sys-info">平台 v93.4 · 2026-09-21 · 呼伦贝尔</div>
+      <div class="sys-info">平台 v94 · 2026-09-21 · 呼伦贝尔</div>
     </div>
   </aside>
   <div class="mask" id="mask"></div>
@@ -3965,7 +3974,7 @@ body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
     <header class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
       <div class="crumb" id="crumb">数据总览</div>
-      <span class="ver-badge" title="当前版本">v93.4 · 09-21</span>
+      <span class="ver-badge" title="当前版本">v94 · 09-21</span>
       <div class="topbar-right">
         <div class="iot-chip" id="iotChip" title="点击开/关智能硬件实时采集">● 实时采集</div>
         <button class="gear-btn" id="themeBtn" title="切换科技深色 / 浅色">🌙</button>
@@ -3984,7 +3993,7 @@ body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
     </header>
     <nav class="mnav" id="mnav"></nav>
     <section class="content" id="content"></section>
-    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v93.4 · 2026-09-21</footer>
+    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v94 · 2026-09-21</footer>
   </main>
 </div>
 <button class="fab" id="fabBtn" title="智能服务小伊">👩‍🌾</button>
@@ -4039,21 +4048,21 @@ const DEFAULT_DATA = {
   nav: [
     { key:'profile',    icon:'🏡', title:'牧场档案' },
     { key:'bigscreen',  icon:'🖥️', title:'数据大屏' },
-    { key:'dashboard',  icon:'📊', title:'数据总览' },
-    { key:'cycle',      icon:'🔄', title:'四季循环' },
+    { key:'dashboard',  icon:'📊', title:'日常总览' },
+    { key:'log',        icon:'📒', title:'牧事日志' },
     { key:'livestock',  icon:'🐂', title:'养殖管理' },
-    { key:'grassland',  icon:'🌾', title:'草场分类' },
     { key:'forage',     icon:'🧊', title:'饲草管理' },
+    { key:'grassland',  icon:'🌾', title:'草场管理' },
     { key:'vaccine',    icon:'💉', title:'防疫管理' },
     { key:'devices',    icon:'📡', title:'智慧装备' },
-    { key:'slaughter',  icon:'🍖', title:'屠宰加工' },
-    { key:'products',   icon:'🛍️', title:'产品中心' },
-    { key:'gov',        icon:'🏛️', title:'政务对接' },
-    { key:'tourism',    icon:'🏕️', title:'文旅牧游' },
-    { key:'log',        icon:'📒', title:'牧事日志' },
+    { key:'cycle',      icon:'🔄', title:'四季生产' },
     { key:'ledger',     icon:'💰', title:'经营账本' },
     { key:'labor',      icon:'🧑‍🌾', title:'用工管理' },
     { key:'insurance',  icon:'🛡️', title:'保险理赔' },
+    { key:'slaughter',  icon:'🍖', title:'屠宰加工' },
+    { key:'products',   icon:'🛍️', title:'产品中心' },
+    { key:'tourism',    icon:'🏕️', title:'文旅牧游' },
+    { key:'gov',        icon:'🏛️', title:'政务上报' },
     { key:'gallery',    icon:'📷', title:'牧场相册' },
     { key:'admin',      icon:'⚙️', title:'后台管理' },
     { key:'agent',      icon:'👩‍🌾', title:'智能服务小伊' }
@@ -4644,7 +4653,7 @@ const Charts = (() => {
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v93.4';
+  const APP_VERSION = 'v94';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -5029,7 +5038,7 @@ const Charts = (() => {
           <div class="bs-title-en">${ps.subtitle || 'SMART RANCH DATA COMMAND CENTER'}</div>
         </div>
         <div class="bs-tools">
-          <button class="btn ghost sm bs-back" id="bsBack" title="返回数据总览">← 返回总览</button>
+          <button class="btn ghost sm bs-back" id="bsBack" title="返回日常总览">← 返回总览</button>
           <button class="btn ghost sm bs-voice" id="bsVoice">🔊 语音讲解</button>
           <div class="bs-time" id="bsTime"></div>
           <button class="btn ghost sm bs-full" id="bsFull">⛶ 全屏</button>
@@ -5619,7 +5628,7 @@ const Charts = (() => {
     obs2.observe(content, { childList: true });
   }
 
-  /* ================= 数据总览 ================= */
+  /* ================= 日常总览 ================= */
   function pageDashboard() {
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const ps = pageSetting('dashboard');
@@ -5635,6 +5644,15 @@ const Charts = (() => {
           <div class="hero-badge">今日值班：吉日嘎拉 · 兽医</div>
           <div class="hero-badge">演示月份：${demoMonth}月 · ${m.season}季</div>
         </div>
+      </div>
+      <div class="quick-entry-bar" aria-label="牧民常用功能">
+        <span class="qe-label">常用功能</span>
+        <button type="button" data-quick="log">📒 写牧事</button>
+        <button type="button" data-quick="livestock">🐂 盘点牛只</button>
+        <button type="button" data-quick="forage">🧊 饲草出入库</button>
+        <button type="button" data-quick="vaccine">💉 防疫登记</button>
+        <button type="button" data-quick="devices">📡 设备接入</button>
+        <button type="button" data-quick="bigscreen">🖥️ 进入数据大屏</button>
       </div>
       <div class="kpi-grid">
         ${statCard({icon:'🐄', label:'牲畜存栏', value:fmt(c.totalAnimals)+' 头只', sub:DB.species.map(x=>x.name+' '+fmt(x.count)).join(' · '), color:'#4f46e5', bg:'#eef2ff'})}
@@ -5699,6 +5717,7 @@ const Charts = (() => {
     </div>`;
   }
   function afterDashboard(){
+    $('#content').querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.quick)));
     Charts.donut($('#chStock'), { centerValue: fmt(compute().totalAnimals), centerTitle:'存栏（头只）',
       segments: DB.species.map(x=>({ label:x.name, value:x.count, color:x.color })) });
     Charts.line($('#chTrend'), { labels:['9月','10月','11月','12月','1月','2月','3月','4月','5月','6月','7月','8月'], unit:'头',
@@ -7622,7 +7641,7 @@ const Charts = (() => {
   /* ================= 路由 ================= */
   const pages = {
     bigscreen:  { title:'数据大屏', render:pageBigscreen, after:afterBigscreen },
-    dashboard:  { title:'数据总览', render:pageDashboard, after:afterDashboard },
+    dashboard:  { title:'日常总览', render:pageDashboard, after:afterDashboard },
     log:        { title:'牧事日志', render:pageLog, after:afterLog },
     ledger:     { title:'经营账本', render:pageLedger, after:afterLedger },
     labor:      { title:'用工管理', render:pageLabor, after:afterLabor },

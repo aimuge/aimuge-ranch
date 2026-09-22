@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v93.4';
+  const APP_VERSION = 'v94';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -391,7 +391,7 @@
           <div class="bs-title-en">${ps.subtitle || 'SMART RANCH DATA COMMAND CENTER'}</div>
         </div>
         <div class="bs-tools">
-          <button class="btn ghost sm bs-back" id="bsBack" title="返回数据总览">← 返回总览</button>
+          <button class="btn ghost sm bs-back" id="bsBack" title="返回日常总览">← 返回总览</button>
           <button class="btn ghost sm bs-voice" id="bsVoice">🔊 语音讲解</button>
           <div class="bs-time" id="bsTime"></div>
           <button class="btn ghost sm bs-full" id="bsFull">⛶ 全屏</button>
@@ -981,7 +981,7 @@
     obs2.observe(content, { childList: true });
   }
 
-  /* ================= 数据总览 ================= */
+  /* ================= 日常总览 ================= */
   function pageDashboard() {
     const c = compute(), m = DB.months[demoMonth-1], se = DB.seasons.find(x=>x.key===m.season);
     const ps = pageSetting('dashboard');
@@ -997,6 +997,15 @@
           <div class="hero-badge">今日值班：吉日嘎拉 · 兽医</div>
           <div class="hero-badge">演示月份：${demoMonth}月 · ${m.season}季</div>
         </div>
+      </div>
+      <div class="quick-entry-bar" aria-label="牧民常用功能">
+        <span class="qe-label">常用功能</span>
+        <button type="button" data-quick="log">📒 写牧事</button>
+        <button type="button" data-quick="livestock">🐂 盘点牛只</button>
+        <button type="button" data-quick="forage">🧊 饲草出入库</button>
+        <button type="button" data-quick="vaccine">💉 防疫登记</button>
+        <button type="button" data-quick="devices">📡 设备接入</button>
+        <button type="button" data-quick="bigscreen">🖥️ 进入数据大屏</button>
       </div>
       <div class="kpi-grid">
         ${statCard({icon:'🐄', label:'牲畜存栏', value:fmt(c.totalAnimals)+' 头只', sub:DB.species.map(x=>x.name+' '+fmt(x.count)).join(' · '), color:'#4f46e5', bg:'#eef2ff'})}
@@ -1061,6 +1070,7 @@
     </div>`;
   }
   function afterDashboard(){
+    $('#content').querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.quick)));
     Charts.donut($('#chStock'), { centerValue: fmt(compute().totalAnimals), centerTitle:'存栏（头只）',
       segments: DB.species.map(x=>({ label:x.name, value:x.count, color:x.color })) });
     Charts.line($('#chTrend'), { labels:['9月','10月','11月','12月','1月','2月','3月','4月','5月','6月','7月','8月'], unit:'头',
@@ -2984,7 +2994,7 @@
   /* ================= 路由 ================= */
   const pages = {
     bigscreen:  { title:'数据大屏', render:pageBigscreen, after:afterBigscreen },
-    dashboard:  { title:'数据总览', render:pageDashboard, after:afterDashboard },
+    dashboard:  { title:'日常总览', render:pageDashboard, after:afterDashboard },
     log:        { title:'牧事日志', render:pageLog, after:afterLog },
     ledger:     { title:'经营账本', render:pageLedger, after:afterLedger },
     labor:      { title:'用工管理', render:pageLabor, after:afterLabor },

@@ -3927,3 +3927,12 @@ body.bigscreen-active .bs-v8 .bs-panel::after{opacity:.52!important}
   body.bigscreen-active .bs-gov-panel .bs-gov-list{gap:1px!important}
   body.bigscreen-active .bs-gov-panel .bs-gov-list span{font-size:7.5px!important}
 }
+
+/* v94 牧民常用功能快捷入口 */
+.quick-entry-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(135deg,rgba(17,107,123,.055),rgba(27,145,168,.035));box-shadow:0 8px 22px -22px rgba(8,42,56,.55)}
+.quick-entry-bar .qe-label{font-size:12px;font-weight:700;color:#0f766e;margin-right:2px}
+.quick-entry-bar button{border:1px solid rgba(17,107,123,.20);background:#fff;color:#244d59;border-radius:999px;padding:7px 12px;font-size:12px;font-family:inherit;cursor:pointer;transition:.16s}
+.quick-entry-bar button:hover{border-color:#168198;color:#0d6678;background:#f3fbfc;transform:translateY(-1px)}
+body[data-theme="dark"] .quick-entry-bar{background:rgba(4,25,35,.72);border-color:rgba(55,179,200,.18)}
+body[data-theme="dark"] .quick-entry-bar button{background:rgba(7,38,53,.88);border-color:rgba(55,179,200,.28);color:#c9e5e9}
+@media(max-width:700px){.quick-entry-bar{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quick-entry-bar .qe-label{grid-column:1/-1}.quick-entry-bar button{width:100%;padding:8px 6px;font-size:11px}}
