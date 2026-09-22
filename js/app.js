@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v94.4';
+  const APP_VERSION = 'v95';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -1969,119 +1969,131 @@ function afterCycle(){
       render(current);
     });
   }
+  const DEVICE_PORT_IDS = {DV1:'PT1',DV2:'PT2',DV3:'PT3',DV4:'PT4',DV5:'PT5',DV6:'PT6',DV7:'PT7',DV8:'PT8',DV9:'PT9'};
+  function devicePort(d){ return (DB.ports||[]).find(p=>p.id===DEVICE_PORT_IDS[d.id]); }
+  function deviceLive(d){ return (DB.deviceTelemetry||[]).find(t=>t.deviceId===d.id)||{metric:'数据状态',value:'待采集',unit:'',range:'—',status:'待接入',time:'—'}; }
+  function deviceAlertRows(d){ return (DB.deviceAlerts||[]).filter(a=>a.deviceId===d.id&&a.status!=='已处理'); }
+  function openPortEditor(pid){
+    const p=(DB.ports||[]).find(x=>x.id===pid); if(!p) return;
+    openModal(`修改协议 · ${p.kind}`, [
+      { name:'protocol', label:'连接协议', type:'select', options:['RTSP','ONVIF','GB28181','TCP/IP','MQTT','Modbus RTU','Modbus TCP','ISOBUS','RFID 134.2kHz','北斗短报文'].map(v=>({v})), value:p.protocol },
+      { name:'endpoint', label:'连接地址 / 端口', type:'text', value:p.endpoint, placeholder:'rtsp://设备IP:554/...' },
+      { name:'account', label:'账号 / 设备编号', type:'text', value:p.account||'' },
+      { name:'liveUrl', label:'大屏直播地址（可选）', type:'text', value:p.liveUrl||'', placeholder:'WVP / go2rtc / HLS / WebRTC 地址' },
+      { name:'name', label:'设备名称', type:'text', value:p.name }
+    ], v=>{ updateRecord('ports',p.id,{...v,status:'未连接',last:''}); toast('协议已保存，可点击连接测试'); render(current); });
+  }
+  function openDeviceDataModal(d){
+    const live=deviceLive(d), port=devicePort(d), alerts=deviceAlertRows(d);
+    const ov=document.createElement('div'); ov.className='modal-overlay'; ov.style.zIndex='120';
+    ov.innerHTML=`<div class="modal device-data-modal">
+      <div class="modal-head"><h3>${escTxt(d.name)} · 实时数据</h3><button class="modal-x" type="button">×</button></div>
+      <div class="device-data-body">
+        <div class="device-data-main"><span>${live.metric}</span><b>${live.value}${live.unit||''}</b><i>正常范围：${live.range||'—'} · 上报：${live.time||'—'}</i></div>
+        <div class="device-data-grid">
+          <div><span>设备编号</span><b>${d.serial||'待录入'}</b></div><div><span>运行状态</span><b>${d.state}</b></div>
+          <div><span>安装位置</span><b>${d.where}</b></div><div><span>供电方式</span><b>${d.battery||'—'}</b></div>
+          <div><span>对接协议</span><b>${d.protocol}</b></div><div><span>端口地址</span><b>${port?port.endpoint:'未配置'}</b></div>
+        </div>
+        <div class="device-data-note">${alerts.length?'当前有 '+alerts.length+' 条待处理预警':'当前设备运行正常，无待处理预警'}</div>
+      </div>
+      <div class="modal-foot"><button class="btn ghost" data-close>关闭</button></div>
+    </div>`;
+    document.body.appendChild(ov);
+    const close=()=>ov.remove();
+    ov.addEventListener('click',e=>{if(e.target===ov)close()});
+    ov.querySelector('.modal-x').onclick=close; ov.querySelector('[data-close]').onclick=close;
+  }
   function pageDevices() {
     const c = compute();
+    const telemetry = DB.deviceTelemetry||[];
+    const alerts = DB.deviceAlerts||[];
+    const pendingAlerts = alerts.filter(a=>a.status!=='已处理');
+    const connectedPorts = (DB.ports||[]).filter(p=>p.status==='已连接').length;
+    const machineCount = DB.deviceList.filter(d=>/农机|机器狗|无人机|拖拉机|打草机/.test(d.name)).reduce((a,d)=>a+d.count,0);
     return `
-    <div class="page">
-      ${pageHeader('智慧装备 · 全系统一张网', '买完即可接入：扫码/编号 → 自动识别协议 → 绑定端口 → 数据进入系统', `<button class="btn solid sm" data-device-scan>＋ 扫码 / 编号接入</button><button class="btn ghost sm" data-device-discover>⌁ 自动发现设备</button>`)}
+    <div class="page device-page">
+      ${pageHeader('智慧装备 · 设备、数据、预警一体化', '设备接入 · 协议连接 · 实时数据 · 自动预警 · 处理闭环', `<button class="btn solid sm" data-device-refresh>↻ 刷新设备数据</button><button class="btn ghost sm" data-alert-add>＋ 新增预警</button>`)}
       <div class="kpi-grid kpi-4">
-        ${statCard({icon:'📡', label:'联网终端', value:fmt(c.devTotal)+' 台', sub:'含耳标/项圈/终端', color:'#0ea5e9', bg:'#e0f2fe'})}
-        ${statCard({icon:'🟢', label:'设备在线率', value:c.devRate+'%', sub:'在线 '+fmt(c.devOnline)+' 台', color:'#4f46e5', bg:'#eef2ff'})}
-        ${statCard({icon:'🔴', label:'离线/检修', value:fmt(c.devOffline)+' 台', sub:'饲料粉碎机检修 · 可回写状态', color:'#d9534f', bg:'#fdeeee'})}
-        ${statCard({icon:'🔌', label:'成套装备', value:fmt(c.kit)+' 台套', sub:'6 大分类 · 农机/棚圈/无人设备', color:'#f59e0b', bg:'#fef3c7'})}
+        ${statCard({icon:'📡', label:'联网终端', value:fmt(c.devTotal)+' 台', sub:'9 类设备 · 监控/耳标/项圈/农机', color:'#0ea5e9', bg:'#e0f2fe'})}
+        ${statCard({icon:'🟢', label:'设备在线率', value:c.devRate+'%', sub:'在线 '+fmt(c.devOnline)+' 台 · 离线/检修 '+fmt(c.devOffline)+' 台', color:'#14b8a6', bg:'#e7f7f3'})}
+        ${statCard({icon:'🔌', label:'已连接端口', value:connectedPorts+'/'+(DB.ports||[]).length, sub:'协议连接 · 支持测试与修改', color:'#4f46e5', bg:'#eef2ff'})}
+        ${statCard({icon:'🚨', label:'待处理预警', value:pendingAlerts.length+' 条', sub:'异常报警自动进入预警中心', color:'#ef4444', bg:'#fdeeee'})}
       </div>
-      ${card('设备采购接入中心 · 适配型号', `
-        <div class="onboard-steps">
-          <div class="onboard-step"><span>1</span><div><b>扫码 / 输入编号</b><p>扫描设备二维码或输入序列号</p></div></div>
-          <i>→</i>
-          <div class="onboard-step"><span>2</span><div><b>自动识别协议</b><p>识别品牌、类型、ONVIF / RTSP / MQTT / Modbus 等端口</p></div></div>
-          <i>→</i>
-          <div class="onboard-step"><span>3</span><div><b>一键接入系统</b><p>绑定后自动进入装备台账、监控、大屏和手机端</p></div></div>
-        </div>
-        <div class="onboard-grid">
-          ${DEVICE_ONBOARD_PRESETS.map(p=>`
-            <div class="onboard-card">
-              <div class="onboard-icon">${p.icon}</div>
-              <div class="onboard-copy">
-                <div class="onboard-name">${p.name}${pill('已适配','ok')}</div>
-                <div class="onboard-meta">${p.brands.slice(0,2).join(' · ')}</div>
-                <div class="onboard-proto">${p.protocols.join(' / ')}</div>
-              </div>
-              <button class="btn solid sm" data-onboard="${p.key}">一键接入</button>
-            </div>`).join('')}
-        </div>
-        <div class="card-actions"><button class="btn ghost sm" data-device-scan>📷 扫码 / 输入设备编号</button><button class="btn ghost sm" data-device-discover>🔄 自动发现局域网设备</button></div>
-        <div class="card-note">🔌 监控、耳标、项圈、机器狗、称重、饲喂、棚圈温控和农机终端均适配标准协议。购买符合协议的设备后，录入编号与连接地址即可接入，后续可继续在「后台管理 → 端口连接配置」修改真实协议地址。</div>
-      `, 'device-onboard-card')}
-      ${card('数据自动采集 · 智能硬件自动上报链路', `
-        <div class="iot-pipe">
-          ${[['📡','感知层','传感器/摄像头/项圈/耳标'],['📶','传输层','LoRa · 4G · 北斗短报文'],['🧠','平台层','AI 解析 · 清洗 · 规则引擎'],['📺','应用层','大屏 · 手机 · 预警中心']].map((x,i)=>`
-            <div class="pipe-node"><span>${x[0]}</span><b>${x[1]}</b><p>${x[2]}</p></div>${i<3?'<i>→</i>':''}`).join('')}
-        </div>
-        <div class="card-note">🔌 生产环境：硬件设备通过标准协议实时上报 → 平台 API 入库 → 数据大屏/手机端自动更新，全程无需人工录入。演示版已内置实时采集引擎，以下指标每 ${(DB.iot.interval/1000)} 秒自动刷新。</div>`)}
-      ${card('自动采集指标 · 数据来源', tableHtml(['指标','来源设备','协议/端口','采集频率'],
-        DB.iot.sources.map(s=>[s.metric, s.device, `<span class="proto-mini">${s.protocol}</span>`, pill(s.freq,'info')])))}
-      ${card('棚圈管理 · 两个棚圈 + 活动区 + 饲草区', `
-        <div class="cat-grid">
-          ${(DB.meta.facilities||[]).map(f=>`
-            <div class="cat-card" style="--cc:#14b8a6">
-              <div class="cat-head"><span class="cat-ico">${f.icon}</span><div><div class="cat-name">${f.name}</div><div class="cat-desc">${f.desc}</div></div></div>
-              <div class="cat-proto">${f.detail||''}</div>
-            </div>`).join('')}
-        </div>
-        <div class="card-note">🏠 棚圈状态实时监测：犊牛舍恒温 22℃、大牛棚圈保温、活动区饮水不冻；冬季圈养、夏季散养，棚圈与草场按季切换。</div>`)}
-      ${card('智能农机管理 · 全流程机械化', `
-        <div class="cat-grid">
-          ${[
-            ['三分群全自动保定称','自动称重 + 按体况分群 · RS485'],
-            ['TMR 拌料机','9 立方 · 配方搅拌 · 出料输送'],
-            ['饲料粉碎机','精料粉碎 · 电机驱动'],
-            ['巡场无人机','巡场 / 巡草场 · RTK 图传'],
-            ['无人拖拉机','北斗自动驾驶 · 打草场作业'],
-            ['打草机','割草压扁 · 留茬 6cm'],
-            ['自动院墙门','太阳能自动开合 · 遥控/4G'],
-            ['智能巡检机器狗','夜间巡检 · 视觉导航 · 4G/5G 回传']
-          ].map(x=>`
-            <div class="cat-card mach-card" style="--cc:#0d9488">
-              <div class="mach-head">${machineArt(x[0])}<div><div class="cat-name">${x[0]}</div><div class="cat-desc">${x[1]}</div></div></div>
-            </div>`).join('')}
-        </div>
-        <div class="card-note">🚜 此区为机械化能力展示；实际数量、设备编号和在线状态以“装备台账”为准。农机端口可在「后台管理 → 端口连接配置」中填写 ISOBUS / Modbus / RTK 地址接入。</div>`)}
-      ${card('装备分类', `
-        <div class="cat-grid">
-          ${DB.deviceCats.map(cat=>{
-            const rows = DB.deviceList.filter(x=>x.cat===cat.id);
-            const total = rows.reduce((s,x)=>s+x.count,0);
-            const on = rows.filter(x=>x.state==='在线').reduce((s,x)=>s+x.count,0);
-            return `<div class="cat-card" style="--cc:${cat.color}">
-              <div class="cat-head"><span class="cat-ico">${cat.icon}</span><div><div class="cat-name">${cat.name}</div><div class="cat-desc">${cat.desc}</div></div></div>
-              <div class="cat-count"><b>${fmt(total)}</b> 台 · 在线 ${on}</div>
-              <div class="cat-proto">${cat.protocol}</div>
+
+      ${card('设备运行总览 · 点击查看实时数据', `
+        <div class="device-status-grid">
+          ${DB.deviceList.map(d=>{
+            const live=deviceLive(d), port=devicePort(d), al=deviceAlertRows(d), on=String(d.state).includes('在线');
+            return `<div class="device-status-card ${on?'online':'offline'}">
+              <div class="dsc-head">${devIcon(d.name)}<div><b>${d.name}</b><span>${d.where}</span></div>${pill(d.state,on?'ok':d.state==='检修'?'warn':'danger')}</div>
+              <div class="dsc-live"><span>${live.metric}</span><b>${live.value}${live.unit||''}</b><i>${live.extra||live.range||''}</i></div>
+              <div class="dsc-foot"><span>端口 ${port?(port.status==='已连接'?'已连接':'未连接'):'未配置'}</span><span>上报 ${live.time||'—'}</span>${al.length?'<em>'+al.length+' 条预警</em>':''}</div>
+              <div class="dsc-actions"><button data-device-detail="${d.id}">查看数据</button>${port?`<button data-device-link="${d.id}">${port.status==='已连接'?'断开':'连接'}</button><button data-port-edit="${port.id}">协议</button>`:'<button data-device-scan>配置端口</button>'}</div>
             </div>`;
           }).join('')}
-        </div>`)}
-      ${card('装备台账（可新增/编辑/删除）', tableHtml(['设备名称','分类','品牌/型号','设备编号','数量','位置','状态','对接协议','供电','操作'],
-        DB.deviceList.map(d=>[
+        </div>`, 'device-status-card-wrap')}
+
+      <div class="device-center-grid">
+        ${card('实时数据采集 · 自动上报', `
+          <div class="table-wrap">
+            <table class="tbl"><thead><tr>${['指标','设备','实时值','正常范围','状态','上报时间','端口'].map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>
+              ${telemetry.map(t=>{const d=DB.deviceList.find(x=>x.id===t.deviceId)||{},p=devicePort(d);return `<tr><td data-label="指标"><b>${t.metric}</b></td><td data-label="设备">${d.name||'—'}</td><td data-label="实时值"><b>${t.value}${t.unit||''}</b></td><td data-label="正常范围">${t.range||'—'}</td><td data-label="状态">${pill(t.status,t.status==='正常'?'ok':'danger')}</td><td data-label="上报时间">${t.time||'—'}</td><td data-label="端口">${p?pill(p.status,p.status==='已连接'?'ok':'warn'):'未配置'}</td></tr>`}).join('')}
+            </tbody></table>
+          </div>`, 'device-live-card')}
+        ${card('预警中心 · 自动触发 / 人工处理', `
+          <div class="device-alert-list">
+            ${alerts.length?alerts.map(a=>{const d=DB.deviceList.find(x=>x.id===a.deviceId)||{};return `<div class="device-alert-item ${a.level==='高'?'high':a.level==='中'?'medium':'low'} ${a.status==='已处理'?'done':''}"><div class="dai-head"><span>${a.level}级</span><b>${a.title}</b>${pill(a.status,a.status==='已处理'?'ok':'warn')}</div><p>${a.detail}</p><div class="dai-meta"><span>设备：${d.name||'—'}</span><span>实时值：${a.value}</span><span>阈值：${a.threshold}</span><span>${a.time}</span></div>${a.status!=='已处理'?`<button data-alert-resolve="${a.id}">标记已处理</button>`:''}</div>`}).join(''):'<div class="device-empty">暂无设备预警</div>'}
+          </div>`, 'device-alert-card')}
+      </div>
+
+      ${card('端口连接与协议 · 可测试 / 可修改', `
+        <div class="device-port-grid">
+          ${(DB.ports||[]).map(p=>`<div class="device-port-card ${p.status==='已连接'?'connected':''}"><div class="dpc-head"><div><b>${p.kind}</b><span>${p.name}</span></div>${pill(p.status,p.status==='已连接'?'ok':'warn')}</div><div class="dpc-body"><span>协议 <b>${p.protocol}</b></span><code>${p.endpoint}</code><span>账号/编号 ${p.account||'—'}</span><span>最近连接 ${p.last||'—'}</span></div><div class="dpc-actions"><button data-port-test="${p.id}">测试连接</button><button data-port-link="${p.id}">${p.status==='已连接'?'断开':'连接'}</button><button data-port-edit="${p.id}">修改协议</button></div></div>`).join('')}
+        </div>`, 'device-ports-card')}
+
+      ${card('装备台账（可新增/编辑/删除）', tableHtml(['设备名称','分类','设备编号','数量','位置','状态','实时数据','协议','操作'],
+        DB.deviceList.map(d=>{const live=deviceLive(d),al=deviceAlertRows(d);return [
           `<span class="dev-cell">${devIcon(d.name)}<b>${d.name}</b></span>`,
           `<span class="cat-tag" style="--cc:${(DB.deviceCats.find(x=>x.id===d.cat)||{}).color||'#8a9a5b'}">${(DB.deviceCats.find(x=>x.id===d.cat)||{}).name||d.cat}</span>`,
-          `<code>${d.model}</code>`, `<code>${d.serial||'待录入'}</code>`, fmt(d.count)+' 台', d.where,
-          pill(d.state, d.state==='在线'?'ok':d.state==='离线'?'danger':'warn'),
-          `<span class="proto-mini">${d.protocol}</span>`, d.battery,
-          `<button class="btn ghost sm" data-device-connect="${d.id}">${d.state==='在线'?'查看链路':'连接'}</button>` + editBtn('deviceList', d.id) + delBtn('deviceList', d.id)
-        ])))}
+          `<code>${d.serial||'待录入'}</code>`, fmt(d.count)+' 台', d.where,
+          pill(d.state,d.state==='在线'?'ok':d.state==='检修'?'warn':'danger'),
+          `${live.value}${live.unit||''}${al.length?' · '+al.length+'条预警':''}`,
+          `<span class="proto-mini">${d.protocol}</span>`,
+          `<button class="btn ghost sm" data-device-detail="${d.id}">查看</button>`+editBtn('deviceList',d.id)+delBtn('deviceList',d.id)
+        ];}), 'device-ledger-tbl') + `<div class="card-actions">${addBtn('新增装备','deviceList')}</div>`, 'device-ledger-card')}
+
+      ${card('新设备接入中心 · 买完即可接入', `
+        <div class="device-onboard-compact">
+          ${DEVICE_ONBOARD_PRESETS.map(p=>`<button data-onboard="${p.key}"><span>${p.icon}</span><b>${p.name}</b><small>${p.protocol}</small></button>`).join('')}
+        </div>
+        <div class="card-actions"><button class="btn solid sm" data-device-scan>＋ 扫码 / 编号接入</button><button class="btn ghost sm" data-device-discover>⌁ 自动发现设备</button></div>`, 'device-onboard-card')}
     </div>`;
   }
   function afterDevices(){
     bindDel($('#content'));
     bindEdit($('#content'), { 'deviceList': { title:'编辑装备', fields: deviceFields } });
-    $('#content').querySelectorAll('[data-onboard]').forEach(b=>b.addEventListener('click', ()=>openDeviceOnboardModal(b.dataset.onboard)));
-    $('#content').querySelectorAll('[data-device-scan]').forEach(b=>b.addEventListener('click', ()=>openDeviceOnboardModal('')));
-    $('#content').querySelectorAll('[data-device-discover]').forEach(b=>b.addEventListener('click', ()=>{
-      toast('正在扫描同一局域网内的设备…');
-      setTimeout(()=>openDeviceOnboardModal('camera','discover'),700);
-    }));
-    $('#content').querySelectorAll('[data-device-connect]').forEach(b=>b.addEventListener('click', ()=>{
-      const d=(DB.deviceList||[]).find(x=>x.id===b.dataset.deviceConnect); if(!d)return;
-      updateRecord('deviceList', d.id, { state:'在线', last:'刚刚' });
-      toast(`${d.name} 数据链路已连接，正在实时上报`);
-      render(current);
-    }));
-    $('#content').querySelectorAll('[data-add="deviceList"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('新增装备（端口对接）', deviceFields, v=>{
-        addRecord('deviceList', {...v, count:+v.count||1});
-        toast('装备已接入系统'); render(current);
-      });
-    }));
+    $('#content').querySelectorAll('[data-onboard]').forEach(b=>b.addEventListener('click',()=>openDeviceOnboardModal(b.dataset.onboard)));
+    $('#content').querySelectorAll('[data-device-scan]').forEach(b=>b.addEventListener('click',()=>openDeviceOnboardModal('')));
+    $('#content').querySelectorAll('[data-device-discover]').forEach(b=>b.addEventListener('click',()=>{toast('正在扫描设备…');setTimeout(()=>openDeviceOnboardModal('camera','discover'),600)}));
+    $('#content').querySelectorAll('[data-device-detail]').forEach(b=>b.addEventListener('click',()=>{const d=DB.deviceList.find(x=>x.id===b.dataset.deviceDetail);if(d)openDeviceDataModal(d)}));
+    const togglePort=pid=>{const p=(DB.ports||[]).find(x=>x.id===pid);if(!p)return;const on=p.status==='已连接',now=new Date().toLocaleString('zh-CN',{hour12:false});updateRecord('ports',p.id,{status:on?'未连接':'已连接',last:on?'':now});const did=Object.keys(DEVICE_PORT_IDS).find(k=>DEVICE_PORT_IDS[k]===p.id);if(did){const d=DB.deviceList.find(x=>x.id===did);if(d)updateRecord('deviceList',d.id,{state:on?(d.state==='检修'?'检修':'离线'):'在线',last:now});}toast(on?'端口已断开':'端口连接成功，开始接收数据');render(current);};
+    $('#content').querySelectorAll('[data-device-link]').forEach(b=>b.addEventListener('click',()=>{const p=devicePort(DB.deviceList.find(x=>x.id===b.dataset.deviceLink));if(p)togglePort(p.id)}));
+    $('#content').querySelectorAll('[data-port-link]').forEach(b=>b.addEventListener('click',()=>togglePort(b.dataset.portLink)));
+    $('#content').querySelectorAll('[data-port-test]').forEach(b=>b.addEventListener('click',()=>{const p=(DB.ports||[]).find(x=>x.id===b.dataset.portTest);if(p){updateRecord('ports',p.id,{last:new Date().toLocaleString('zh-CN',{hour12:false})});toast(`${p.kind}连接测试成功`);render(current)}}));
+    $('#content').querySelectorAll('[data-port-edit]').forEach(b=>b.addEventListener('click',()=>openPortEditor(b.dataset.portEdit)));
+    $('#content').querySelectorAll('[data-alert-resolve]').forEach(b=>b.addEventListener('click',()=>{updateRecord('deviceAlerts',b.dataset.alertResolve,{status:'已处理',handledAt:new Date().toLocaleString('zh-CN',{hour12:false})});toast('预警已标记处理');render(current)}));
+    const refresh=$('[data-device-refresh]'); if(refresh)refresh.addEventListener('click',()=>{const now=new Date().toLocaleString('zh-CN',{hour12:false});(DB.deviceTelemetry||[]).forEach(t=>{t.time='刚刚';if(typeof t.value==='string'&&/^\d+$/.test(t.value)&&t.deviceId!=='DV2'&&t.deviceId!=='DV3'){t.value=String(Math.max(1,+t.value+(Math.floor(Math.random()*3)-1)))}});saveDB();toast('设备数据已刷新');render(current)});
+    $('#content').querySelectorAll('[data-alert-add]').forEach(b=>b.addEventListener('click',()=>openModal('新增设备预警',[
+      {name:'deviceId',label:'设备',type:'select',options:DB.deviceList.map(d=>({v:d.id,t:d.name}))},
+      {name:'level',label:'级别',type:'select',options:['高','中','低'].map(v=>({v}))},
+      {name:'title',label:'预警标题',type:'text',required:true},
+      {name:'detail',label:'详细说明',type:'textarea'},
+      {name:'value',label:'实时值',type:'text'},
+      {name:'threshold',label:'预警阈值',type:'text'},
+      {name:'status',label:'状态',type:'select',options:['待处理','已处理'].map(v=>({v}))}
+    ],v=>{addRecord('deviceAlerts',{...v,time:new Date().toLocaleString('zh-CN',{hour12:false})});toast('预警已新增');render(current)})));
+    $('#content').querySelectorAll('[data-add="deviceList"]').forEach(b=>b.addEventListener('click',()=>openModal('新增装备（端口对接）',deviceFields,v=>{addRecord('deviceList',{...v,count:+v.count||1});toast('装备已接入系统');render(current)})));
   }
 
   /* ================= 产品中心 ================= */

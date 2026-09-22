@@ -209,6 +209,26 @@ const DEFAULT_DATA = {
     { id:'PT9', kind:'农机端口', name:'无人机 / 无人拖拉机 / 打草机', protocol:'RTK / 北斗作业监测', endpoint:'https://api.example.cn/v1/machine/task', account:'终端编号', status:'未连接', last:'' }
   ],
 
+  /* ---------- 智能装备实时数据与预警 ---------- */
+  deviceTelemetry: [
+    { id:'DT1', deviceId:'DV1', metric:'在线视频路数', value:'6', unit:'路', range:'6 路', status:'正常', time:'刚刚' },
+    { id:'DT2', deviceId:'DV2', metric:'耳标测温在线', value:'186', unit:'头', range:'186 头', status:'正常', time:'刚刚', extra:'平均体温 38.6℃' },
+    { id:'DT3', deviceId:'DV3', metric:'项圈定位在线', value:'5', unit:'个', range:'5 个', status:'正常', time:'刚刚', extra:'北斗信号 92% · 电量 78-92%' },
+    { id:'DT4', deviceId:'DV4', metric:'机器狗巡检状态', value:'82', unit:'%', range:'电量 ≥30%', status:'正常', time:'5 分钟前', extra:'夜间巡检中 · 续航约 3.5h' },
+    { id:'DT5', deviceId:'DV5', metric:'今日自动过称', value:'5', unit:'头', range:'按计划采集', status:'正常', time:'刚刚', extra:'平均体重 486kg' },
+    { id:'DT6', deviceId:'DV6', metric:'TMR 今日搅拌', value:'2', unit:'批', range:'2 批/天', status:'正常', time:'今天 06:35', extra:'饲喂量 2.4 吨' },
+    { id:'DT7', deviceId:'DV7', metric:'撒料机今日撒料', value:'2', unit:'次', range:'2 次/天', status:'正常', time:'今天 07:10', extra:'作业通道 2 条' },
+    { id:'DT8', deviceId:'DV8', metric:'粉碎机运行状态', value:'检修', unit:'', range:'应在线', status:'报警', time:'今天 08:00', extra:'电机检修 · 暂不可启动' },
+    { id:'DT9', deviceId:'DV9', metric:'农机今日作业', value:'32', unit:'亩', range:'按任务计划', status:'正常', time:'昨天 18:30', extra:'无人机/无人拖拉机/打草机' }
+  ],
+  deviceAlerts: [
+    { id:'DA1', deviceId:'DV8', level:'高', title:'饲料粉碎机处于检修状态', detail:'电机检修，暂不可启动，请检修完成后再恢复任务。', value:'检修', threshold:'运行状态=在线', time:'今天 08:00', status:'待处理' },
+    { id:'DA2', deviceId:'DV2', level:'中', title:'2 枚耳标电量偏低', detail:'建议下次保定或分群时更换耳标电池。', value:'电量<10%', threshold:'电量≥20%', time:'今天 07:42', status:'待处理' },
+    { id:'DA3', deviceId:'DV3', level:'中', title:'1 个定位项圈信号偏弱', detail:'该牛只位于活动区边缘，信号可能受地形影响。', value:'信号 28%', threshold:'信号≥35%', time:'今天 07:35', status:'待处理' },
+    { id:'DA4', deviceId:'DV1', level:'中', title:'生活区监控夜间画面遮挡', detail:'AI 识别画面清晰度下降，请检查镜头和补光灯。', value:'清晰度 62%', threshold:'清晰度≥80%', time:'昨天 23:18', status:'待处理' },
+    { id:'DA5', deviceId:'DV6', level:'低', title:'TMR 液压油温偏高', detail:'建议作业间歇降温并检查液压油。', value:'78℃', threshold:'<75℃', time:'昨天 17:20', status:'已处理' }
+  ],
+
   /* ---------- 产品 ---------- */
   productInventory: [
     { id:'P1', name:'冷鲜草原牛肉', unit:'吨', stock:1.6, price:'¥76/kg', note:'冷链 0-4℃ · 订单式分割' },
@@ -412,7 +432,20 @@ const KEY = 'yilate-ranch-v48';
 let DB = loadDB();
 
 function loadDB(){
-  try { const raw = localStorage.getItem(KEY); if (raw){ const d = JSON.parse(raw); if (d && d.meta) return d; } } catch(e){}
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw){
+      const d = JSON.parse(raw);
+      if (d && d.meta){
+        const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        const merged = Object.assign(base, d);
+        if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
+        if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
+        if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
+        return merged;
+      }
+    }
+  } catch(e){}
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
 let cloudPushTimer = null;
