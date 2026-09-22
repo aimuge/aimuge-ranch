@@ -204,8 +204,12 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setR
 const isStaticDemoHost = location.protocol==='file:' || /(^|\.)github\.io$/i.test(location.hostname) || ['8123','8124'].includes(location.port);
 const demoLoginBtn = $('demoLoginBtn');
 if (isStaticDemoHost && demoLoginBtn) {
+  const offline = location.protocol==='file:';
   demoLoginBtn.style.display='block';
-  $('loginNotice').textContent='当前为公网演示版：可直接进入系统查看数据大屏；本地服务器登录仍使用正式账号。';
+  demoLoginBtn.textContent = offline ? '进入离线演示版' : '进入公网演示版';
+  $('loginNotice').textContent = offline
+    ? '当前为U盘离线演示版：可直接进入系统查看数据大屏；正式账号登录仍需连接云端后端。'
+    : '当前为公网演示版：可直接进入系统查看数据大屏；本地服务器登录仍使用正式账号。';
   $('loginNotice').style.borderColor='rgba(94,234,212,.38)';
   $('loginNotice').style.background='rgba(94,234,212,.07)';
 }
