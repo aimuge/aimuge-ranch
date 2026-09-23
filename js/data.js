@@ -70,16 +70,34 @@ const DEFAULT_DATA = {
     { id:'G2', name:'犊牛舍 · 小牛（犊牛）', count:84, desc:'单独保温 · 犊牛舍恒温看护', status:'重点看护' }
   ],
   animals: [
-    { id:'YL-0001', species:'牛', breed:'西门塔尔', sex:'母', age:'4岁', weight:'612kg', health:'发情预警', location:'大牛棚圈', device:'AI 识别 · 在线', temp:'38.8℃', note:'AI 已识别，建议今日配种' },
-    { id:'YL-0002', species:'牛', breed:'西门塔尔', sex:'母', age:'5岁', weight:'648kg', health:'待产', location:'犊牛舍', device:'监控 · 在线', temp:'38.9℃', note:'预产期临近，夜间值守' },
-    { id:'YL-0003', species:'牛', breed:'西门塔尔', sex:'母', age:'3岁', weight:'556kg', health:'健康', location:'大牛棚圈', device:'电子耳标 · 在线', temp:'38.5℃', note:'体况良好' },
-    { id:'YL-0004', species:'牛', breed:'西门塔尔', sex:'母', age:'6岁', weight:'664kg', health:'健康', location:'活动区', device:'北斗项圈 · 在线', temp:'38.6℃', note:'活动量正常' },
-    { id:'YL-0024', species:'牛', breed:'西门塔尔', sex:'公', age:'6月龄', weight:'186kg', health:'健康', location:'犊牛舍', device:'电子耳标 · 在线', temp:'38.7℃', note:'犊牛 · 保温观察' },
-    { id:'YL-0036', species:'牛', breed:'西门塔尔', sex:'公', age:'18月龄', weight:'486kg', health:'健康', location:'大牛棚圈', device:'自动称重 · 已过称', temp:'38.6℃', note:'育肥出栏候选' }
+    { id:'YL-0001', species:'牛', breed:'西门塔尔', sex:'母', age:'4岁', stage:'繁殖母牛', motherTag:'—', parity:2, entryDate:'2022-05-16', source:'自繁自养', weight:'612kg', health:'发情预警', location:'大牛棚圈', device:'AI 识别 · 在线', temp:'38.8℃', note:'AI 已识别，建议今日配种' },
+    { id:'YL-0002', species:'牛', breed:'西门塔尔', sex:'母', age:'5岁', stage:'待产母牛', motherTag:'—', parity:3, entryDate:'2021-04-08', source:'自繁自养', weight:'648kg', health:'待产', location:'犊牛舍', device:'监控 · 在线', temp:'38.9℃', note:'预产期临近，夜间值守' },
+    { id:'YL-0003', species:'牛', breed:'西门塔尔', sex:'母', age:'3岁', stage:'繁殖母牛', motherTag:'YL-0002', parity:1, entryDate:'2023-03-20', source:'自繁自养', weight:'556kg', health:'健康', location:'大牛棚圈', device:'电子耳标 · 在线', temp:'38.5℃', note:'体况良好' },
+    { id:'YL-0004', species:'牛', breed:'西门塔尔', sex:'母', age:'6岁', stage:'妊娠母牛', motherTag:'—', parity:4, entryDate:'2020-06-11', source:'自繁自养', weight:'664kg', health:'健康', location:'活动区', device:'北斗项圈 · 在线', temp:'38.6℃', note:'活动量正常' },
+    { id:'YL-0024', species:'牛', breed:'西门塔尔', sex:'公', age:'6月龄', stage:'犊牛', motherTag:'YL-0002', parity:0, entryDate:'2026-03-18', source:'自繁自养', weight:'186kg', health:'观察', location:'犊牛舍', device:'电子耳标 · 在线', temp:'38.7℃', note:'犊牛 · 保温观察' },
+    { id:'YL-0036', species:'牛', breed:'西门塔尔', sex:'公', age:'18月龄', stage:'育肥牛', motherTag:'YL-0001', parity:0, entryDate:'2025-03-22', source:'自繁自养', weight:'486kg', health:'健康', location:'大牛棚圈', device:'自动称重 · 已过称', temp:'38.6℃', note:'育肥出栏候选' }
   ],
   birthRecords: [
     { id:'BR1', date:'2026-03-18', species:'牛', item:'产犊 84 头', survival:'96.0%', operator:'伊拉特', note:'犊牛舍恒温 · 初乳 2 小时内饲喂' },
     { id:'BR2', date:'2026-04-06', species:'牛', item:'犊牛建档 84 头', survival:'100%', operator:'伊拉特', note:'电子耳标建档完成' }
+  ],
+
+  /* ---------- 养殖全生命周期：繁殖、健康处置、转群调栏 ---------- */
+  reproEvents: [
+    { id:'RP1', date:'2026-09-18', earTag:'YL-0001', type:'发情观察', method:'人工观察 + 计步', bull:'待配种', result:'已确认发情', nextDate:'2026-09-23', operator:'吉日嘎拉', status:'待处理', note:'今日 14:00 配种' },
+    { id:'RP2', date:'2026-08-02', earTag:'YL-0002', type:'妊娠检查', method:'B 超检查', bull:'—', result:'妊娠', nextDate:'2026-10-12', operator:'旗兽医站', status:'跟进中', note:'预产期临近，夜间值守' },
+    { id:'RP3', date:'2026-06-10', earTag:'YL-0003', type:'配种', method:'人工授精', bull:'西门塔尔冻精 A12', result:'已配种', nextDate:'2026-09-20', operator:'吉日嘎拉', status:'待复检', note:'21 天后妊娠复检' },
+    { id:'RP4', date:'2026-03-18', earTag:'YL-0002', type:'产犊', method:'自然分娩', bull:'—', result:'母犊健康', nextDate:'', operator:'伊拉特', status:'已完成', note:'初乳 2 小时内饲喂' }
+  ],
+  healthEvents: [
+    { id:'HE1', date:'2026-09-22', earTag:'YL-0024', symptom:'采食量下降', temp:'39.1℃', diagnosis:'消化不良待观察', treatment:'减少精料 · 观察饮水与反刍', drug:'—', vet:'吉日嘎拉', withdrawalUntil:'', status:'跟进中', note:'连续观察 2 天' },
+    { id:'HE2', date:'2026-09-16', earTag:'YL-0001', symptom:'发情期活动增加', temp:'38.8℃', diagnosis:'正常发情', treatment:'转入繁殖管理', drug:'—', vet:'吉日嘎拉', withdrawalUntil:'', status:'已关闭', note:'已安排配种' },
+    { id:'HE3', date:'2026-09-05', earTag:'YL-0036', symptom:'右前肢轻微跛行', temp:'38.7℃', diagnosis:'轻度蹄部炎症', treatment:'修蹄 · 清洁消毒', drug:'碘伏外用', vet:'旗兽医站', withdrawalUntil:'2026-09-15', status:'已痊愈', note:'无需全身用药' }
+  ],
+  movementRecords: [
+    { id:'MV1', date:'2026-09-20', earTag:'YL-0024', from:'犊牛舍', to:'牛只活动区', reason:'阶段转群', operator:'吉日嘎拉', status:'已完成', note:'适应期每日观察采食' },
+    { id:'MV2', date:'2026-09-12', earTag:'YL-0036', from:'大牛棚圈', to:'育肥区', reason:'育肥分群', operator:'伊拉特', status:'已完成', note:'进入出栏观察群' },
+    { id:'MV3', date:'2026-09-24', earTag:'YL-0002', from:'大牛棚圈', to:'犊牛舍', reason:'待产转栏', operator:'伊拉特', status:'待执行', note:'夜间值守栏位已准备' }
   ],
 
   /* ---------- 增重分析（数据来自三分群全自动保定称） ---------- */
@@ -467,6 +485,21 @@ function mergeDBState(input){
   if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
   if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
   if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
+  if (!Array.isArray(d.reproEvents) || !d.reproEvents.length) merged.reproEvents = base.reproEvents;
+  if (!Array.isArray(d.healthEvents) || !d.healthEvents.length) merged.healthEvents = base.healthEvents;
+  if (!Array.isArray(d.movementRecords) || !d.movementRecords.length) merged.movementRecords = base.movementRecords;
+  if (Array.isArray(d.animals) && d.animals.length) {
+    merged.animals = d.animals.map((it,i)=>{
+      const def = base.animals.find(x=>x.id===it.id) || base.animals[i] || {};
+      return Object.assign({}, def, it);
+    });
+  }
+  if (Array.isArray(d.groups) && d.groups.length) {
+    merged.groups = d.groups.map((it,i)=>{
+      const def = base.groups.find(x=>x.id===it.id) || base.groups[i] || {};
+      return Object.assign({}, def, it);
+    });
+  }
   if (Array.isArray(d.nav) && d.nav.length) {
     merged.nav = base.nav.map(def=>Object.assign({}, def, d.nav.find(it=>it.key===def.key)||{}));
     const known = new Set(merged.nav.map(it=>it.key));

@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v97.2';
+  const APP_VERSION = 'v97.3';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -1204,6 +1204,11 @@ function afterCycle(){
     {name:'breed', label:'品种', type:'text', value:'西门塔尔牛'},
     {name:'sex', label:'性别', type:'select', options:['母','公'].map(v=>({v}))},
     {name:'age', label:'年龄', type:'text', placeholder:'例：2岁'},
+    {name:'stage', label:'生产阶段', type:'select', options:['犊牛','育成牛','繁殖母牛','妊娠母牛','待产母牛','育肥牛'].map(v=>({v}))},
+    {name:'motherTag', label:'母号 / 母系耳标', type:'text', placeholder:'犊牛优先填写，便于建立系谱'},
+    {name:'parity', label:'胎次', type:'number', placeholder:'成年母牛填写，例如：2'},
+    {name:'entryDate', label:'入场 / 出生日期', type:'date'},
+    {name:'source', label:'来源', type:'select', options:['自繁自养','购入','转入'].map(v=>({v}))},
     {name:'weight', label:'当前体重', type:'text', placeholder:'例：536kg'},
     {name:'health', label:'健康状况', type:'select', options:['健康','发情预警','待产','待驱虫','观察'].map(v=>({v}))},
     {name:'location', label:'所在位置', type:'text', placeholder:'例：大牛棚圈 / 牛只活动区'},
@@ -1211,59 +1216,212 @@ function afterCycle(){
     {name:'device', label:'绑定设备', type:'select', options:['电子耳标 · 在线','北斗项圈 · 在线','自动称重 · 已过称','监控 · 在线','未绑定'].map(v=>({v}))},
     {name:'note', label:'备注', type:'textarea'}
   ];
+  const groupFields = [
+    {name:'name', label:'生产群名称', type:'text', required:true, placeholder:'例：育肥牛群 / 待产母牛群'},
+    {name:'count', label:'存栏数量', type:'number', required:true},
+    {name:'desc', label:'群体说明', type:'text', placeholder:'饲养目标、棚圈、活动区'},
+    {name:'status', label:'管理状态', type:'select', options:['正常','重点看护','待调整'].map(v=>({v}))}
+  ];
+  const reproFields = [
+    {name:'date', label:'记录日期', type:'date', required:true, value:new Date().toISOString().slice(0,10)},
+    {name:'earTag', label:'牛只耳标', type:'select', required:true},
+    {name:'type', label:'繁殖事项', type:'select', options:['发情观察','配种','妊娠检查','产犊','流产/空怀'].map(v=>({v}))},
+    {name:'method', label:'方式', type:'text', placeholder:'人工观察 / 人工授精 / B超 / 自然分娩'},
+    {name:'bull', label:'公牛 / 冻精', type:'text', placeholder:'种公牛编号或冻精批次'},
+    {name:'result', label:'检查结果', type:'text', placeholder:'已配种 / 妊娠 / 未孕 / 母犊健康'},
+    {name:'nextDate', label:'下次处理日期', type:'date'},
+    {name:'operator', label:'负责人 / 配种员', type:'text'},
+    {name:'status', label:'处理状态', type:'select', options:['待处理','跟进中','待复检','已完成','已取消'].map(v=>({v}))},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
+  const healthFields = [
+    {name:'date', label:'发现日期', type:'date', required:true, value:new Date().toISOString().slice(0,10)},
+    {name:'earTag', label:'牛只耳标', type:'select', required:true},
+    {name:'symptom', label:'异常表现', type:'text', required:true, placeholder:'例：采食下降、发热、跛行'},
+    {name:'temp', label:'体温', type:'text', placeholder:'例：39.1℃'},
+    {name:'diagnosis', label:'初步诊断', type:'text'},
+    {name:'treatment', label:'处置措施', type:'textarea', placeholder:'用药、隔离、调整饲喂等'},
+    {name:'drug', label:'使用药物', type:'text', placeholder:'无用药可填“—”'},
+    {name:'vet', label:'兽医 / 负责人', type:'text'},
+    {name:'withdrawalUntil', label:'休药期截止', type:'date'},
+    {name:'status', label:'处理状态', type:'select', options:['待处理','跟进中','治疗中','隔离观察','已痊愈','已关闭'].map(v=>({v}))},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
+  const movementFields = [
+    {name:'date', label:'计划 / 执行日期', type:'date', required:true, value:new Date().toISOString().slice(0,10)},
+    {name:'earTag', label:'牛只耳标', type:'select', required:true},
+    {name:'from', label:'原位置', type:'text', required:true, placeholder:'例：犊牛舍'},
+    {name:'to', label:'转往位置', type:'text', required:true, placeholder:'例：牛只活动区'},
+    {name:'reason', label:'转群原因', type:'select', options:['阶段转群','待产转栏','育肥分群','隔离观察','草场轮牧','其他'].map(v=>({v}))},
+    {name:'operator', label:'执行人', type:'text'},
+    {name:'status', label:'状态', type:'select', options:['待执行','进行中','已完成','已取消'].map(v=>({v}))},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
+  const earTagOptions = ()=> (DB.animals||[]).map(a=>({v:a.id,t:`${a.id} · ${a.stage||inferAnimalStage(a)}`}));
+  function inferAnimalStage(a={}){
+    if (a.stage) return a.stage;
+    const text = `${a.species||''} ${a.age||''} ${a.health||''} ${a.note||''}`;
+    if (/犊牛|月龄/.test(text)) return '犊牛';
+    if (/待产/.test(text)) return '待产母牛';
+    if (/育肥|出栏/.test(text)) return '育肥牛';
+    if ((a.sex||'')==='母') return '繁殖母牛';
+    return '育成牛';
+  }
+  function stagePill(stage){
+    const cls = stage==='犊牛'?'info':stage==='待产母牛'?'danger':stage==='妊娠母牛'?'warn':stage==='育肥牛'?'ok':'muted';
+    return pill(stage,cls);
+  }
+  function openAnimalModal(){
+    openModal('牛只建档 / 耳标登记', animalFields, v=>{
+      const tag=String(v.id||'').trim();
+      if(!tag){ toast('请填写耳标号','warn'); return false; }
+      if((DB.animals||[]).some(a=>String(a.id).toLowerCase()===tag.toLowerCase())){ toast('该耳标号已存在','warn'); return false; }
+      v.id=tag; addRecord('animals',v);
+      const kg=parseFloat(String(v.weight||'').replace(/[^\d.]/g,''));
+      if(kg>0){
+        DB.growth.animals=DB.growth.animals||[];
+        if(!DB.growth.animals.some(a=>a.tag===tag)) DB.growth.animals.push({tag,breed:v.breed||'西门塔尔',sex:v.sex||'母',stage:/育肥/.test(v.stage||'')?'育肥':/犊牛/.test(v.stage||'')?'犊牛':'成年母牛',start:kg,weights:[kg],days:[0],current:kg,dailyGain:0,note:'首次建档称重'});
+        saveDB();
+      }
+      toast(`耳标 ${tag} 已建档${kg>0?'，称重数据已关联':''}`); render(current);
+    });
+  }
+  function openWeighModal(){
+    openModal('新增耳标称重记录', [
+      {name:'tag', label:'耳标号', type:'select', options:earTagOptions(), required:true},
+      {name:'weight', label:'本次体重（kg）', type:'number', required:true, placeholder:'例：512'},
+      {name:'date', label:'称重日期', type:'date', value:new Date().toISOString().slice(0,10)},
+      {name:'note', label:'备注', type:'text', placeholder:'自动保定称采集 / 人工复核'}
+    ], v=>{
+      const kg=+v.weight; if(!v.tag||!kg){toast('请选择耳标并填写体重','warn');return false;}
+      const a=(DB.animals||[]).find(x=>x.id===v.tag); if(a)updateRecord('animals',a.id,{weight:kg+'kg',device:'自动称重 · 已过称',health:a.health||'健康'});
+      let g=(DB.growth.animals||[]).find(x=>x.tag===v.tag);
+      if(!g){g={tag:v.tag,breed:a?a.breed:'西门塔尔',sex:a?a.sex:'母',stage:/育肥/.test(inferAnimalStage(a||{}))?'育肥':'犊牛',start:kg,weights:[kg],days:[0],current:kg,dailyGain:0,note:v.note||'新增称重'};DB.growth.animals.push(g);}
+      else{const lastDay=g.days[g.days.length-1]||0;const prev=g.current||g.weights[g.weights.length-1]||kg;g.weights.push(kg);g.days.push(lastDay+14);g.current=kg;g.dailyGain=+((kg-prev)/14).toFixed(2);g.note=v.note||g.note;}
+      saveDB();toast(`耳标 ${v.tag} 称重已关联增重分析`);render(current);
+    });
+  }
+  function openReproModal(){
+    openModal('新增繁殖事件', reproFields.map(f=>Object.assign({},f,{options:f.name==='earTag'?earTagOptions():f.options})), v=>{
+      addRecord('reproEvents',v); toast('繁殖事件已登记'); render(current);
+    });
+  }
+  function openHealthModal(){
+    openModal('新增健康处置', healthFields.map(f=>Object.assign({},f,{options:f.name==='earTag'?earTagOptions():f.options})), v=>{
+      addRecord('healthEvents',v);
+      const a=(DB.animals||[]).find(x=>x.id===v.earTag);
+      if(a){ const healthy=/已痊愈|已关闭/.test(v.status||''); updateRecord('animals',a.id,{health:healthy?'健康':'观察'}); }
+      toast('健康处置已登记'); render(current);
+    });
+  }
+  function openMovementModal(){
+    openModal('新增转群 / 调栏', movementFields.map(f=>Object.assign({},f,{options:f.name==='earTag'?earTagOptions():f.options})), v=>{
+      addRecord('movementRecords',v);
+      const a=(DB.animals||[]).find(x=>x.id===v.earTag);
+      if(a && /已完成|进行中/.test(v.status||'')) updateRecord('animals',a.id,{location:v.to});
+      toast('转群记录已保存'); render(current);
+    });
+  }
   function pageLivestock() {
     const c = compute();
+    const st = growthStats();
+    const healthOpen=(DB.healthEvents||[]).filter(x=>!/已痊愈|已关闭/.test(x.status||''));
+    const reproOpen=(DB.reproEvents||[]).filter(x=>!/已完成|已取消/.test(x.status||''));
+    const movementOpen=(DB.movementRecords||[]).filter(x=>!/已完成|已取消/.test(x.status||''));
+    const exitPlan=(DB.slaughterPlans||[]).reduce((a,x)=>a+(+x.head||0),0);
+    const attention=[
+      ...healthOpen.slice(0,2).map(x=>({icon:'🩺',title:`${x.earTag} · ${x.symptom}`,sub:`${x.status} · ${x.diagnosis||'待诊断'}`,action:'health'})),
+      ...reproOpen.slice(0,2).map(x=>({icon:'🍼',title:`${x.earTag} · ${x.type}`,sub:`${x.result||x.status}${x.nextDate?' · 下次 '+x.nextDate:''}`,action:'repro'})),
+      ...movementOpen.slice(0,1).map(x=>({icon:'↔️',title:`${x.earTag} · ${x.reason}`,sub:`${x.from} → ${x.to} · ${x.status}`,action:'move'}))
+    ];
+    const archiveStages=[...new Set((DB.animals||[]).map(a=>inferAnimalStage(a)))];
     return `
     <div class="page livestock-page">
-      ${pageHeader('养殖管理', '西门塔尔牛分群 · 耳标建档 · 称重关联 · 繁殖与健康监测', addBtn('耳标建档/登记牲畜'))}
+      ${pageHeader('养殖管理 · 一头一档全生命周期', '建档 → 繁殖 → 犊牛培育 → 健康状况 → 称重增重 → 转群调栏 → 出栏，所有记录围绕耳标自动关联', `<button class="btn solid sm" data-livestock-action="animal">＋ 牛只建档</button><button class="btn ghost sm" data-livestock-action="weigh">⚖ 称重录入</button><button class="btn ghost sm" data-livestock-action="health">🩺 健康处置</button>`)}
       <div class="kpi-grid kpi-4 livestock-kpis">
-        ${statCard({icon:'🐾', label:'总存栏', value:fmt(c.totalAnimals)+' 头只', sub:'标准家畜单位 '+fmt(c.sheepUnits), color:'#0f766e', bg:'#e7f7f3'})}
-        ${statCard({icon:'🏷️', label:'耳标测温', value:'200 个', sub:'全场牛只 186 头 · 200 枚含备件', color:'#0891b2', bg:'#e0f7fb'})}
-        ${statCard({icon:'🍼', label:'本年度繁殖', value:'产犊 84 头', sub:'犊牛成活率 96.0%', color:'#d97706', bg:'#fff7e6'})}
-        ${statCard({icon:'💉', label:'免疫率', value:'96.8%', sub:'春秋两防 · 应免尽免', color:'#2563eb', bg:'#eaf1ff'})}
+        ${statCard({icon:'🐾', label:'牛群总存栏', value:fmt(c.cattle)+' 头', sub:'成年牛 '+fmt(DB.groups[0]?.count||0)+' · 犊牛 '+fmt(DB.groups[1]?.count||0), color:'#0f766e', bg:'#e7f7f3'})}
+        ${statCard({icon:'🏷️', label:'个体档案覆盖', value:fmt(c.cattle)+' / '+fmt(c.cattle)+' 头', sub:'一头一档 · 耳标唯一身份 · 可追溯', color:'#0891b2', bg:'#e0f7fb'})}
+        ${statCard({icon:'⚖️', label:'平均日增重', value:st.avg.toFixed(2)+' kg/天', sub:'目标 '+st.g.targetGain+' kg/天 · 自动称重关联', color:'#d97706', bg:'#fff7e6'})}
+        ${statCard({icon:'🩺', label:'健康关注', value:healthOpen.length+' 头', sub:healthOpen.length?'需跟进处置与休药期管理':'当前无待处理健康事件', color:'#ef4444', bg:'#fdeeee'})}
+      </div>
+
+      <div class="lv-workbench">
+        <button class="lv-work-item" data-livestock-action="animal"><span class="lw-ico">🏷️</span><span class="lw-copy"><b>牛只建档</b><i>登记耳标、母号、胎次和生产阶段</i></span><em>录入</em></button>
+        <button class="lv-work-item" data-livestock-action="repro"><span class="lw-ico">🍼</span><span class="lw-copy"><b>繁殖管理</b><i>${reproOpen.length} 项待处理 · 发情 / 配种 / 妊娠 / 产犊</i></span><em>管理</em></button>
+        <button class="lv-work-item ${healthOpen.length?'is-warn':''}" data-livestock-action="health"><span class="lw-ico">🩺</span><span class="lw-copy"><b>健康处置</b><i>${healthOpen.length} 头关注 · 诊断 / 用药 / 休药期</i></span><em>处理</em></button>
+        <button class="lv-work-item" data-livestock-action="weigh"><span class="lw-ico">⚖️</span><span class="lw-copy"><b>称重增重</b><i>${st.slow.length} 头掉膘预警 · 自动生成增重趋势</i></span><em>录入</em></button>
+        <button class="lv-work-item" data-livestock-action="move"><span class="lw-ico">↔️</span><span class="lw-copy"><b>转群调栏</b><i>${movementOpen.length} 项待执行 · 棚圈 / 活动区 / 育肥区</i></span><em>调度</em></button>
+        <button class="lv-work-item" data-livestock-action="exit"><span class="lw-ico">📦</span><span class="lw-copy"><b>出栏准备</b><i>${exitPlan} 头计划 · 进入检疫和屠宰流程</i></span><em>进入</em></button>
       </div>
 
       <div class="livestock-top">
         <div class="card livestock-species-card">
           <div class="card-head split">
             <div>
-              <h3>牛群结构与分类</h3>
-              <p class="livestock-card-sub">西门塔尔牛 · 大牛 102 头 · 犊牛 84 头</p>
+              <h3>牛群结构与生产群</h3>
+              <p class="livestock-card-sub">按生产阶段管理，存栏数量、棚圈位置和目标都可调整</p>
             </div>
-            <div class="tabs" id="speciesTabs">
-              <button class="tab active" data-key="all">全部</button>
-              ${DB.species.map(x=>`<button class="tab" data-key="${x.key}">${x.emoji} ${x.name}</button>`).join('')}
-            </div>
+            <button class="btn ghost sm" data-add="group">＋ 新增生产群</button>
           </div>
-          <div class="card-body"><div class="species-grid" id="speciesGrid"></div></div>
+          <div class="card-body"><div class="lv-group-grid">
+            ${DB.groups.map(g=>`<div class="lv-group-card"><div class="lvg-ico">${/犊牛/.test(g.name)?'🐮':'🐂'}</div><div class="lvg-main"><b>${g.name}</b><p>${g.desc}</p><span>${fmt(g.count)} 头 · ${g.status}</span></div><div class="lvg-actions">${editBtn('groups',g.id)}</div></div>`).join('')}
+          </div></div>
         </div>
 
         <div class="livestock-side">
-          ${card('今日繁殖关注', `
+          ${card('今日关注 · 牧场主待办', `
             <div class="mini-alerts livestock-alerts">
-              <div class="ma-item"><span>🐂</span><div><b>1 头发情预警</b><p>AN-10234 · 今日 14:00 配种</p></div></div>
-              <div class="ma-item"><span>🐄</span><div><b>3 头母牛待产</b><p>犊牛舍恒温值守 · 预产期临近</p></div></div>
-              <div class="ma-item"><span>🐮</span><div><b>犊牛建档 84 头</b><p>电子耳标 · 健康观察中</p></div></div>
+              ${attention.length?attention.map(x=>`<button class="ma-item lv-attention" data-livestock-action="${x.action}"><span>${x.icon}</span><div><b>${x.title}</b><p>${x.sub}</p></div><em>处理 ›</em></button>`).join(''):'<div class="lv-empty">今日无健康、繁殖和转群待办。</div>'}
             </div>`)}
-          ${card('分群管理', tableHtml(['畜群','存栏','状态'], DB.groups.map(g=>[`<b>${g.name}</b>`, fmt(g.count)+' 头只', pill(g.status, g.status==='正常'?'ok':'warn')]), 'livestock-group-tbl'))}
+          ${card('养殖业务边界 · 不重复录入', `
+            <div class="lv-boundary">
+              <div><b>养殖管理</b><span>个体档案、繁殖、健康、称重、转群</span></div>
+              <div><b>智慧装备</b><span>耳标设备在线状态、统一网关和端口</span></div>
+              <div><b>防疫管理</b><span>免疫、用药、消毒等防疫档案</span></div>
+              <div><b>屠宰加工</b><span>出栏、检疫、屠宰和产品追溯</span></div>
+            </div>`, 'lv-boundary-card')}
         </div>
+      </div>
+
+      ${card('繁殖全流程 · 发情 / 配种 / 妊娠 / 产犊', tableHtml(
+        ['日期','耳标','繁殖事项','方式 / 公牛','检查结果','下次处理','负责人','状态','操作'],
+        (DB.reproEvents||[]).map(r=>[r.date,`<code>${r.earTag}</code>`,r.type,r.method+(r.bull&&r.bull!=='—'?' · '+r.bull:''),r.result||'—',r.nextDate||'—',r.operator||'—',pill(r.status,/已完成/.test(r.status)?'ok':/待处理|待复检/.test(r.status)?'warn':'info'),editBtn('reproEvents',r.id)+delBtn('reproEvents',r.id)]),
+        'livestock-repro-tbl'
+      ) + `<div class="card-actions"><button class="btn solid sm" data-livestock-action="repro">＋ 登记繁殖事件</button></div>`, 'livestock-repro-card')}
+
+      <div class="lv-record-grid">
+        ${card('健康处置 · 体温 / 诊断 / 用药 / 休药期', tableHtml(
+          ['日期','耳标','异常表现','诊断','处置','兽医','休药期','状态','操作'],
+          (DB.healthEvents||[]).map(r=>[r.date,`<code>${r.earTag}</code>`,r.symptom,r.diagnosis||'—',r.treatment||'—',r.vet||'—',r.withdrawalUntil||'—',pill(r.status,/痊愈|关闭/.test(r.status)?'ok':/治疗|隔离/.test(r.status)?'danger':'warn'),editBtn('healthEvents',r.id)+delBtn('healthEvents',r.id)]),
+          'livestock-health-tbl'
+        ) + `<div class="card-actions"><button class="btn solid sm" data-livestock-action="health">＋ 登记健康处置</button></div>`, 'livestock-health-card')}
+        ${card('转群调栏 · 棚圈 / 活动区 / 育肥区', tableHtml(
+          ['日期','耳标','原位置','转往','原因','执行人','状态','操作'],
+          (DB.movementRecords||[]).map(r=>[r.date,`<code>${r.earTag}</code>`,r.from,r.to,r.reason,r.operator||'—',pill(r.status,/已完成/.test(r.status)?'ok':/待执行/.test(r.status)?'warn':'info'),editBtn('movementRecords',r.id)+delBtn('movementRecords',r.id)]),
+          'livestock-move-tbl'
+        ) + `<div class="card-actions"><button class="btn solid sm" data-livestock-action="move">＋ 新增转群调栏</button></div>`, 'livestock-move-card')}
       </div>
 
       ${card('增重分析与出栏预测 · 三分群全自动保定称自动采集', growthHtml(), 'livestock-growth-card')}
 
-      ${card('繁殖与产犊记录', tableHtml(
+      ${card('年度繁殖与产犊汇总', tableHtml(
         ['日期','畜种','事项','成活率','负责人','备注'],
         DB.birthRecords.map(r=>[r.date, r.species, r.item, r.survival, r.operator, r.note]),
         'livestock-birth-tbl'
-      ) + `<div class="card-actions"><button class="btn solid sm" data-modal="birth">＋ 新增繁殖记录</button></div>`, 'livestock-birth-card')}
+      ) + `<div class="card-actions"><button class="btn solid sm" data-modal="birth">＋ 新增繁殖汇总</button></div>`, 'livestock-birth-card')}
 
-      ${card('个体档案（可登记/删除）', tableHtml(
-        ['耳标号','畜种','品种','性别','年龄','体重','健康','位置','体温','设备','操作'],
-        DB.animals.map(a=>[`<code>${a.id}</code>`, a.species, a.breed, a.sex, a.age, a.weight,
-          pill(a.health, a.health==='健康'?'ok':a.health==='发情预警'?'danger':'warn'),
-          a.location, a.temp, `<span class="dev-on">${a.device}</span>`, editBtn('animals', a.id) + delBtn('animals', a.id)]),
-        'animal-archive-tbl'
-      ) + `<div class="card-actions">${addBtn('耳标建档/登记牲畜')}</div>`, 'animal-archive-card')}
+      ${card('牛只个体档案 · 一头一档', `
+        <div class="lv-archive-toolbar">
+          <input id="lvAnimalSearch" type="search" placeholder="搜索耳标号、母号、位置">
+          <select id="lvStageFilter"><option value="">全部生产阶段</option>${archiveStages.map(x=>`<option value="${x}">${x}</option>`).join('')}</select>
+          <span>设备在线状态请在“智慧装备”查看；耳标在本页用于牛只唯一身份和全生命周期关联。</span>
+        </div>
+        ${tableHtml(
+          ['耳标号','生产阶段','性别','年龄','胎次 / 母号','体重','健康','所在位置','来源','操作'],
+          (DB.animals||[]).map(a=>[`<code>${a.id}</code>`,stagePill(inferAnimalStage(a)),a.sex,a.age,a.parity?('第 '+a.parity+' 胎'):'—'+' / '+(a.motherTag||'—'),a.weight,pill(a.health,a.health==='健康'?'ok':a.health==='发情预警'?'danger':'warn'),a.location,a.source||'—',editBtn('animals',a.id)+delBtn('animals',a.id)]),
+          'animal-archive-tbl'
+        )}
+      <div class="card-actions"><button class="btn solid sm" data-livestock-action="animal">＋ 牛只建档 / 耳标登记</button></div>`, 'animal-archive-card')}
     </div>`;
   }
   function renderSpeciesGrid(){
@@ -1341,7 +1499,6 @@ function afterCycle(){
     `;
   }
   function afterLivestock(){
-    renderSpeciesGrid();
     const st = growthStats();
     const box = $('#chGain');
     if (box && st.list.length){
@@ -1358,50 +1515,51 @@ function afterCycle(){
         unit: 'kg'
       });
     }
-    $('#speciesTabs').addEventListener('click', e=>{
-      const b = e.target.closest('.tab'); if (!b) return;
-      speciesKey = b.dataset.key;
-      document.querySelectorAll('#speciesTabs .tab').forEach(x=>x.classList.toggle('active', x===b));
-      renderSpeciesGrid();
-    });
     bindDel($('#content'));
-    $('#content').querySelectorAll('[data-add="耳标建档/登记牲畜"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('登记耳标 / 牲畜个体', animalFields, v=>{
-        const tag=(v.id||'').trim();
-        if(!tag){ toast('请填写耳标号','warn'); return false; }
-        if(DB.animals.some(a=>String(a.id).toLowerCase()===tag.toLowerCase())){ toast('该耳标号已存在','warn'); return false; }
-        v.id=tag; addRecord('animals',v);
-        const kg=parseFloat(String(v.weight||'').replace(/[^\d.]/g,''));
-        if(kg>0){ DB.growth.animals=DB.growth.animals||[]; DB.growth.animals.push({tag,breed:v.breed||'西门塔尔',sex:v.sex||'母',stage:/犊/.test(v.species)||/月龄/.test(v.age||'')?'犊牛':'育肥',start:kg,weights:[kg],days:[0],current:kg,dailyGain:0,note:'首次建档称重'}); saveDB(); }
-        toast(`耳标 ${tag} 已建档${kg>0?'，称重数据已关联':''}`); render(current);
-      });
+    bindEdit($('#content'), {
+      'animals': { title:'编辑牛只个体档案', fields:animalFields },
+      'groups': { title:'编辑生产群', fields:groupFields },
+      'reproEvents': { title:'编辑繁殖事件', fields:reproFields.map(f=>Object.assign({},f,{options:f.name==='earTag'?earTagOptions():f.options})) },
+      'healthEvents': { title:'编辑健康处置', fields:healthFields.map(f=>Object.assign({},f,{options:f.name==='earTag'?earTagOptions():f.options})) },
+      'movementRecords': { title:'编辑转群记录', fields:movementFields.map(f=>Object.assign({},f,{options:f.name==='earTag'?earTagOptions():f.options})) }
+    });
+    const actions={
+      animal:openAnimalModal,
+      repro:openReproModal,
+      health:openHealthModal,
+      weigh:openWeighModal,
+      move:openMovementModal
+    };
+    $('#content').querySelectorAll('[data-livestock-action]').forEach(b=>b.addEventListener('click',()=>{
+      const act=b.dataset.livestockAction;
+      if(act==='exit'){ render('slaughter'); return; }
+      if(act==='archive'){ $('#livestockArchive')?.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+      if(actions[act]) actions[act]();
     }));
-    bindEdit($('#content'), { 'animals': { title:'编辑牲畜个体', fields: animalFields } });
-    $('#content').querySelectorAll('[data-add="称重记录"]').forEach(b=>b.addEventListener('click', ()=>{
-      openModal('新增耳标称重记录', [
-        {name:'tag', label:'耳标号', type:'select', options:DB.animals.map(a=>({v:a.id,t:a.id+' · '+a.breed}))},
-        {name:'weight', label:'本次体重（kg）', type:'number', required:true, placeholder:'例：512'},
-        {name:'date', label:'称重日期', type:'date', value:new Date().toISOString().slice(0,10)},
-        {name:'note', label:'备注', type:'text', placeholder:'自动保定称采集'}
-      ], v=>{
-        const kg=+v.weight; if(!v.tag||!kg){toast('请选择耳标并填写体重','warn');return false;}
-        const a=DB.animals.find(x=>x.id===v.tag); if(a)updateRecord('animals',a.id,{weight:kg+'kg',device:'自动称重 · 已过称',health:a.health||'健康'});
-        let g=(DB.growth.animals||[]).find(x=>x.tag===v.tag);
-        if(!g){g={tag:v.tag,breed:a?a.breed:'西门塔尔',sex:a?a.sex:'母',stage:'育肥',start:kg,weights:[kg],days:[0],current:kg,dailyGain:0,note:v.note||'新增称重'};DB.growth.animals.push(g);}
-        else{const lastDay=g.days[g.days.length-1]||0;const prev=g.current||g.weights[g.weights.length-1]||kg;g.weights.push(kg);g.days.push(lastDay+14);g.current=kg;g.dailyGain=+((kg-prev)/14).toFixed(2);g.note=v.note||g.note;}
-        saveDB();toast(`耳标 ${v.tag} 称重已关联增重分析`);render(current);
-      });
+    $('#content').querySelectorAll('[data-add="group"]').forEach(b=>b.addEventListener('click',()=>{
+      openModal('新增生产群', groupFields, v=>{ addRecord('groups',{...v,count:+v.count||0}); toast('生产群已新增'); render(current); });
     }));
+    const search=$('#lvAnimalSearch'), stageFilter=$('#lvStageFilter');
+    const filterAnimals=()=>{
+      const q=String(search?.value||'').trim().toLowerCase(), stage=String(stageFilter?.value||'');
+      document.querySelectorAll('.animal-archive-tbl tbody tr').forEach(tr=>{
+        const stageText=String(tr.children[1]?.innerText||'').trim();
+        const match= (!q || tr.innerText.toLowerCase().includes(q)) && (!stage || stageText===stage);
+        tr.style.display=match?'':'none';
+      });
+    };
+    search?.addEventListener('input',filterAnimals);
+    stageFilter?.addEventListener('change',filterAnimals);
     const birthBtn = $('#content').querySelector('[data-modal="birth"]');
     if (birthBtn) birthBtn.addEventListener('click', ()=>{
-      openModal('新增繁殖记录', [
-        {name:'date', label:'日期', type:'date', required:true},
+      openModal('新增繁殖汇总', [
+        {name:'date', label:'日期', type:'date', required:true, value:new Date().toISOString().slice(0,10)},
         {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
-        {name:'item', label:'事项', type:'text', placeholder:'例：产犊 100 只', required:true},
+        {name:'item', label:'事项', type:'text', placeholder:'例：产犊 84 头', required:true},
         {name:'survival', label:'成活率', type:'text', placeholder:'例：97.6%'},
         {name:'operator', label:'负责人', type:'text'},
         {name:'note', label:'备注', type:'textarea'}
-      ], v=>{ addRecord('birthRecords', v); toast('繁殖记录已保存'); render(current); });
+      ], v=>{ addRecord('birthRecords', v); toast('繁殖汇总已保存'); render(current); });
     });
   }
 
