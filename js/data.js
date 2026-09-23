@@ -232,14 +232,14 @@ const DEFAULT_DATA = {
 
   /* ---------- 独立系统接入中心 ---------- */
   integrations: [
-    { id:'IN1', key:'camera', name:'海康视频监控系统', vendor:'海康威视', protocol:'GB28181 / ONVIF / RTSP', direction:'视频流 + AI事件', vendorEndpoint:'rtsp://192.168.1.64:554/Streaming/Channels/101', platformEndpoint:'/api/integrations/camera/push', auth:'SIP ID + 密码', data:'在线状态 · 视频流 · 抓拍 · AI识别事件', frequency:'实时', status:'未连接', last:'' },
-    { id:'IN2', key:'earTag', name:'电子耳标测温系统', vendor:'RFID读写器/耳标厂商', protocol:'TCP/IP / BLE / MQTT', direction:'子系统推送', vendorEndpoint:'tcp://192.168.1.80:8000', platformEndpoint:'/api/integrations/ear-tag/push', auth:'网关编号 + Token', data:'耳标号 · 体温 · 电量 · 在线状态', frequency:'5分钟', status:'未连接', last:'' },
-    { id:'IN3', key:'tmr', name:'TMR饲喂管理系统', vendor:'TMR设备厂商', protocol:'Modbus / ISOBUS / API', direction:'我方拉取 + 对方推送', vendorEndpoint:'modbus://192.168.1.91:502', platformEndpoint:'/api/integrations/tmr/pull', auth:'设备编号', data:'配方 · 搅拌批次 · 投喂量 · 运行状态', frequency:'实时/批次', status:'未连接', last:'' },
-    { id:'IN4', key:'scale', name:'自动称重保定系统', vendor:'称重设备厂商', protocol:'Modbus TCP / RS485', direction:'对方推送', vendorEndpoint:'modbus://192.168.1.90:502', platformEndpoint:'/api/integrations/scale/push', auth:'设备序列号', data:'耳标号 · 体重 · 分群 · 称重时间', frequency:'每次过称', status:'未连接', last:'' },
-    { id:'IN5', key:'drone', name:'无人机巡检系统', vendor:'无人机平台', protocol:'HTTPS API / WebSocket', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/drone/tasks', platformEndpoint:'/api/integrations/drone/pull', auth:'API Key + Secret', data:'航线 · 图片 · 视频 · 作业面积 · 异常点', frequency:'任务结束', status:'未连接', last:'' },
-    { id:'IN6', key:'robotDog', name:'机器狗巡检系统', vendor:'机器狗平台', protocol:'HTTP API / MQTT / RTSP', direction:'对方推送 + 视频流', vendorEndpoint:'http://192.168.1.120:8080/api/robot', platformEndpoint:'/api/integrations/robot-dog/push', auth:'设备序列号 + Token', data:'巡检轨迹 · 电量 · 告警 · 视频', frequency:'实时', status:'未连接', last:'' },
-    { id:'IN7', key:'machine', name:'北斗农机作业系统', vendor:'农机终端平台', protocol:'RTK / 北斗 / HTTPS API', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/machine/tasks', platformEndpoint:'/api/integrations/machine/pull', auth:'终端编号 + API Key', data:'作业面积 · 轨迹 · 速度 · 故障', frequency:'5分钟', status:'未连接', last:'' },
-    { id:'IN8', key:'gov', name:'政府监管平台', vendor:'旗/市农牧监管平台', protocol:'HTTPS JSON / 文件交换', direction:'我方上报', vendorEndpoint:'https://gov-api.example.cn/v1/report', platformEndpoint:'/api/integrations/gov/report', auth:'政务账号 + 数字证书', data:'防疫 · 检疫 · 屠宰 · 耳标溯源', frequency:'按业务上报', status:'未连接', last:'' }
+    { id:'IN1', key:'camera', name:'海康视频监控系统', vendor:'海康威视', protocol:'GB28181 / ONVIF / RTSP', direction:'视频流 + AI事件', vendorEndpoint:'rtsp://192.168.1.64:554/Streaming/Channels/101', platformEndpoint:'/api/integrations/camera/push', auth:'SIP ID + 密码', data:'在线状态 · 视频流 · 抓拍 · AI识别事件', frequency:'实时', status:'未连接', last:'', webUrl:'http://192.168.1.64' },
+    { id:'IN2', key:'earTag', name:'电子耳标测温系统', vendor:'RFID读写器/耳标厂商', protocol:'TCP/IP / BLE / MQTT', direction:'子系统推送', vendorEndpoint:'tcp://192.168.1.80:8000', platformEndpoint:'/api/integrations/ear-tag/push', auth:'网关编号 + Token', data:'耳标号 · 体温 · 电量 · 在线状态', frequency:'5分钟', status:'未连接', last:'', webUrl:'http://192.168.1.80' },
+    { id:'IN3', key:'tmr', name:'TMR饲喂管理系统', vendor:'TMR设备厂商', protocol:'Modbus / ISOBUS / API', direction:'我方拉取 + 对方推送', vendorEndpoint:'modbus://192.168.1.91:502', platformEndpoint:'/api/integrations/tmr/pull', auth:'设备编号', data:'配方 · 搅拌批次 · 投喂量 · 运行状态', frequency:'实时/批次', status:'未连接', last:'', webUrl:'http://192.168.1.91' },
+    { id:'IN4', key:'scale', name:'自动称重保定系统', vendor:'称重设备厂商', protocol:'Modbus TCP / RS485', direction:'对方推送', vendorEndpoint:'modbus://192.168.1.90:502', platformEndpoint:'/api/integrations/scale/push', auth:'设备序列号', data:'耳标号 · 体重 · 分群 · 称重时间', frequency:'每次过称', status:'未连接', last:'', webUrl:'http://192.168.1.90' },
+    { id:'IN5', key:'drone', name:'无人机巡检系统', vendor:'无人机平台', protocol:'HTTPS API / WebSocket', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/drone/tasks', platformEndpoint:'/api/integrations/drone/pull', auth:'API Key + Secret', data:'航线 · 图片 · 视频 · 作业面积 · 异常点', frequency:'任务结束', status:'未连接', last:'', webUrl:'https://api.example.cn/' },
+    { id:'IN6', key:'robotDog', name:'机器狗巡检系统', vendor:'机器狗平台', protocol:'HTTP API / MQTT / RTSP', direction:'对方推送 + 视频流', vendorEndpoint:'http://192.168.1.120:8080/api/robot', platformEndpoint:'/api/integrations/robot-dog/push', auth:'设备序列号 + Token', data:'巡检轨迹 · 电量 · 告警 · 视频', frequency:'实时', status:'未连接', last:'', webUrl:'http://192.168.1.120:8080' },
+    { id:'IN7', key:'machine', name:'北斗农机作业系统', vendor:'农机终端平台', protocol:'RTK / 北斗 / HTTPS API', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/machine/tasks', platformEndpoint:'/api/integrations/machine/pull', auth:'终端编号 + API Key', data:'作业面积 · 轨迹 · 速度 · 故障', frequency:'5分钟', status:'未连接', last:'', webUrl:'https://api.example.cn/' },
+    { id:'IN8', key:'gov', name:'政府监管平台', vendor:'旗/市农牧监管平台', protocol:'HTTPS JSON / 文件交换', direction:'我方上报', vendorEndpoint:'https://gov-api.example.cn/v1/report', platformEndpoint:'/api/integrations/gov/report', auth:'政务账号 + 数字证书', data:'防疫 · 检疫 · 屠宰 · 耳标溯源', frequency:'按业务上报', status:'未连接', last:'', webUrl:'https://gov-api.example.cn/' }
   ],
 
   /* ---------- 耳标统一对外接入 ---------- */
@@ -463,12 +463,24 @@ let DB = loadDB();
 function mergeDBState(input){
   const d = input || {};
   const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  const merged = Object.assign(base, d);
+  const merged = Object.assign({}, base, d);
   if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
   if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
   if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
-  if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
-  if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
+  if (Array.isArray(d.nav) && d.nav.length) {
+    merged.nav = base.nav.map(def=>Object.assign({}, def, d.nav.find(it=>it.key===def.key)||{}));
+    const known = new Set(merged.nav.map(it=>it.key));
+    d.nav.forEach(it=>{ if(it && it.key && !known.has(it.key)){ merged.nav.push(it); known.add(it.key); } });
+  }
+  merged.earTagGateway = Object.assign({}, base.earTagGateway, d.earTagGateway || {});
+  if (!Array.isArray(d.integrations) || !d.integrations.length) {
+    merged.integrations = base.integrations;
+  } else {
+    merged.integrations = d.integrations.map((it,i)=>{
+      const def = base.integrations.find(x=>x.id===it.id||x.key===it.key) || base.integrations[i] || {};
+      return Object.assign({},def,it);
+    });
+  }
   merged.meta = Object.assign({}, base.meta, d.meta || {});
   return merged;
 }

@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v97.1';
+  const APP_VERSION = 'v97.2';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -2194,11 +2194,13 @@ function afterCycle(){
     {name:'direction', label:'数据方向', type:'select', options:['对方推送','我方拉取','视频流','我方上报','视频流 + AI事件','我方拉取 + 对方推送','对方推送 + 视频流'].map(v=>({v}))},
     {name:'vendorEndpoint', label:'对方系统地址/端口', type:'text'},
     {name:'platformEndpoint', label:'我方接收/拉取地址', type:'text'},
+    {name:'webUrl', label:'独立系统登录/管理地址', type:'text', placeholder:'例：http://厂商平台地址/登录'},
     {name:'auth', label:'认证方式', type:'text', placeholder:'API Key / Token / SIP ID / 证书'},
     {name:'data', label:'同步数据内容', type:'textarea'},
     {name:'frequency', label:'同步频率', type:'text', placeholder:'实时 / 5分钟 / 每次过称 / 按业务上报'},
     {name:'status', label:'连接状态', type:'select', options:['未连接','测试中','已连接','停用'].map(v=>({v}))}
   ];
+  const integrationWebUrl = value => { try { const u=new URL(String(value||''),location.href); return /^https?:$/.test(u.protocol)?u.href:''; } catch(e){ return ''; } };
   function openIntegrationDetail(it){
     const ov=document.createElement('div'); ov.className='modal-overlay'; ov.style.zIndex='120';
     const sample=JSON.stringify({vendor:it.vendor,system:it.name,deviceId:'DEVICE-001',data:it.data,time:new Date().toISOString()},null,2);
@@ -2215,7 +2217,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     const pull=list.filter(x=>/拉取/.test(x.direction)).length;
     return `
     <div class="page integration-page">
-      ${pageHeader('系统接入中心 · 独立系统统一接入', '监控、耳标、TMR、称重、无人机、机器狗和农机平台只需各留一个适配接口', `<button class="btn solid sm" data-integration-add>＋ 新增外部系统</button>`)}
+      ${pageHeader('系统接入中心 · 独立系统统一接入', '连接后点击每张系统卡片里的“↗ 打开独立系统”，即可进入厂商自己的软件', `<button class="btn solid sm" data-integration-add>＋ 新增外部系统</button>`)}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🔗', label:'外部系统', value:list.length+' 个', sub:'视频/耳标/饲喂/称重/无人设备', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'🟢', label:'已连接', value:connected+' 个', sub:'统一适配 · 状态可测试', color:'#14b8a6', bg:'#e7f7f3'})}
@@ -2228,7 +2230,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
       </div>
       ${card('独立系统连接清单', `
         <div class="integration-grid">
-          ${list.map(it=>`<div class="integration-card ${it.status==='已连接'?'connected':''}"><div class="ic-head"><span>${it.key==='camera'?'🎥':it.key==='earTag'?'🏷️':it.key==='tmr'?'🚜':it.key==='scale'?'⚖️':it.key==='drone'?'🛸':it.key==='robotDog'?'🤖':it.key==='machine'?'🛰️':'🏛️'}</span><div><b>${it.name}</b><small>${it.vendor}</small></div>${pill(it.status,it.status==='已连接'?'ok':it.status==='停用'?'muted':'warn')}</div><div class="ic-body"><div><span>接入方式</span><b>${it.protocol}</b></div><div><span>数据方向</span><b>${it.direction}</b></div><div><span>对方地址</span><code>${it.vendorEndpoint}</code></div><div><span>我方接口</span><code>${it.platformEndpoint}</code></div><div><span>同步内容</span><b>${it.data}</b></div><div><span>频率认证</span><b>${it.frequency} · ${it.auth}</b></div></div><div class="ic-actions"><button data-integration-detail="${it.id}">接入说明</button><button data-integration-test="${it.id}">测试连接</button><button data-integration-toggle="${it.id}">${it.status==='已连接'?'断开':'连接'}</button><button data-integration-edit="${it.id}">编辑</button>${delBtn('integrations',it.id)}</div></div>`).join('')}
+          ${list.map(it=>`<div class="integration-card ${it.status==='已连接'?'connected':''}"><div class="ic-head"><span>${it.key==='camera'?'🎥':it.key==='earTag'?'🏷️':it.key==='tmr'?'🚜':it.key==='scale'?'⚖️':it.key==='drone'?'🛸':it.key==='robotDog'?'🤖':it.key==='machine'?'🛰️':'🏛️'}</span><div><b>${it.name}</b><small>${it.vendor}</small></div>${pill(it.status,it.status==='已连接'?'ok':it.status==='停用'?'muted':'warn')}</div><div class="ic-body"><div><span>接入方式</span><b>${it.protocol}</b></div><div><span>数据方向</span><b>${it.direction}</b></div><div><span>对方地址</span><code>${it.vendorEndpoint}</code></div><div><span>我方接口</span><code>${it.platformEndpoint}</code></div><div><span>同步内容</span><b>${it.data}</b></div><div><span>频率认证</span><b>${it.frequency} · ${it.auth}</b></div></div><div class="ic-actions"><a class="integration-open" data-integration-open="${it.id}" href="${integrationWebUrl(it.webUrl)}" target="_blank" rel="noopener noreferrer">↗ 打开独立系统</a><button data-integration-detail="${it.id}">接入说明</button><button data-integration-test="${it.id}">测试连接</button><button data-integration-toggle="${it.id}">${it.status==='已连接'?'断开':'连接'}</button><button data-integration-edit="${it.id}">编辑</button>${delBtn('integrations',it.id)}</div></div>`).join('')}
         </div>`, 'integration-list-card')}
       ${card('平台提供什么 · 对方提供什么', `
         <div class="integration-rules"><div><h4>我们平台提供</h4><p>统一接入地址、回调地址、MQTT Topic、接口认证方式、JSON数据格式、测试环境和数据字段映射。</p><span>每个独立系统只需要一个适配接口。</span></div><div><h4>对方系统提供</h4><p>API地址或端口、AppKey/Secret/Token、设备编号、接口文档、推送频率、数据样例和心跳/在线状态接口。</p><span>如对方无API，可通过边缘网关转换协议。</span></div><div><h4>连接后形成</h4><p>外部数据先进入接入适配器，再做清洗和统一编码，最后进入档案、预警、报表和数据大屏。</p><span>不再逐个设备直连主系统。</span></div></div>`, 'integration-rules-card')}
@@ -2238,6 +2240,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     bindDel($('#content'));
     bindEdit($('#content'), { 'integrations': { title:'编辑外部系统接入', fields:integrationFields } });
     const toggle=id=>{const it=(DB.integrations||[]).find(x=>x.id===id);if(!it)return;const on=it.status==='已连接';it.status=on?'未连接':'已连接';it.last=on?'':new Date().toLocaleString('zh-CN',{hour12:false});saveDB();toast(on?'外部系统已断开':'外部系统连接成功');render(current);};
+    $('#content').querySelectorAll('[data-integration-open]').forEach(b=>b.addEventListener('click',e=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationOpen);if(!it||!integrationWebUrl(it.webUrl)){e.preventDefault();toast('请先编辑该接入配置，填写有效的 http/https 独立系统登录/管理地址','warn');}}));
     $('#content').querySelectorAll('[data-integration-detail]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationDetail);if(it)openIntegrationDetail(it)}));
     $('#content').querySelectorAll('[data-integration-test]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationTest);if(!it)return;it.status='已连接';it.last=new Date().toLocaleString('zh-CN',{hour12:false});saveDB();toast(`${it.name} 连接测试成功`);render(current)}));
     $('#content').querySelectorAll('[data-integration-toggle]').forEach(b=>b.addEventListener('click',()=>toggle(b.dataset.integrationToggle)));
@@ -2922,7 +2925,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
         ${statCard({icon:'🗂️', label:'数据表', value:'20+ 张', sub:'牲畜/草场/装备/账本/订单', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🧾', label:'记录总数', value:dbCount()+' 条', sub:'可增删改 · 本机保存', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'👥', label:'账号角色', value:'4 类', sub:'场主/兽医/牧工/客服', color:'#f59e0b', bg:'#fef3c7'})}
-        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-21 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
+        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-23 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
       </div>
       <div class="grid-3">
         <div class="col2">
