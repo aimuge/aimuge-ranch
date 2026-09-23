@@ -4061,6 +4061,20 @@ body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(
 .bs-season-name{animation:none!important;text-shadow:none!important}
 .bs-v8 .bs-panel{background-image:linear-gradient(150deg,rgba(9,38,50,.96),rgba(5,22,32,.98))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 12px 28px -26px #000!important}
 
+/* v97 独立系统接入中心 */
+.integration-flow{display:flex;align-items:stretch;gap:6px;overflow:auto;padding:14px;margin-bottom:14px;border:1px solid rgba(17,107,123,.16);border-radius:14px;background:linear-gradient(135deg,rgba(17,107,123,.06),rgba(27,145,168,.035));box-shadow:0 10px 28px -28px rgba(8,42,56,.62)}
+.integration-flow>div{min-width:112px;flex:1;padding:10px 8px;text-align:center;border:1px solid rgba(17,107,123,.15);border-radius:11px;background:#fff}
+.integration-flow>div span{display:block;font-size:20px}.integration-flow>div b{display:block;font-size:11px;color:#1d4653;margin-top:4px}.integration-flow>div small{display:block;font-size:8.5px;color:#84989f;margin-top:2px}.integration-flow>i{display:flex;align-items:center;color:#168198;font-style:normal;font-weight:800}.integration-flow>em{display:flex;align-items:center;min-width:170px;padding:10px;border-radius:11px;background:linear-gradient(135deg,#0d6678,#1b91a8);color:#fff;font-style:normal;font-size:10px;text-align:center;line-height:1.5}
+.integration-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.integration-card{border:1px solid var(--line);border-radius:14px;padding:13px;background:linear-gradient(145deg,#fff,#f7fbfb);min-width:0}.integration-card.connected{border-color:#8fd7c6;background:linear-gradient(145deg,#f8fffd,#effbf7)}
+.ic-head{display:flex;align-items:center;gap:9px}.ic-head>span{font-size:24px;flex:none}.ic-head>div{flex:1;min-width:0}.ic-head b{display:block;font-size:13px;color:#173743}.ic-head small{display:block;font-size:10px;color:#7d929a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ic-head .pill{flex:none}
+.ic-body{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:11px 0}.ic-body>div{min-width:0;padding:7px 8px;border:1px solid #e4edef;border-radius:8px;background:rgba(255,255,255,.72)}.ic-body span{display:block;font-size:9px;color:#83989f}.ic-body b,.ic-body code{display:block;margin-top:2px;font-size:10px;color:#294e59;word-break:break-all}.ic-body code{font-size:9px;background:transparent;padding:0;border:0}.ic-actions{display:flex;gap:6px;flex-wrap:wrap}.ic-actions button{border:1px solid rgba(17,107,123,.22);background:#fff;color:#0f6678;border-radius:8px;padding:6px 9px;font-size:10px;font-family:inherit;cursor:pointer}.ic-actions button:hover{border-color:#168198;background:#f3fbfc}
+.integration-rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.integration-rules>div{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff}.integration-rules h4{margin:0 0 7px;color:#0d6678;font-size:13px}.integration-rules p{font-size:11px;color:#607981;line-height:1.7}.integration-rules span{display:block;margin-top:8px;font-size:10px;color:#168198}
+.integration-modal{width:min(760px,94vw)}.integration-detail{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:18px}.integration-detail>div{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}.integration-detail span{display:block;font-size:10px;color:#81969d}.integration-detail b{display:block;font-size:11px;color:#274c57;word-break:break-all;margin-top:3px}.integration-detail .code{grid-column:1/-1;margin:0;white-space:pre-wrap;word-break:break-all}
+body[data-theme="dark"] .integration-flow,body[data-theme="dark"] .integration-card,body[data-theme="dark"] .integration-rules>div,body[data-theme="dark"] .integration-detail>div{background:linear-gradient(145deg,rgba(7,31,42,.94),rgba(4,20,29,.97));border-color:rgba(55,179,200,.18)}body[data-theme="dark"] .integration-flow>div{background:rgba(7,38,53,.9);border-color:rgba(55,179,200,.22)}body[data-theme="dark"] .integration-flow>div b,body[data-theme="dark"] .ic-head b,body[data-theme="dark"] .ic-body b,body[data-theme="dark"] .integration-detail b{color:#d9f3f7}body[data-theme="dark"] .ic-body>div{background:rgba(5,27,38,.72);border-color:rgba(55,179,200,.14)}
+@media(max-width:900px){.integration-grid{grid-template-columns:1fr}.integration-rules{grid-template-columns:1fr}.integration-flow>em{min-width:140px}}
+@media(max-width:640px){.integration-flow{padding:9px}.integration-flow>div{min-width:94px}.ic-body{grid-template-columns:1fr}.integration-detail{grid-template-columns:1fr;padding:12px}.integration-detail .code{grid-column:auto}}
+
 </style>
 </head>
 <body>
@@ -4077,7 +4091,7 @@ body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
       <div class="wx-mini">📱 牧民端小程序 · 游客端小程序</div>
-      <div class="sys-info">平台 v96.2 · 2026-09-21 · 呼伦贝尔</div>
+      <div class="sys-info">平台 v97 · 2026-09-21 · 呼伦贝尔</div>
     </div>
   </aside>
   <div class="mask" id="mask"></div>
@@ -4087,7 +4101,7 @@ body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(
     <header class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
       <div class="crumb" id="crumb">数据总览</div>
-      <span class="ver-badge" title="当前版本">v96.2 · 09-21</span>
+      <span class="ver-badge" title="当前版本">v97 · 09-21</span>
       <div class="topbar-right">
         <div class="iot-chip" id="iotChip" title="点击开/关智能硬件实时采集">● 实时采集</div>
         <button class="gear-btn" id="themeBtn" title="切换科技深色 / 浅色">🌙</button>
@@ -4106,7 +4120,7 @@ body[data-theme="dark"] .ear-gateway>div{background:linear-gradient(145deg,rgba(
     </header>
     <nav class="mnav" id="mnav"></nav>
     <section class="content" id="content"></section>
-    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v96.2 · 2026-09-21</footer>
+    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v97 · 2026-09-21</footer>
   </main>
 </div>
 <button class="fab" id="fabBtn" title="智能服务小伊">👩‍🌾</button>
@@ -4168,6 +4182,7 @@ const DEFAULT_DATA = {
     { key:'grassland',  icon:'🌾', title:'草场管理' },
     { key:'vaccine',    icon:'💉', title:'防疫管理' },
     { key:'devices',    icon:'📡', title:'智慧装备' },
+    { key:'integrations', icon:'🔗', title:'系统接入中心' },
     { key:'cycle',      icon:'🔄', title:'四季生产' },
     { key:'ledger',     icon:'💰', title:'经营账本' },
     { key:'labor',      icon:'🧑‍🌾', title:'用工管理' },
@@ -4350,6 +4365,18 @@ const DEFAULT_DATA = {
     { id:'DA3', deviceId:'DV3', level:'中', title:'1 个定位项圈信号偏弱', detail:'该牛只位于活动区边缘，信号可能受地形影响。', value:'信号 28%', threshold:'信号≥35%', time:'今天 07:35', status:'待处理' },
     { id:'DA4', deviceId:'DV1', level:'中', title:'生活区监控夜间画面遮挡', detail:'AI 识别画面清晰度下降，请检查镜头和补光灯。', value:'清晰度 62%', threshold:'清晰度≥80%', time:'昨天 23:18', status:'待处理' },
     { id:'DA5', deviceId:'DV6', level:'低', title:'TMR 液压油温偏高', detail:'建议作业间歇降温并检查液压油。', value:'78℃', threshold:'<75℃', time:'昨天 17:20', status:'已处理' }
+  ],
+
+  /* ---------- 独立系统接入中心 ---------- */
+  integrations: [
+    { id:'IN1', key:'camera', name:'海康视频监控系统', vendor:'海康威视', protocol:'GB28181 / ONVIF / RTSP', direction:'视频流 + AI事件', vendorEndpoint:'rtsp://192.168.1.64:554/Streaming/Channels/101', platformEndpoint:'/api/integrations/camera/push', auth:'SIP ID + 密码', data:'在线状态 · 视频流 · 抓拍 · AI识别事件', frequency:'实时', status:'未连接', last:'' },
+    { id:'IN2', key:'earTag', name:'电子耳标测温系统', vendor:'RFID读写器/耳标厂商', protocol:'TCP/IP / BLE / MQTT', direction:'子系统推送', vendorEndpoint:'tcp://192.168.1.80:8000', platformEndpoint:'/api/integrations/ear-tag/push', auth:'网关编号 + Token', data:'耳标号 · 体温 · 电量 · 在线状态', frequency:'5分钟', status:'未连接', last:'' },
+    { id:'IN3', key:'tmr', name:'TMR饲喂管理系统', vendor:'TMR设备厂商', protocol:'Modbus / ISOBUS / API', direction:'我方拉取 + 对方推送', vendorEndpoint:'modbus://192.168.1.91:502', platformEndpoint:'/api/integrations/tmr/pull', auth:'设备编号', data:'配方 · 搅拌批次 · 投喂量 · 运行状态', frequency:'实时/批次', status:'未连接', last:'' },
+    { id:'IN4', key:'scale', name:'自动称重保定系统', vendor:'称重设备厂商', protocol:'Modbus TCP / RS485', direction:'对方推送', vendorEndpoint:'modbus://192.168.1.90:502', platformEndpoint:'/api/integrations/scale/push', auth:'设备序列号', data:'耳标号 · 体重 · 分群 · 称重时间', frequency:'每次过称', status:'未连接', last:'' },
+    { id:'IN5', key:'drone', name:'无人机巡检系统', vendor:'无人机平台', protocol:'HTTPS API / WebSocket', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/drone/tasks', platformEndpoint:'/api/integrations/drone/pull', auth:'API Key + Secret', data:'航线 · 图片 · 视频 · 作业面积 · 异常点', frequency:'任务结束', status:'未连接', last:'' },
+    { id:'IN6', key:'robotDog', name:'机器狗巡检系统', vendor:'机器狗平台', protocol:'HTTP API / MQTT / RTSP', direction:'对方推送 + 视频流', vendorEndpoint:'http://192.168.1.120:8080/api/robot', platformEndpoint:'/api/integrations/robot-dog/push', auth:'设备序列号 + Token', data:'巡检轨迹 · 电量 · 告警 · 视频', frequency:'实时', status:'未连接', last:'' },
+    { id:'IN7', key:'machine', name:'北斗农机作业系统', vendor:'农机终端平台', protocol:'RTK / 北斗 / HTTPS API', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/machine/tasks', platformEndpoint:'/api/integrations/machine/pull', auth:'终端编号 + API Key', data:'作业面积 · 轨迹 · 速度 · 故障', frequency:'5分钟', status:'未连接', last:'' },
+    { id:'IN8', key:'gov', name:'政府监管平台', vendor:'旗/市农牧监管平台', protocol:'HTTPS JSON / 文件交换', direction:'我方上报', vendorEndpoint:'https://gov-api.example.cn/v1/report', platformEndpoint:'/api/integrations/gov/report', auth:'政务账号 + 数字证书', data:'防疫 · 检疫 · 屠宰 · 耳标溯源', frequency:'按业务上报', status:'未连接', last:'' }
   ],
 
   /* ---------- 耳标统一对外接入 ---------- */
@@ -4582,6 +4609,7 @@ function loadDB(){
         if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
         if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
         if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
+        if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
         return merged;
       }
     }
@@ -4816,7 +4844,7 @@ const Charts = (() => {
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v96.2';
+  const APP_VERSION = 'v97';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -6996,6 +7024,65 @@ function afterCycle(){
     $('#content').querySelectorAll('[data-add="deviceList"]').forEach(b=>b.addEventListener('click',()=>openModal('新增装备（端口对接）',deviceFields,v=>{addRecord('deviceList',{...v,count:+v.count||1});toast('装备已接入系统');render(current)})));
   }
 
+  /* ================= 独立系统接入中心 ================= */
+  const integrationFields = [
+    {name:'name', label:'系统名称', type:'text', required:true},
+    {name:'vendor', label:'厂商/平台', type:'text'},
+    {name:'protocol', label:'对接协议', type:'text', placeholder:'HTTPS API / MQTT / RTSP / Modbus'},
+    {name:'direction', label:'数据方向', type:'select', options:['对方推送','我方拉取','视频流','我方上报','视频流 + AI事件','我方拉取 + 对方推送','对方推送 + 视频流'].map(v=>({v}))},
+    {name:'vendorEndpoint', label:'对方系统地址/端口', type:'text'},
+    {name:'platformEndpoint', label:'我方接收/拉取地址', type:'text'},
+    {name:'auth', label:'认证方式', type:'text', placeholder:'API Key / Token / SIP ID / 证书'},
+    {name:'data', label:'同步数据内容', type:'textarea'},
+    {name:'frequency', label:'同步频率', type:'text', placeholder:'实时 / 5分钟 / 每次过称 / 按业务上报'},
+    {name:'status', label:'连接状态', type:'select', options:['未连接','测试中','已连接','停用'].map(v=>({v}))}
+  ];
+  function openIntegrationDetail(it){
+    const ov=document.createElement('div'); ov.className='modal-overlay'; ov.style.zIndex='120';
+    const sample=JSON.stringify({vendor:it.vendor,system:it.name,deviceId:'DEVICE-001',data:it.data,time:new Date().toISOString()},null,2);
+    ov.innerHTML=`<div class="modal integration-modal"><div class="modal-head"><h3>${escTxt(it.name)} · 接入说明</h3><button class="modal-x" type="button">×</button></div><div class="integration-detail"><div><span>对接方向</span><b>${escTxt(it.direction)}</b></div><div><span>协议</span><b>${escTxt(it.protocol)}</b></div><div><span>对方提供</span><b>${escTxt(it.vendorEndpoint)}</b></div><div><span>我方提供</span><b>${escTxt(it.platformEndpoint)}</b></div><div><span>认证</span><b>${escTxt(it.auth)}</b></div><div><span>数据内容</span><b>${escTxt(it.data)}</b></div><pre class="code">POST ${escTxt(it.platformEndpoint)}
+Content-Type: application/json
+
+${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" data-close>关闭</button></div></div>`;
+    document.body.appendChild(ov); const close=()=>ov.remove(); ov.querySelector('.modal-x').onclick=close; ov.querySelector('[data-close]').onclick=close; ov.addEventListener('click',e=>{if(e.target===ov)close()});
+  }
+  function pageIntegrations(){
+    const list=DB.integrations||[];
+    const connected=list.filter(x=>x.status==='已连接').length;
+    const push=list.filter(x=>/推送|上报/.test(x.direction)).length;
+    const pull=list.filter(x=>/拉取/.test(x.direction)).length;
+    return `
+    <div class="page integration-page">
+      ${pageHeader('系统接入中心 · 独立系统统一接入', '监控、耳标、TMR、称重、无人机、机器狗和农机平台只需各留一个适配接口', `<button class="btn solid sm" data-integration-add>＋ 新增外部系统</button>`)}
+      <div class="kpi-grid kpi-4">
+        ${statCard({icon:'🔗', label:'外部系统', value:list.length+' 个', sub:'视频/耳标/饲喂/称重/无人设备', color:'#0ea5e9', bg:'#e0f2fe'})}
+        ${statCard({icon:'🟢', label:'已连接', value:connected+' 个', sub:'统一适配 · 状态可测试', color:'#14b8a6', bg:'#e7f7f3'})}
+        ${statCard({icon:'📥', label:'推送接入', value:push+' 个', sub:'对方主动推送至本平台', color:'#4f46e5', bg:'#eef2ff'})}
+        ${statCard({icon:'📤', label:'主动拉取', value:pull+' 个', sub:'平台定时读取对方数据', color:'#f59e0b', bg:'#fef3c7'})}
+      </div>
+      <div class="integration-flow">
+        ${[['🎥','视频监控系统','GB28181 / RTSP'],['🏷️','耳标测温系统','MQTT / TCP'],['🚜','TMR饲喂系统','Modbus / ISOBUS'],['⚖️','自动称重系统','Modbus / RS485'],['🛸','无人机系统','HTTPS / WebSocket'],['🤖','机器狗系统','API / MQTT'],['🛰️','北斗农机系统','RTK / API'],['🏛️','政府监管平台','HTTPS JSON']].map((x,i)=>`<div><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></div>${i<7?'<i>→</i>':''}`).join('')}
+        <em>统一数据中枢 · 统一账号权限 · 统一预警 · 统一数据大屏</em>
+      </div>
+      ${card('独立系统连接清单', `
+        <div class="integration-grid">
+          ${list.map(it=>`<div class="integration-card ${it.status==='已连接'?'connected':''}"><div class="ic-head"><span>${it.key==='camera'?'🎥':it.key==='earTag'?'🏷️':it.key==='tmr'?'🚜':it.key==='scale'?'⚖️':it.key==='drone'?'🛸':it.key==='robotDog'?'🤖':it.key==='machine'?'🛰️':'🏛️'}</span><div><b>${it.name}</b><small>${it.vendor}</small></div>${pill(it.status,it.status==='已连接'?'ok':it.status==='停用'?'muted':'warn')}</div><div class="ic-body"><div><span>接入方式</span><b>${it.protocol}</b></div><div><span>数据方向</span><b>${it.direction}</b></div><div><span>对方地址</span><code>${it.vendorEndpoint}</code></div><div><span>我方接口</span><code>${it.platformEndpoint}</code></div><div><span>同步内容</span><b>${it.data}</b></div><div><span>频率认证</span><b>${it.frequency} · ${it.auth}</b></div></div><div class="ic-actions"><button data-integration-detail="${it.id}">接入说明</button><button data-integration-test="${it.id}">测试连接</button><button data-integration-toggle="${it.id}">${it.status==='已连接'?'断开':'连接'}</button><button data-integration-edit="${it.id}">编辑</button>${delBtn('integrations',it.id)}</div></div>`).join('')}
+        </div>`, 'integration-list-card')}
+      ${card('平台提供什么 · 对方提供什么', `
+        <div class="integration-rules"><div><h4>我们平台提供</h4><p>统一接入地址、回调地址、MQTT Topic、接口认证方式、JSON数据格式、测试环境和数据字段映射。</p><span>每个独立系统只需要一个适配接口。</span></div><div><h4>对方系统提供</h4><p>API地址或端口、AppKey/Secret/Token、设备编号、接口文档、推送频率、数据样例和心跳/在线状态接口。</p><span>如对方无API，可通过边缘网关转换协议。</span></div><div><h4>连接后形成</h4><p>外部数据先进入接入适配器，再做清洗和统一编码，最后进入档案、预警、报表和数据大屏。</p><span>不再逐个设备直连主系统。</span></div></div>`, 'integration-rules-card')}
+    </div>`;
+  }
+  function afterIntegrations(){
+    bindDel($('#content'));
+    bindEdit($('#content'), { 'integrations': { title:'编辑外部系统接入', fields:integrationFields } });
+    const toggle=id=>{const it=(DB.integrations||[]).find(x=>x.id===id);if(!it)return;const on=it.status==='已连接';it.status=on?'未连接':'已连接';it.last=on?'':new Date().toLocaleString('zh-CN',{hour12:false});saveDB();toast(on?'外部系统已断开':'外部系统连接成功');render(current);};
+    $('#content').querySelectorAll('[data-integration-detail]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationDetail);if(it)openIntegrationDetail(it)}));
+    $('#content').querySelectorAll('[data-integration-test]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationTest);if(!it)return;it.status='已连接';it.last=new Date().toLocaleString('zh-CN',{hour12:false});saveDB();toast(`${it.name} 连接测试成功`);render(current)}));
+    $('#content').querySelectorAll('[data-integration-toggle]').forEach(b=>b.addEventListener('click',()=>toggle(b.dataset.integrationToggle)));
+    $('#content').querySelectorAll('[data-integration-edit]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationEdit);if(!it)return;openModal(`编辑接入 · ${it.name}`,integrationFields.map(f=>({...f,value:it[f.name]??f.value})),v=>{updateRecord('integrations',it.id,v);toast('接入配置已更新');render(current)})}));
+    $('#content').querySelectorAll('[data-integration-add]').forEach(b=>b.addEventListener('click',()=>openModal('新增外部系统接入',integrationFields,v=>{addRecord('integrations',{...v,last:''});toast('外部系统已新增');render(current)})));
+  }
+
   /* ================= 产品中心 ================= */
   const productInventoryFields = [
     {name:'name', label:'产品名称', type:'text', required:true},
@@ -7928,6 +8015,7 @@ function afterCycle(){
     vaccine:    { title:'防疫管理', render:pageVaccine, after:afterVaccine },
     gov:        { title:'政务对接', render:pageGov, after:afterGov },
     devices:    { title:'智慧装备', render:pageDevices, after:afterDevices },
+    integrations:{ title:'系统接入中心', render:pageIntegrations, after:afterIntegrations },
     products:   { title:'产品中心', render:pageProducts, after:afterProducts },
     tourism:    { title:'文旅牧游', render:pageTourism, after:afterTourism },
     profile:    { title:'牧场档案', render:pageProfile, after:afterProfile }

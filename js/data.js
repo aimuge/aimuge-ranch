@@ -45,6 +45,7 @@ const DEFAULT_DATA = {
     { key:'grassland',  icon:'🌾', title:'草场管理' },
     { key:'vaccine',    icon:'💉', title:'防疫管理' },
     { key:'devices',    icon:'📡', title:'智慧装备' },
+    { key:'integrations', icon:'🔗', title:'系统接入中心' },
     { key:'cycle',      icon:'🔄', title:'四季生产' },
     { key:'ledger',     icon:'💰', title:'经营账本' },
     { key:'labor',      icon:'🧑‍🌾', title:'用工管理' },
@@ -227,6 +228,18 @@ const DEFAULT_DATA = {
     { id:'DA3', deviceId:'DV3', level:'中', title:'1 个定位项圈信号偏弱', detail:'该牛只位于活动区边缘，信号可能受地形影响。', value:'信号 28%', threshold:'信号≥35%', time:'今天 07:35', status:'待处理' },
     { id:'DA4', deviceId:'DV1', level:'中', title:'生活区监控夜间画面遮挡', detail:'AI 识别画面清晰度下降，请检查镜头和补光灯。', value:'清晰度 62%', threshold:'清晰度≥80%', time:'昨天 23:18', status:'待处理' },
     { id:'DA5', deviceId:'DV6', level:'低', title:'TMR 液压油温偏高', detail:'建议作业间歇降温并检查液压油。', value:'78℃', threshold:'<75℃', time:'昨天 17:20', status:'已处理' }
+  ],
+
+  /* ---------- 独立系统接入中心 ---------- */
+  integrations: [
+    { id:'IN1', key:'camera', name:'海康视频监控系统', vendor:'海康威视', protocol:'GB28181 / ONVIF / RTSP', direction:'视频流 + AI事件', vendorEndpoint:'rtsp://192.168.1.64:554/Streaming/Channels/101', platformEndpoint:'/api/integrations/camera/push', auth:'SIP ID + 密码', data:'在线状态 · 视频流 · 抓拍 · AI识别事件', frequency:'实时', status:'未连接', last:'' },
+    { id:'IN2', key:'earTag', name:'电子耳标测温系统', vendor:'RFID读写器/耳标厂商', protocol:'TCP/IP / BLE / MQTT', direction:'子系统推送', vendorEndpoint:'tcp://192.168.1.80:8000', platformEndpoint:'/api/integrations/ear-tag/push', auth:'网关编号 + Token', data:'耳标号 · 体温 · 电量 · 在线状态', frequency:'5分钟', status:'未连接', last:'' },
+    { id:'IN3', key:'tmr', name:'TMR饲喂管理系统', vendor:'TMR设备厂商', protocol:'Modbus / ISOBUS / API', direction:'我方拉取 + 对方推送', vendorEndpoint:'modbus://192.168.1.91:502', platformEndpoint:'/api/integrations/tmr/pull', auth:'设备编号', data:'配方 · 搅拌批次 · 投喂量 · 运行状态', frequency:'实时/批次', status:'未连接', last:'' },
+    { id:'IN4', key:'scale', name:'自动称重保定系统', vendor:'称重设备厂商', protocol:'Modbus TCP / RS485', direction:'对方推送', vendorEndpoint:'modbus://192.168.1.90:502', platformEndpoint:'/api/integrations/scale/push', auth:'设备序列号', data:'耳标号 · 体重 · 分群 · 称重时间', frequency:'每次过称', status:'未连接', last:'' },
+    { id:'IN5', key:'drone', name:'无人机巡检系统', vendor:'无人机平台', protocol:'HTTPS API / WebSocket', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/drone/tasks', platformEndpoint:'/api/integrations/drone/pull', auth:'API Key + Secret', data:'航线 · 图片 · 视频 · 作业面积 · 异常点', frequency:'任务结束', status:'未连接', last:'' },
+    { id:'IN6', key:'robotDog', name:'机器狗巡检系统', vendor:'机器狗平台', protocol:'HTTP API / MQTT / RTSP', direction:'对方推送 + 视频流', vendorEndpoint:'http://192.168.1.120:8080/api/robot', platformEndpoint:'/api/integrations/robot-dog/push', auth:'设备序列号 + Token', data:'巡检轨迹 · 电量 · 告警 · 视频', frequency:'实时', status:'未连接', last:'' },
+    { id:'IN7', key:'machine', name:'北斗农机作业系统', vendor:'农机终端平台', protocol:'RTK / 北斗 / HTTPS API', direction:'我方拉取', vendorEndpoint:'https://api.example.cn/v1/machine/tasks', platformEndpoint:'/api/integrations/machine/pull', auth:'终端编号 + API Key', data:'作业面积 · 轨迹 · 速度 · 故障', frequency:'5分钟', status:'未连接', last:'' },
+    { id:'IN8', key:'gov', name:'政府监管平台', vendor:'旗/市农牧监管平台', protocol:'HTTPS JSON / 文件交换', direction:'我方上报', vendorEndpoint:'https://gov-api.example.cn/v1/report', platformEndpoint:'/api/integrations/gov/report', auth:'政务账号 + 数字证书', data:'防疫 · 检疫 · 屠宰 · 耳标溯源', frequency:'按业务上报', status:'未连接', last:'' }
   ],
 
   /* ---------- 耳标统一对外接入 ---------- */
@@ -459,6 +472,7 @@ function loadDB(){
         if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
         if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
         if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
+        if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
         return merged;
       }
     }

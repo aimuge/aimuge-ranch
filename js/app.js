@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v96.2';
+  const APP_VERSION = 'v97';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -2186,6 +2186,65 @@ function afterCycle(){
     $('#content').querySelectorAll('[data-add="deviceList"]').forEach(b=>b.addEventListener('click',()=>openModal('新增装备（端口对接）',deviceFields,v=>{addRecord('deviceList',{...v,count:+v.count||1});toast('装备已接入系统');render(current)})));
   }
 
+  /* ================= 独立系统接入中心 ================= */
+  const integrationFields = [
+    {name:'name', label:'系统名称', type:'text', required:true},
+    {name:'vendor', label:'厂商/平台', type:'text'},
+    {name:'protocol', label:'对接协议', type:'text', placeholder:'HTTPS API / MQTT / RTSP / Modbus'},
+    {name:'direction', label:'数据方向', type:'select', options:['对方推送','我方拉取','视频流','我方上报','视频流 + AI事件','我方拉取 + 对方推送','对方推送 + 视频流'].map(v=>({v}))},
+    {name:'vendorEndpoint', label:'对方系统地址/端口', type:'text'},
+    {name:'platformEndpoint', label:'我方接收/拉取地址', type:'text'},
+    {name:'auth', label:'认证方式', type:'text', placeholder:'API Key / Token / SIP ID / 证书'},
+    {name:'data', label:'同步数据内容', type:'textarea'},
+    {name:'frequency', label:'同步频率', type:'text', placeholder:'实时 / 5分钟 / 每次过称 / 按业务上报'},
+    {name:'status', label:'连接状态', type:'select', options:['未连接','测试中','已连接','停用'].map(v=>({v}))}
+  ];
+  function openIntegrationDetail(it){
+    const ov=document.createElement('div'); ov.className='modal-overlay'; ov.style.zIndex='120';
+    const sample=JSON.stringify({vendor:it.vendor,system:it.name,deviceId:'DEVICE-001',data:it.data,time:new Date().toISOString()},null,2);
+    ov.innerHTML=`<div class="modal integration-modal"><div class="modal-head"><h3>${escTxt(it.name)} · 接入说明</h3><button class="modal-x" type="button">×</button></div><div class="integration-detail"><div><span>对接方向</span><b>${escTxt(it.direction)}</b></div><div><span>协议</span><b>${escTxt(it.protocol)}</b></div><div><span>对方提供</span><b>${escTxt(it.vendorEndpoint)}</b></div><div><span>我方提供</span><b>${escTxt(it.platformEndpoint)}</b></div><div><span>认证</span><b>${escTxt(it.auth)}</b></div><div><span>数据内容</span><b>${escTxt(it.data)}</b></div><pre class="code">POST ${escTxt(it.platformEndpoint)}
+Content-Type: application/json
+
+${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" data-close>关闭</button></div></div>`;
+    document.body.appendChild(ov); const close=()=>ov.remove(); ov.querySelector('.modal-x').onclick=close; ov.querySelector('[data-close]').onclick=close; ov.addEventListener('click',e=>{if(e.target===ov)close()});
+  }
+  function pageIntegrations(){
+    const list=DB.integrations||[];
+    const connected=list.filter(x=>x.status==='已连接').length;
+    const push=list.filter(x=>/推送|上报/.test(x.direction)).length;
+    const pull=list.filter(x=>/拉取/.test(x.direction)).length;
+    return `
+    <div class="page integration-page">
+      ${pageHeader('系统接入中心 · 独立系统统一接入', '监控、耳标、TMR、称重、无人机、机器狗和农机平台只需各留一个适配接口', `<button class="btn solid sm" data-integration-add>＋ 新增外部系统</button>`)}
+      <div class="kpi-grid kpi-4">
+        ${statCard({icon:'🔗', label:'外部系统', value:list.length+' 个', sub:'视频/耳标/饲喂/称重/无人设备', color:'#0ea5e9', bg:'#e0f2fe'})}
+        ${statCard({icon:'🟢', label:'已连接', value:connected+' 个', sub:'统一适配 · 状态可测试', color:'#14b8a6', bg:'#e7f7f3'})}
+        ${statCard({icon:'📥', label:'推送接入', value:push+' 个', sub:'对方主动推送至本平台', color:'#4f46e5', bg:'#eef2ff'})}
+        ${statCard({icon:'📤', label:'主动拉取', value:pull+' 个', sub:'平台定时读取对方数据', color:'#f59e0b', bg:'#fef3c7'})}
+      </div>
+      <div class="integration-flow">
+        ${[['🎥','视频监控系统','GB28181 / RTSP'],['🏷️','耳标测温系统','MQTT / TCP'],['🚜','TMR饲喂系统','Modbus / ISOBUS'],['⚖️','自动称重系统','Modbus / RS485'],['🛸','无人机系统','HTTPS / WebSocket'],['🤖','机器狗系统','API / MQTT'],['🛰️','北斗农机系统','RTK / API'],['🏛️','政府监管平台','HTTPS JSON']].map((x,i)=>`<div><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></div>${i<7?'<i>→</i>':''}`).join('')}
+        <em>统一数据中枢 · 统一账号权限 · 统一预警 · 统一数据大屏</em>
+      </div>
+      ${card('独立系统连接清单', `
+        <div class="integration-grid">
+          ${list.map(it=>`<div class="integration-card ${it.status==='已连接'?'connected':''}"><div class="ic-head"><span>${it.key==='camera'?'🎥':it.key==='earTag'?'🏷️':it.key==='tmr'?'🚜':it.key==='scale'?'⚖️':it.key==='drone'?'🛸':it.key==='robotDog'?'🤖':it.key==='machine'?'🛰️':'🏛️'}</span><div><b>${it.name}</b><small>${it.vendor}</small></div>${pill(it.status,it.status==='已连接'?'ok':it.status==='停用'?'muted':'warn')}</div><div class="ic-body"><div><span>接入方式</span><b>${it.protocol}</b></div><div><span>数据方向</span><b>${it.direction}</b></div><div><span>对方地址</span><code>${it.vendorEndpoint}</code></div><div><span>我方接口</span><code>${it.platformEndpoint}</code></div><div><span>同步内容</span><b>${it.data}</b></div><div><span>频率认证</span><b>${it.frequency} · ${it.auth}</b></div></div><div class="ic-actions"><button data-integration-detail="${it.id}">接入说明</button><button data-integration-test="${it.id}">测试连接</button><button data-integration-toggle="${it.id}">${it.status==='已连接'?'断开':'连接'}</button><button data-integration-edit="${it.id}">编辑</button>${delBtn('integrations',it.id)}</div></div>`).join('')}
+        </div>`, 'integration-list-card')}
+      ${card('平台提供什么 · 对方提供什么', `
+        <div class="integration-rules"><div><h4>我们平台提供</h4><p>统一接入地址、回调地址、MQTT Topic、接口认证方式、JSON数据格式、测试环境和数据字段映射。</p><span>每个独立系统只需要一个适配接口。</span></div><div><h4>对方系统提供</h4><p>API地址或端口、AppKey/Secret/Token、设备编号、接口文档、推送频率、数据样例和心跳/在线状态接口。</p><span>如对方无API，可通过边缘网关转换协议。</span></div><div><h4>连接后形成</h4><p>外部数据先进入接入适配器，再做清洗和统一编码，最后进入档案、预警、报表和数据大屏。</p><span>不再逐个设备直连主系统。</span></div></div>`, 'integration-rules-card')}
+    </div>`;
+  }
+  function afterIntegrations(){
+    bindDel($('#content'));
+    bindEdit($('#content'), { 'integrations': { title:'编辑外部系统接入', fields:integrationFields } });
+    const toggle=id=>{const it=(DB.integrations||[]).find(x=>x.id===id);if(!it)return;const on=it.status==='已连接';it.status=on?'未连接':'已连接';it.last=on?'':new Date().toLocaleString('zh-CN',{hour12:false});saveDB();toast(on?'外部系统已断开':'外部系统连接成功');render(current);};
+    $('#content').querySelectorAll('[data-integration-detail]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationDetail);if(it)openIntegrationDetail(it)}));
+    $('#content').querySelectorAll('[data-integration-test]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationTest);if(!it)return;it.status='已连接';it.last=new Date().toLocaleString('zh-CN',{hour12:false});saveDB();toast(`${it.name} 连接测试成功`);render(current)}));
+    $('#content').querySelectorAll('[data-integration-toggle]').forEach(b=>b.addEventListener('click',()=>toggle(b.dataset.integrationToggle)));
+    $('#content').querySelectorAll('[data-integration-edit]').forEach(b=>b.addEventListener('click',()=>{const it=(DB.integrations||[]).find(x=>x.id===b.dataset.integrationEdit);if(!it)return;openModal(`编辑接入 · ${it.name}`,integrationFields.map(f=>({...f,value:it[f.name]??f.value})),v=>{updateRecord('integrations',it.id,v);toast('接入配置已更新');render(current)})}));
+    $('#content').querySelectorAll('[data-integration-add]').forEach(b=>b.addEventListener('click',()=>openModal('新增外部系统接入',integrationFields,v=>{addRecord('integrations',{...v,last:''});toast('外部系统已新增');render(current)})));
+  }
+
   /* ================= 产品中心 ================= */
   const productInventoryFields = [
     {name:'name', label:'产品名称', type:'text', required:true},
@@ -3118,6 +3177,7 @@ function afterCycle(){
     vaccine:    { title:'防疫管理', render:pageVaccine, after:afterVaccine },
     gov:        { title:'政务对接', render:pageGov, after:afterGov },
     devices:    { title:'智慧装备', render:pageDevices, after:afterDevices },
+    integrations:{ title:'系统接入中心', render:pageIntegrations, after:afterIntegrations },
     products:   { title:'产品中心', render:pageProducts, after:afterProducts },
     tourism:    { title:'文旅牧游', render:pageTourism, after:afterTourism },
     profile:    { title:'牧场档案', render:pageProfile, after:afterProfile }
