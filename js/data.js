@@ -75,7 +75,9 @@ const DEFAULT_DATA = {
     { id:'YL-0003', species:'牛', breed:'西门塔尔', sex:'母', age:'3岁', stage:'繁殖母牛', motherTag:'YL-0002', parity:1, entryDate:'2023-03-20', source:'自繁自养', weight:'556kg', health:'健康', location:'大牛棚圈', device:'电子耳标 · 在线', temp:'38.5℃', note:'体况良好' },
     { id:'YL-0004', species:'牛', breed:'西门塔尔', sex:'母', age:'6岁', stage:'妊娠母牛', motherTag:'—', parity:4, entryDate:'2020-06-11', source:'自繁自养', weight:'664kg', health:'健康', location:'活动区', device:'北斗项圈 · 在线', temp:'38.6℃', note:'活动量正常' },
     { id:'YL-0024', species:'牛', breed:'西门塔尔', sex:'公', age:'6月龄', stage:'犊牛', motherTag:'YL-0002', parity:0, entryDate:'2026-03-18', source:'自繁自养', weight:'186kg', health:'观察', location:'犊牛舍', device:'电子耳标 · 在线', temp:'38.7℃', note:'犊牛 · 保温观察' },
-    { id:'YL-0036', species:'牛', breed:'西门塔尔', sex:'公', age:'18月龄', stage:'育肥牛', motherTag:'YL-0001', parity:0, entryDate:'2025-03-22', source:'自繁自养', weight:'486kg', health:'健康', location:'大牛棚圈', device:'自动称重 · 已过称', temp:'38.6℃', note:'育肥出栏候选' }
+    { id:'YL-0036', species:'牛', breed:'西门塔尔', sex:'公', age:'18月龄', stage:'育肥牛', motherTag:'YL-0001', parity:0, entryDate:'2025-03-22', source:'自繁自养', weight:'486kg', health:'健康', location:'大牛棚圈', device:'自动称重 · 已过称', temp:'38.6℃', note:'育肥出栏候选' },
+    { id:'YL-0042', species:'牛', breed:'西门塔尔', sex:'公', age:'18月龄', stage:'育肥牛', motherTag:'YL-0004', parity:0, entryDate:'2025-03-18', source:'自繁自养', weight:'510kg', health:'健康', location:'育肥区', device:'自动称重 · 已过称', temp:'38.5℃', note:'增重最快 · 近期重点观察' },
+    { id:'YL-0051', species:'牛', breed:'西门塔尔', sex:'公', age:'20月龄', stage:'育肥牛', motherTag:'YL-0003', parity:0, entryDate:'2025-01-12', source:'自繁自养', weight:'458kg', health:'观察', location:'育肥区', device:'自动称重 · 已过称', temp:'38.6℃', note:'日增重偏慢 · 建议调整配方' }
   ],
   birthRecords: [
     { id:'BR1', date:'2026-03-18', species:'牛', item:'产犊 84 头', survival:'96.0%', operator:'伊拉特', note:'犊牛舍恒温 · 初乳 2 小时内饲喂' },
@@ -309,9 +311,9 @@ const DEFAULT_DATA = {
       { id:'TO-004', item:'奶食工坊 ×2', guest:'亲子团 · 杭州', date:'12/18', amount:'¥240', status:'待付款' }
     ],
     yurts: [
-      { name:'暖冬蒙古包 A 区', count:3, fac:'地暖 · 独立卫浴 · Wi-Fi', status:'营业中' },
-      { name:'家庭星空包 B 区', count:2, fac:'天窗 · 火墙', status:'营业中' },
-      { name:'游牧体验毡房', count:2, fac:'传统毡房 · 火炉', status:'冬季关闭' }
+      { id:'Y1', name:'暖冬蒙古包 A 区', count:3, fac:'地暖 · 独立卫浴 · Wi-Fi', status:'营业中' },
+      { id:'Y2', name:'家庭星空包 B 区', count:2, fac:'天窗 · 火墙', status:'营业中' },
+      { id:'Y3', name:'游牧体验毡房', count:2, fac:'传统毡房 · 火炉', status:'冬季关闭' }
     ],
     safety:'游客意外险全覆盖 · 持证牧民向导 4 名 · 雪地救援车 1 台 · 距旗医院 60km 急救联动'
   },
@@ -506,6 +508,13 @@ function mergeDBState(input){
     d.nav.forEach(it=>{ if(it && it.key && !known.has(it.key)){ merged.nav.push(it); known.add(it.key); } });
   }
   merged.earTagGateway = Object.assign({}, base.earTagGateway, d.earTagGateway || {});
+  merged.tourism = Object.assign({}, base.tourism, d.tourism || {});
+  if (Array.isArray(d.tourism?.yurts) && d.tourism.yurts.length) {
+    merged.tourism.yurts = d.tourism.yurts.map((it,i)=>{
+      const def = base.tourism.yurts.find(x=>x.id===it.id||x.name===it.name) || base.tourism.yurts[i] || {};
+      return Object.assign({}, def, it);
+    });
+  }
   if (!Array.isArray(d.integrations) || !d.integrations.length) {
     merged.integrations = base.integrations;
   } else {
@@ -565,19 +574,49 @@ function setPath(obj, path, val){
   t[last] = val;
 }
 function uid(prefix){ return (prefix||'ID') + '-' + String(Date.now()).slice(-6); }
+function animalGroupId(item={}){
+  return /犊牛|月龄/.test(`${item.stage||''} ${item.species||''} ${item.age||''}`) ? 'G2' : 'G1';
+}
+function adjustAnimalCounts(item={}, delta=0){
+  const species=(DB.species||[]).find(x=>x.key==='cattle') || (DB.species||[])[0];
+  if(species) species.count=Math.max(0,(+species.count||0)+delta);
+  const group=(DB.groups||[]).find(x=>x.id===animalGroupId(item));
+  if(group) group.count=Math.max(0,(+group.count||0)+delta);
+}
+function syncCattleCount(){
+  const total=(DB.groups||[]).reduce((sum,g)=>sum+(+g.count||0),0);
+  const species=(DB.species||[]).find(x=>x.key==='cattle') || (DB.species||[])[0];
+  if(species && total>0) species.count=total;
+}
 function addRecord(path, item){
   const arr = byPath(DB, path) || [];
   item.id = item.id || uid();
-  arr.push(item); setPath(DB, path, arr); saveDB(); return item;
+  arr.push(item); setPath(DB, path, arr);
+  if(path==='animals') adjustAnimalCounts(item,1);
+  if(path==='groups') syncCattleCount();
+  saveDB(); return item;
 }
 function updateRecord(path, id, patch){
   const arr = byPath(DB, path) || [];
   const i = arr.findIndex(x=>x.id===id); if (i<0) return;
-  arr[i] = Object.assign({}, arr[i], patch); saveDB();
+  const before=arr[i], after=Object.assign({}, arr[i], patch);
+  if(path==='animals' && animalGroupId(before)!==animalGroupId(after)){
+    adjustAnimalCounts(before,-1); adjustAnimalCounts(after,1);
+  }
+  arr[i] = after;
+  if(path==='groups') syncCattleCount();
+  saveDB();
 }
 function delRecord(path, id){
   const arr = byPath(DB, path) || [];
-  setPath(DB, path, arr.filter(x=>x.id!==id)); saveDB();
+  const item=arr.find(x=>x.id===id);
+  if(path==='animals' && item){
+    adjustAnimalCounts(item,-1);
+    if(DB.growth && Array.isArray(DB.growth.animals)) DB.growth.animals=DB.growth.animals.filter(x=>x.tag!==id);
+  }
+  setPath(DB, path, arr.filter(x=>x.id!==id));
+  if(path==='groups') syncCattleCount();
+  saveDB();
 }
 function resetData(){ DB = JSON.parse(JSON.stringify(DEFAULT_DATA)); saveDB(); }
 

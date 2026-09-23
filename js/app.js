@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v97.3';
+  const APP_VERSION = 'v98.0';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -266,6 +266,7 @@
     <div class="table-wrap ${cls?cls+'-wrap':''}"><table class="tbl ${cls}"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
     <tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td data-label="${headers[i]||''}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   const addBtn = (label, path) => `<button class="btn solid sm" data-add="${path||label}">＋ ${label}</button>`;
+  const navBtn = (label, page, cls='ghost') => `<button class="btn ${cls} sm" data-goto="${page}">${label}</button>`;
   const pageHeader = (title, sub, actions='') => {
     const saved = pageSetting(current);
     const finalTitle = saved.title || title;
@@ -383,7 +384,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo-sm.webp?v=89" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=98.0d" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -1257,7 +1258,7 @@ function afterCycle(){
     {name:'status', label:'状态', type:'select', options:['待执行','进行中','已完成','已取消'].map(v=>({v}))},
     {name:'note', label:'备注', type:'textarea'}
   ];
-  const earTagOptions = ()=> (DB.animals||[]).map(a=>({v:a.id,t:`${a.id} · ${a.stage||inferAnimalStage(a)}`}));
+  function earTagOptions(){ return (DB.animals||[]).map(a=>({v:a.id,t:`${a.id} · ${a.stage||inferAnimalStage(a)}`})); }
   function inferAnimalStage(a={}){
     if (a.stage) return a.stage;
     const text = `${a.species||''} ${a.age||''} ${a.health||''} ${a.note||''}`;
@@ -1337,7 +1338,7 @@ function afterCycle(){
     const archiveStages=[...new Set((DB.animals||[]).map(a=>inferAnimalStage(a)))];
     return `
     <div class="page livestock-page">
-      ${pageHeader('养殖管理 · 一头一档全生命周期', '建档 → 繁殖 → 犊牛培育 → 健康状况 → 称重增重 → 转群调栏 → 出栏，所有记录围绕耳标自动关联', `<button class="btn solid sm" data-livestock-action="animal">＋ 牛只建档</button><button class="btn ghost sm" data-livestock-action="weigh">⚖ 称重录入</button><button class="btn ghost sm" data-livestock-action="health">🩺 健康处置</button>`)}
+      ${pageHeader('养殖管理 · 一头一档全生命周期', '建档 → 繁殖 → 犊牛培育 → 健康状况 → 称重增重 → 转群调栏 → 出栏，所有记录围绕耳标自动关联', `<button class="btn solid sm" data-livestock-action="animal">＋ 牛只建档</button><button class="btn ghost sm" data-livestock-action="weigh">⚖ 称重录入</button><button class="btn ghost sm" data-livestock-action="health">🩺 健康处置</button>${navBtn('🩺 防疫管理','vaccine')}${navBtn('🍖 出栏屠宰','slaughter')}`)}
       <div class="kpi-grid kpi-4 livestock-kpis">
         ${statCard({icon:'🐾', label:'牛群总存栏', value:fmt(c.cattle)+' 头', sub:'成年牛 '+fmt(DB.groups[0]?.count||0)+' · 犊牛 '+fmt(DB.groups[1]?.count||0), color:'#0f766e', bg:'#e7f7f3'})}
         ${statCard({icon:'🏷️', label:'个体档案覆盖', value:fmt(c.cattle)+' / '+fmt(c.cattle)+' 头', sub:'一头一档 · 耳标唯一身份 · 可追溯', color:'#0891b2', bg:'#e0f7fb'})}
@@ -1424,25 +1425,6 @@ function afterCycle(){
       <div class="card-actions"><button class="btn solid sm" data-livestock-action="animal">＋ 牛只建档 / 耳标登记</button></div>`, 'animal-archive-card')}
     </div>`;
   }
-  function renderSpeciesGrid(){
-    const grid = $('#speciesGrid'); if (!grid) return;
-    const list = speciesKey==='all' ? DB.species : DB.species.filter(x=>x.key===speciesKey);
-    grid.innerHTML = list.map(sp=>`
-      <div class="species-card" style="--sp:${sp.color}">
-        <div class="sp-head"><span class="sp-emoji">${sp.emoji}</span>
-          <div><div class="sp-name">${sp.name}</div><div class="sp-breed">${sp.breed}</div></div>
-          <div class="sp-count">${fmt(sp.count)}<small> 头/只</small></div></div>
-        <div class="sp-structure">${sp.structure}</div>
-        <div class="sp-meta"><span>GPS <b>${sp.gps} 套</b></span><span>均温 <b>${sp.tempAvg}</b></span></div>
-        <div class="sp-chart" data-chart="${sp.key}"></div>
-      </div>`).join('');
-    list.forEach(sp=>{
-      Charts.line(grid.querySelector(`[data-chart="${sp.key}"]`), {
-        labels:['近1期','近2期','近3期','近4期','近5期','近6期','本期'],
-        series:[{ name:'存栏', color:sp.color, values:sp.trend }], height:120, yFormat:v=>Math.round(v) });
-    });
-  }
-  let speciesKey = 'all';
   function growthStats(){
     const g = DB.growth; const list = g.animals || [];
     const gains = list.map(a=>a.dailyGain);
@@ -1719,7 +1701,7 @@ function afterCycle(){
     const sl = DB.slaughterRecords, sp = DB.slaughterPlans;
     return `
     <div class="page">
-      ${pageHeader('屠宰加工', '定点屠宰 · 检疫合格 · 冷链分割 · 产品联动', addBtn('登记屠宰记录'))}
+      ${pageHeader('屠宰加工', '定点屠宰 · 检疫合格 · 冷链分割 · 产品联动', `${navBtn('🐂 育肥牛档案','livestock')}${addBtn('登记屠宰记录')}`)}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🍖', label:'已屠宰（本季）', value:sl.reduce((a,r)=>a+r.head,0)+' 头只', sub:'西门塔尔牛定点屠宰', color:'#b3541e', bg:'#fbeee6'})}
         ${statCard({icon:'✅', label:'检疫合格率', value:'100%', sub:'旗动物检疫所出证', color:'#4f46e5', bg:'#eef2ff'})}
@@ -1770,7 +1752,7 @@ function afterCycle(){
   ];
   const vaccineRecordFields = [
     {name:'date', label:'日期', type:'date', required:true},
-    {name:'earTag', label:'耳标号（个体防疫时填写）', type:'text', placeholder:'例：YL-0008；群体防疫可留空'},
+    {name:'earTag', label:'牛只耳标（群体防疫可留空）', type:'select', options:[{v:'',t:'群体防疫 / 未指定个体'}, ...earTagOptions()]},
     {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
     {name:'group', label:'群体', type:'text', placeholder:'例：全群 / 犊牛'},
     {name:'vaccine', label:'疫苗/项目', type:'select', options:['口蹄疫 O 型','口蹄疫 A 型','炭疽','布病监测','犊牛腹泻疫苗','出栏前检疫'].map(v=>({v}))},
@@ -1780,7 +1762,7 @@ function afterCycle(){
   ];
   const medicineFields = [
     {name:'date', label:'日期', type:'date'},
-    {name:'earTag', label:'耳标号（个体用药时填写）', type:'text'},
+    {name:'earTag', label:'牛只耳标（群体用药可留空）', type:'select', options:[{v:'',t:'群体用药 / 未指定个体'}, ...earTagOptions()]},
     {name:'species', label:'畜种', type:'select', options:['牛','犊牛'].map(v=>({v}))},
     {name:'group', label:'群体', type:'text', placeholder:'例：育肥牛 60 头'},
     {name:'drug', label:'药品', type:'text', required:true, placeholder:'例：伊维菌素（驱虫）'},
@@ -1788,11 +1770,18 @@ function afterCycle(){
     {name:'operator', label:'兽医', type:'text'},
     {name:'note', label:'备注', type:'text'}
   ];
+  const disinfectFields = [
+    {name:'date', label:'消毒日期', type:'date', required:true},
+    {name:'item', label:'消毒对象', type:'text', required:true, placeholder:'例：犊牛舍 / 大牛棚圈 / 活动区'},
+    {name:'drug', label:'消毒药品', type:'text', required:true, placeholder:'例：戊二醛、过氧乙酸、生石灰'},
+    {name:'operator', label:'消毒人员', type:'text'},
+    {name:'note', label:'备注', type:'textarea'}
+  ];
   function pageVaccine() {
     const vr = DB.vaccineRecords, ds = DB.disinfect, done = vr.filter(r=>r.status==='完成').length;
     return `
     <div class="page">
-      ${pageHeader('防疫管理', '春秋两防 · 应免尽免 · 消毒灭源 · 检疫出证', addBtn('登记防疫记录'))}
+      ${pageHeader('防疫管理', '春秋两防 · 应免尽免 · 消毒灭源 · 检疫出证', `${navBtn('🐂 牛只档案','livestock')}${addBtn('登记防疫记录')}`)}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'💉', label:'免疫程序', value:DB.vaccinePlans.length+' 项', sub:'口蹄疫 · 小反刍 · 炭疽等', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'✅', label:'已完成记录', value:done+' 项', sub:'共 '+vr.length+' 条防疫台账', color:'#4f46e5', bg:'#eef2ff'})}
@@ -1808,7 +1797,8 @@ function afterCycle(){
           <div style="margin-top:12px">${addBtn('登记防疫记录')}</div>
         </div>
         <div class="col1">
-          ${card('消毒记录', tableHtml(['日期','对象','消毒药','操作人'], ds.map(r=>[r.date, r.item, r.drug, r.operator])))}
+          ${card('消毒记录（可新增/编辑/删除）', tableHtml(['日期','对象','消毒药','操作人','操作'],
+            ds.map(r=>[r.date, r.item, r.drug, r.operator, editBtn('disinfect',r.id)+delBtn('disinfect',r.id)])) + `<div class="card-actions"><button class="btn solid sm" data-modal="disinfect">＋ 登记消毒</button></div>`)}
           ${card('疫病防控要点（寒冷地区）', `
             <div class="cold-list">
               <div class="cold-item">❄️ 冬春保温防寒 · 暖棚恒温 24℃，减少应激</div>
@@ -1827,7 +1817,7 @@ function afterCycle(){
   }
   function afterVaccine(){
     bindDel($('#content'));
-    bindEdit($('#content'), { 'vaccineRecords': { title:'编辑防疫记录', fields:vaccineRecordFields }, 'medicines': { title:'编辑用药记录', fields:medicineFields }, 'vaccinePlans': { title:'编辑免疫程序', fields:vaccinePlanFields } });
+    bindEdit($('#content'), { 'vaccineRecords': { title:'编辑防疫记录', fields:vaccineRecordFields }, 'medicines': { title:'编辑用药记录', fields:medicineFields }, 'vaccinePlans': { title:'编辑免疫程序', fields:vaccinePlanFields }, 'disinfect': { title:'编辑消毒记录', fields:disinfectFields } });
     $('#content').querySelectorAll('[data-add="vaccinePlans"]').forEach(b=>b.addEventListener('click',()=>openModal('新增免疫程序',vaccinePlanFields,v=>{addRecord('vaccinePlans',v);toast('免疫程序已新增');render(current)})));
     $('#content').querySelectorAll('[data-add="登记防疫记录"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('登记防疫记录', vaccineRecordFields, v=>{ addRecord('vaccineRecords', v); toast('防疫记录已保存'); render(current); });
@@ -1840,7 +1830,10 @@ function afterCycle(){
         toast('用药已登记，休药期已计入'); render(current);
       });
     });
-    bindDel($('#content'));
+    const disBtn = $('#content').querySelector('[data-modal="disinfect"]');
+    if (disBtn) disBtn.addEventListener('click', ()=>{
+      openModal('登记消毒记录', disinfectFields, v=>{ addRecord('disinfect',v); toast('消毒记录已保存'); render(current); });
+    });
   }
 
   /* ================= 装备图标库（每个设备名旁显示对应小图标） ================= */
@@ -2018,9 +2011,16 @@ function afterCycle(){
     <path d="M52 13q5 8 0 16M56 9q8 13 0 26" stroke="#5eead4" stroke-width="1.5" fill="none" opacity=".9"/>
   </svg>`;
 
+  let machineArtSeq=0;
+  function uniqueMachineArt(svg){
+    const suffix='ma'+(++machineArtSeq);
+    const ids=[...svg.matchAll(/id="([^"]+)"/g)].map(m=>m[1]);
+    ids.forEach(id=>{ svg=svg.split(`id="${id}"`).join(`id="${id}-${suffix}"`).split(`url(#${id})`).join(`url(#${id}-${suffix})`); });
+    return svg;
+  }
   function bigDeviceArt(name){
     const k = devIconKey(name);
-    return `<span class="bs-equip-art">${MACHINE_ART[k] || MACHINE_ART.tractor}</span>`;
+    return `<span class="bs-equip-art">${uniqueMachineArt(MACHINE_ART[k] || MACHINE_ART.tractor)}</span>`;
   }
   function machineArt(name){
     const n = String(name||'');
@@ -2033,7 +2033,7 @@ function afterCycle(){
     else if (/拖拉机/.test(n)) k = 'tractor';
     else if (/打草|割草/.test(n)) k = 'mower';
     else if (/门/.test(n)) k = 'gate';
-    return `<span class="mach-art">${MACHINE_ART[k] || MACHINE_ART.tractor}</span>`;
+    return `<span class="mach-art">${uniqueMachineArt(MACHINE_ART[k] || MACHINE_ART.tractor)}</span>`;
   }
 
   /* ================= 智慧装备 ================= */
@@ -2235,7 +2235,7 @@ function afterCycle(){
     const machineCount = DB.deviceList.filter(d=>/农机|机器狗|无人机|拖拉机|打草机/.test(d.name)).reduce((a,d)=>a+d.count,0);
     return `
     <div class="page device-page">
-      ${pageHeader('智慧装备 · 设备、数据、预警一体化', '设备接入 · 协议连接 · 实时数据 · 自动预警 · 处理闭环', `<button class="btn solid sm" data-device-refresh>↻ 刷新设备数据</button><button class="btn ghost sm" data-alert-add>＋ 新增预警</button>`)}
+      ${pageHeader('智慧装备 · 设备、数据、预警一体化', '设备接入 · 协议连接 · 实时数据 · 自动预警 · 处理闭环', `<button class="btn solid sm" data-device-refresh>↻ 刷新设备数据</button><button class="btn ghost sm" data-alert-add>＋ 新增预警</button>${navBtn('🔗 系统接入中心','integrations')}`)}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'📡', label:'联网终端', value:fmt(c.devTotal)+' 台', sub:'9 类设备 · 监控/耳标/项圈/农机', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'🟢', label:'设备在线率', value:c.devRate+'%', sub:'在线 '+fmt(c.devOnline)+' 台 · 离线/检修 '+fmt(c.devOffline)+' 台', color:'#14b8a6', bg:'#e7f7f3'})}
@@ -2375,7 +2375,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     const pull=list.filter(x=>/拉取/.test(x.direction)).length;
     return `
     <div class="page integration-page">
-      ${pageHeader('系统接入中心 · 独立系统统一接入', '连接后点击每张系统卡片里的“↗ 打开独立系统”，即可进入厂商自己的软件', `<button class="btn solid sm" data-integration-add>＋ 新增外部系统</button>`)}
+      ${pageHeader('系统接入中心 · 独立系统统一接入', '连接后点击每张系统卡片里的“↗ 打开独立系统”，即可进入厂商自己的软件', `${navBtn('📡 设备端口','devices')}<button class="btn solid sm" data-integration-add>＋ 新增外部系统</button>`)}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🔗', label:'外部系统', value:list.length+' 个', sub:'视频/耳标/饲喂/称重/无人设备', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'🟢', label:'已连接', value:connected+' 个', sub:'统一适配 · 状态可测试', color:'#14b8a6', bg:'#e7f7f3'})}
@@ -2477,14 +2477,16 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
       <div class="tourism-top-grid">
         ${card('近 7 日牧游收入', `<div id="chRev" class="chart-box"></div>`, 'tourism-revenue-card')}
         ${card('蒙古包 / 毡房', `
-          <div class="yurt-list">${t.yurts.map(y=>`<div class="yurt-item"><div class="yurt-top"><span>⛺ ${y.name}</span>${pill(y.status, y.status==='营业中'?'ok':'muted')}</div><div class="yurt-fac">${y.fac}</div></div>`).join('')}</div>
+          <div class="yurt-list">${t.yurts.map(y=>`<div class="yurt-item"><div class="yurt-top"><span>⛺ ${y.name}</span>${pill(y.status, y.status==='营业中'?'ok':'muted')}</div><div class="yurt-fac">${y.count||1} 间/顶 · ${y.fac}</div><div class="yurt-actions">${editBtn('tourism.yurts',y.id)}${delBtn('tourism.yurts',y.id)}</div></div>`).join('')}</div>
+          <div class="card-actions"><button class="btn solid sm" data-tourism-add="yurt">＋ 新增蒙古包</button></div>
           <div class="card-note">❄️ 冬季全屋地暖 + 火墙，室内恒温 22℃。</div>`, 'tourism-yurt-card')}
       </div>
 
       ${card('旅游产品 · 全季运营', `
         <div class="prod-grid">${t.products.map(p=>`
           <div class="prod-card"><div class="prod-ico">${p.icon}</div><div class="prod-name">${p.name}</div>
-          <div class="prod-desc">${p.desc}</div><div class="prod-foot"><span class="prod-price">${p.price}</span><span class="prod-season">${p.season}</span></div></div>`).join('')}</div>`, 'tourism-products-card')}
+          <div class="prod-desc">${p.desc}</div><div class="prod-foot"><span class="prod-price">${p.price}</span><span class="prod-season">${p.season}</span></div><div class="prod-actions">${editBtn('tourism.products',p.id)}${delBtn('tourism.products',p.id)}</div></div>`).join('')}</div>
+        <div class="card-actions"><button class="btn solid sm" data-tourism-add="product">＋ 新增旅游产品</button></div>`, 'tourism-products-card')}
 
       ${card('民俗节庆日历 · 四季活动', tableHtml(
         ['时间','活动','地点','类型','状态','说明','操作'],
@@ -2529,18 +2531,33 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     {name:'amount', label:'金额', type:'text', placeholder:'例：¥1,360'},
     {name:'status', label:'状态', type:'select', options:[{v:'待付款'},{v:'已付款'},{v:'已确认'},{v:'待接待'}]}
   ];
+  const yurtFields = [
+    {name:'name', label:'蒙古包名称', type:'text', required:true, placeholder:'例：1 号星空蒙古包'},
+    {name:'count', label:'数量（间/顶）', type:'number', value:1},
+    {name:'status', label:'营业状态', type:'select', options:['营业中','维护中','停用'].map(v=>({v}))},
+    {name:'fac', label:'配套设施', type:'text', placeholder:'地暖、火墙、独立卫浴、供暖等'}
+  ];
+  const tourismProductFields = [
+    {name:'name', label:'产品名称', type:'text', required:true},
+    {name:'icon', label:'图标', type:'text', value:'🏕️'},
+    {name:'desc', label:'产品说明', type:'textarea'},
+    {name:'price', label:'参考价格', type:'text', placeholder:'例：¥480/人'},
+    {name:'season', label:'适用季节', type:'text', placeholder:'例：全年 / 6-9 月'}
+  ];
   function afterTourism(){
     Charts.line($('#chRev'), { labels:['2/10','2/11','2/12','2/13','2/14','2/15','2/16'], unit:'元',
       series:[{ name:'收入', color:'#f59e0b', values:[3260,4180,5230,6110,7480,8920,12680] }],
       height:210, yFormat:v=>'¥'+fmt(Math.round(v)) });
     bindDel($('#content'));
-    bindEdit($('#content'), { 'hulunbuir.events': { title:'编辑节庆活动', fields: eventFields }, 'tourism.orders': { title:'编辑牧游订单', fields:tourismOrderFields } });
+    bindEdit($('#content'), { 'hulunbuir.events': { title:'编辑节庆活动', fields: eventFields }, 'tourism.orders': { title:'编辑牧游订单', fields:tourismOrderFields }, 'tourism.yurts': { title:'编辑蒙古包', fields:yurtFields }, 'tourism.products': { title:'编辑旅游产品', fields:tourismProductFields } });
     $('#content').querySelectorAll('[data-add="hulunbuir.events"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('新增节庆活动', eventFields, v=>{ addRecord('hulunbuir.events', v); toast('活动已新增'); render(current); });
     }));
     $('#content').querySelectorAll('[data-add="新增订单"]').forEach(b=>b.addEventListener('click', ()=>{
       openModal('新增牧游订单', tourismOrderFields, v=>{ addRecord('tourism.orders', v); toast('订单已新增'); render(current); });
     }));
+    $('#content').querySelector('[data-tourism-add="yurt"]')?.addEventListener('click',()=>openModal('新增蒙古包',yurtFields,v=>{addRecord('tourism.yurts',{...v,count:+v.count||1});toast('蒙古包已新增');render(current);}));
+    $('#content').querySelector('[data-tourism-add="product"]')?.addEventListener('click',()=>openModal('新增旅游产品',tourismProductFields,v=>{addRecord('tourism.products',v);toast('旅游产品已新增');render(current);}));
   }
 
   /* ================= 牧场档案 ================= */
@@ -2551,7 +2568,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo-sm.webp?v=89" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.0d" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -3095,21 +3112,25 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
               <button class="btn ghost" data-admin="reset">↺ 恢复出厂数据</button>
             </div>
             <div class="card-note">数据保存在本机浏览器；导出 JSON 可用于备份或迁移到其他设备。</div>`)}
-          ${card('账号、角色权限与登录方式', tableHtml(['账号','角色','权限范围','推荐登录方式','状态'],
-            [['伊拉特','场主 / 管理员','全部数据 · 栏目配置 · 端口连接 · 数据导入导出','手机号 + 密码 + 短信二次验证','<span class="pill ok">启用</span>'],
-             ['吉日嘎拉','兽医','防疫 / 用药 / 繁育 / 犊牛看护','手机号验证码 + 微信小程序','<span class="pill ok">启用</span>'],
-             ['巴特尔','牧工','牧事日志 / 考勤 / 草场作业 / 设备报修','微信小程序一键登录','<span class="pill ok">启用</span>'],
-             ['萨仁','牧户游客服','订单 / 游客接待 / 房态 / 商品核销','微信小程序 + 手机号验证码','<span class="pill warn">旺季启用</span>']]))}
+          ${card('账号、角色权限与登录方式', `
+            <div class="admin-actions"><button class="btn solid sm" data-admin-user-add>＋ 新增账号</button><button class="btn ghost sm" data-admin-refresh>↻ 刷新账号</button><span class="admin-meta" id="adminUsersMeta">正在读取账号…</span></div>
+            <div id="adminUsers"><div class="admin-loading">正在读取真实账号与权限…</div></div>
+            <div class="card-note">正式服务登录后读取服务器真实账号；离线演示版显示示例账号。只有牧场主“伊拉特”和技术平台可新增账号、停用账号、重置密码和授权。</div>`,)}
+          ${card('系统运行检查', `
+            <div class="admin-runtime" id="adminRuntime">
+              <div><span>运行模式</span><b>检查中…</b><i>正在连接服务器</i></div>
+              <div><span>数据存储</span><b>检查中…</b><i>SQLite / 浏览器本地</i></div>
+              <div><span>短信服务</span><b>检查中…</b><i>验证码通道</i></div>
+              <div><span>活动会话</span><b>检查中…</b><i>当前在线账号</i></div>
+            </div>`)}
           ${card('权限与登录优化说明', `
             <div class="admin-actions">
               <span class="pill ok">菜单权限</span><span class="pill info">按钮权限</span><span class="pill warn">数据范围</span><span class="pill">操作留痕</span>
             </div>
             <div class="card-note">场主登录后进入全量驾驶舱；兽医只看到防疫、用药、繁殖和预警；牧工只看到日志、考勤、草场作业和设备报修；客服只看到文旅订单与接待。手机端优先微信小程序验证码登录，避免牧民记账号密码；员工离场后可一键停用账号。</div>`)}
-          ${card('系统日志（近 4 条）', tableHtml(['时间','操作','对象','结果'],
-            [['09-16 09:12','登录系统','场主 伊拉特','成功'],
-             ['09-16 09:20','新增繁殖记录','产犊 4 头','成功'],
-             ['09-16 09:35','上报免疫记录','犊牛腹泻疫苗 120 头份','成功'],
-             ['09-16 10:02','数据导出','JSON 备份','成功']]))}
+          ${card('系统日志 · 最近操作', `
+            <div class="admin-actions"><button class="btn ghost sm" data-admin-log-refresh>↻ 刷新日志</button><span class="admin-meta">账号、数据、设备、端口和接入配置变更自动留痕</span></div>
+            <div id="adminAuditLogs"><div class="admin-loading">正在读取操作日志…</div></div>`)}
         </div>
         <div class="col1">
           ${card('端口连接配置 · 监控 / 耳标 / 农机', `
@@ -3190,7 +3211,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
           const f = inp.files[0]; if(!f) return;
           const rd = new FileReader();
           rd.onload = e => {
-            try { const d = JSON.parse(e.target.result); if(!d.meta) throw new Error('格式不对'); DB = d; saveDB(); toast('数据已导入'); render(current); }
+            try { const d = JSON.parse(e.target.result); if(!d.meta) throw new Error('格式不对'); DB = mergeDBState(d); saveDB(); toast('数据已导入并完成字段兼容升级'); render(current); }
             catch(err){ toast('导入失败：JSON 格式不正确','warn'); }
           };
           rd.readAsText(f);
@@ -3200,6 +3221,129 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
       else if (act === 'nav') openNavSettings();
       else if (act === 'reset') confirmDel('确定恢复出厂示例数据吗？当前录入内容将被覆盖。', ()=>{ resetData(); toast('已恢复出厂数据'); render(current); });
     }));
+
+    /* 正式服务器后台：读取真实账号、权限、运行状态和审计日志。 */
+    const roleLabels={owner:'牧场最高管理员',platform:'Aimugo技术平台',ranch_admin:'牧场管理员',veterinarian:'兽医',herder:'牧民 / 牧工',service:'客服 / 文旅',gov:'政务查看'};
+    const roleOptions=Object.entries(roleLabels).map(([v,t])=>({v,t}));
+    const canUseServer=/^https?:$/.test(location.protocol) && !isStaticDemoHost();
+    const userHost=$('#adminUsers'), userMeta=$('#adminUsersMeta');
+    const serverFetch=async(path, options={})=>{
+      const headers={accept:'application/json', ...(options.body?{'content-type':'application/json'}:{}), ...(authUser&&authUser.csrf?{'x-csrf-token':authUser.csrf}:{})};
+      const r=await fetch(path,{...options,credentials:'include',headers}); const d=await r.json().catch(()=>({}));
+      if(!r.ok || d.ok===false) throw new Error(d.error||`请求失败（${r.status}）`);
+      return d;
+    };
+    const sampleUsers=[
+      {id:'demo-owner',username:'yilate',name:'伊拉特',role:'owner',phone:'13900006688',status:'active'},
+      {id:'demo-platform',username:'aimugo_admin',name:'Aimugo技术',role:'platform',phone:'',status:'active'},
+      {id:'demo-vet',username:'jirigala',name:'吉日嘎拉',role:'veterinarian',phone:'13800000000',status:'active'},
+      {id:'demo-herder',username:'bateer',name:'巴特尔',role:'herder',phone:'13700000000',status:'active'},
+      {id:'demo-service',username:'saren',name:'萨仁',role:'service',phone:'13600000000',status:'active'}
+    ];
+    function renderAdminUsers(users, live){
+      if(!userHost) return;
+      userMeta.textContent=live?`${users.length} 个真实账号`:`${users.length} 个演示账号 · 离线状态`;
+      userHost.innerHTML=tableHtml(['姓名','登录账号','角色','手机号','状态','操作'], users.map(u=>[
+        `<b>${u.name||'—'}</b>`, `<code>${u.username||'—'}</code>`, roleLabels[u.role]||u.role||'—', u.phone||'—',
+        pill(u.status==='active'?'启用':'停用',u.status==='active'?'ok':'muted'),
+        live?(u.role==='owner'?`<div class="admin-row-actions"><button data-admin-user-action="edit" data-user-id="${u.id}">编辑资料</button><span class="pill ok">最高权限保护</span></div>`:`<div class="admin-row-actions"><button data-admin-user-action="edit" data-user-id="${u.id}">编辑</button><button data-admin-user-action="permission" data-user-id="${u.id}">授权</button><button data-admin-user-action="reset" data-user-id="${u.id}">重置密码</button><button data-admin-user-action="toggle" data-user-id="${u.id}" data-user-status="${u.status}">${u.status==='active'?'停用':'启用'}</button></div>`):'<span class="admin-meta">离线示例</span>'
+      ]));
+    }
+    async function loadAdminUsers(){
+      if(!userHost) return;
+      if(!canUseServer){ renderAdminUsers(sampleUsers,false); return; }
+      userHost.innerHTML='<div class="admin-loading">正在读取真实账号与权限…</div>';
+      try{ const d=await serverFetch('/api/users'); renderAdminUsers(d.users||[],true); }
+      catch(e){ userHost.innerHTML=`<div class="admin-empty">无法读取账号：${escTxt(e.message)}</div>`; userMeta.textContent='需要牧场主或技术平台权限'; }
+    }
+    function openAdminUserEditor(user){
+      const fields=user?[
+        {name:'name',label:'姓名',type:'text',required:true,value:user.name||''},
+        {name:'phone',label:'手机号',type:'text',value:user.phone||''},
+        {name:'role',label:'角色',type:'select',options:roleOptions,value:user.role},
+        {name:'status',label:'状态',type:'select',options:[{v:'active',t:'启用'},{v:'disabled',t:'停用'}],value:user.status||'active'}
+      ]:[
+        {name:'username',label:'登录账号',type:'text',required:true,placeholder:'字母、数字或手机号'},
+        {name:'password',label:'初始密码',type:'password',required:true,placeholder:'首次登录后强制修改'},
+        {name:'name',label:'姓名',type:'text',required:true},
+        {name:'phone',label:'手机号',type:'text'},
+        {name:'role',label:'角色',type:'select',options:roleOptions,value:'herder'}
+      ];
+      openModal(user?'编辑账号':'新增账号',fields,async v=>{
+        try{
+          if(user) await serverFetch(`/api/users/${user.id}`,{method:'PATCH',body:JSON.stringify(v)});
+          else await serverFetch('/api/users',{method:'POST',body:JSON.stringify(v)});
+          toast(user?'账号已更新':'账号已创建，首次登录需修改密码'); loadAdminUsers();
+        }catch(e){ toast(e.message,'warn'); return false; }
+      });
+    }
+    function openPermissionEditor(userId){
+      openModal('授权给账号',[
+        {name:'resource',label:'数据范围',type:'text',value:'*',placeholder:'* 表示全部，或填写 ranch.state / devices.ports'},
+        {name:'actions',label:'允许操作',type:'text',value:'read,write',placeholder:'read,write；多个用英文逗号分隔'},
+        {name:'scope',label:'权限范围',type:'select',options:['ranch','self','readonly'].map(v=>({v}))},
+        {name:'expiresAt',label:'到期日期（可空）',type:'date'}
+      ],async v=>{
+        try{
+          await serverFetch('/api/permissions',{method:'POST',body:JSON.stringify({userId,resource:v.resource||'*',actions:String(v.actions||'read').split(',').map(x=>x.trim()).filter(Boolean),scope:v.scope||'ranch',expiresAt:v.expiresAt||null})});
+          toast('授权已保存'); loadAdminUsers();
+        }catch(e){ toast(e.message,'warn'); return false; }
+      });
+    }
+    if(userHost) userHost.addEventListener('click', async e=>{
+      const b=e.target.closest('[data-admin-user-action]'); if(!b || !canUseServer) return;
+      const users=(await serverFetch('/api/users').catch(()=>({users:[]}))).users||[];
+      const user=users.find(x=>String(x.id)===String(b.dataset.userId)); if(!user) return;
+      const action=b.dataset.adminUserAction;
+      if(action==='edit') return openAdminUserEditor(user);
+      if(action==='permission') return openPermissionEditor(user.id);
+      if(action==='reset'){
+        confirmAction(`将为 ${user.name} 重置密码，并使现有登录失效。继续吗？`,'重置密码',async()=>{
+          try{ const d=await serverFetch(`/api/users/${user.id}/reset-password`,{method:'POST',body:JSON.stringify({})}); alert(`临时密码：${d.temporaryPassword}\n请交给本人，首次登录后必须修改。`); loadAdminUsers(); }
+          catch(err){ toast(err.message,'warn'); }
+        });
+        return;
+      }
+      if(action==='toggle'){
+        if(user.status==='active'){
+          confirmAction(`确认停用账号“${user.name}”吗？停用后立即退出登录。`,'停用账号',async()=>{
+            try{ await serverFetch(`/api/users/${user.id}`,{method:'DELETE'}); toast('账号已停用','warn'); loadAdminUsers(); }catch(err){ toast(err.message,'warn'); }
+          });
+        }else{
+          try{ await serverFetch(`/api/users/${user.id}`,{method:'PATCH',body:JSON.stringify({status:'active'})}); toast('账号已启用'); loadAdminUsers(); }catch(err){ toast(err.message,'warn'); }
+        }
+      }
+    });
+    const addUserBtn=$('[data-admin-user-add]'); if(addUserBtn) addUserBtn.addEventListener('click',()=>canUseServer?openAdminUserEditor(null):toast('离线演示版不能新增真实账号','warn'));
+    const refreshUsersBtn=$('[data-admin-refresh]'); if(refreshUsersBtn) refreshUsersBtn.addEventListener('click',loadAdminUsers);
+
+    async function loadAdminLogs(){
+      const host=$('#adminAuditLogs'); if(!host) return;
+      if(!canUseServer){ host.innerHTML=tableHtml(['时间','账号','操作','对象','说明'], [
+        ['离线演示','—','数据维护','本机数据','离线版不记录服务器日志']
+      ]); return; }
+      host.innerHTML='<div class="admin-loading">正在读取操作日志…</div>';
+      try{
+        const d=await serverFetch('/api/audit-logs'); const logs=(d.logs||[]).slice(0,20);
+        const actionLabels={'auth.login':'账号登录','auth.logout':'账号退出','user.create':'新增账号','user.update':'修改账号','user.disable':'停用账号','user.password.reset':'重置密码','permission.grant':'账号授权','permission.revoke':'收回授权','ranch.state.update':'保存牧场数据','resource.post':'新增业务记录','resource.put':'修改业务记录','resource.delete':'删除业务记录','device.port.connect':'连接设备端口','device.register':'登记设备适配器','system.seed':'初始化系统'};
+        host.innerHTML=tableHtml(['时间','账号','操作','对象','说明'], logs.map(l=>[
+          String(l.created_at||'').replace('T',' ').replace('Z','').slice(0,19), l.user_name||'系统', actionLabels[l.action]||l.action||'—', `${l.resource||'—'}${l.target_id?' #'+l.target_id:''}`, l.detail||'—'
+        ]));
+      }catch(e){ host.innerHTML=`<div class="admin-empty">无法读取日志：${escTxt(e.message)}</div>`; }
+    }
+    async function loadRuntime(){
+      const host=$('#adminRuntime'); if(!host) return;
+      if(!canUseServer){
+        host.innerHTML='<div><span>运行模式</span><b>离线演示</b><i>无需网络</i></div><div><span>数据存储</span><b>浏览器本地</b><i>可导出 JSON 备份</i></div><div><span>短信服务</span><b>未启用</b><i>离线演示不发送短信</i></div><div><span>活动会话</span><b>1</b><i>当前演示账号</i></div>';
+        return;
+      }
+      try{
+        const d=await serverFetch('/api/platform/status');
+        host.innerHTML=`<div><span>运行模式</span><b>正式服务器</b><i>${escTxt(location.origin)}</i></div><div><span>数据存储</span><b>SQLite</b><i>${escTxt(d.database||'服务器数据库')}</i></div><div><span>短信服务</span><b>${escTxt(d.smsProvider||'console')}</b><i>今日验证码 ${d.smsToday||0} 条</i></div><div><span>活动会话</span><b>${d.activeSessions||0} 个</b><i>共 ${d.users||0} 个账号</i></div>`;
+      }catch(e){ host.innerHTML=`<div><span>运行模式</span><b>服务异常</b><i>${escTxt(e.message)}</i></div>`; }
+    }
+    const logBtn=$('[data-admin-log-refresh]'); if(logBtn) logBtn.addEventListener('click',loadAdminLogs);
+    loadAdminUsers(); loadAdminLogs(); loadRuntime();
   }
 
   /* ================= 政务对接 ================= */
@@ -3247,7 +3391,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     const done = g.systems.filter(x=>x.status==='已对接').length;
     return `
     <div class="page">
-      ${pageHeader('政务对接 · 让数据多跑路 牧民少跑腿', '防疫直报 / 检疫出证 / 屠宰监管 / 耳标溯源，与旗、市、自治区监管平台一键对接', '')}
+      ${pageHeader('政务对接 · 让数据多跑路 牧民少跑腿', '防疫直报 / 检疫出证 / 屠宰监管 / 耳标溯源，与旗、市、自治区监管平台一键对接', navBtn('🔗 外部系统接入','integrations'))}
       <div class="kpi-grid kpi-4">
         ${statCard({icon:'🏛️', label:'已对接系统', value:done+' 个', sub:'检疫/防疫/屠宰/溯源', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'📤', label:'累计上报记录', value:g.reports.length+' 条', sub:'含防疫/出证/耳标/屠宰', color:'#0d9488', bg:'rgba(13,148,136,.12)'})}
@@ -3378,6 +3522,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     content.innerHTML = p.render();
     requestAnimationFrame(()=>content.classList.add('fade-in'));
     if (p.after) p.after();
+    content.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.goto)));
     bindPageSettings();
     renderNav();
     $('#sidebar').classList.remove('open'); $('#mask').classList.remove('show');
