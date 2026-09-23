@@ -460,21 +460,24 @@ const DEFAULT_DATA = {
 const KEY = 'yilate-ranch-v48';
 let DB = loadDB();
 
+function mergeDBState(input){
+  const d = input || {};
+  const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  const merged = Object.assign(base, d);
+  if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
+  if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
+  if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
+  if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
+  if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
+  merged.meta = Object.assign({}, base.meta, d.meta || {});
+  return merged;
+}
 function loadDB(){
   try {
     const raw = localStorage.getItem(KEY);
     if (raw){
       const d = JSON.parse(raw);
-      if (d && d.meta){
-        const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
-        const merged = Object.assign(base, d);
-        if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
-        if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
-        if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
-        if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
-        if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
-        return merged;
-      }
+      if (d && d.meta) return mergeDBState(d);
     }
   } catch(e){}
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -501,7 +504,7 @@ async function loadCloudState(){
     if (!r.ok) return;
     const d = await r.json();
     if (d && d.data) {
-      DB = d.data;
+      DB = mergeDBState(d.data);
       try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){}
       window.dispatchEvent(new CustomEvent('ranch-cloud-data', { detail:DB }));
     } else {

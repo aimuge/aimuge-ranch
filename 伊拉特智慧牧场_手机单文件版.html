@@ -4091,7 +4091,7 @@ body[data-theme="dark"] .integration-flow,body[data-theme="dark"] .integration-c
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
       <div class="wx-mini">📱 牧民端小程序 · 游客端小程序</div>
-      <div class="sys-info">平台 v97 · 2026-09-21 · 呼伦贝尔</div>
+      <div class="sys-info">平台 v97.1 · 2026-09-21 · 呼伦贝尔</div>
     </div>
   </aside>
   <div class="mask" id="mask"></div>
@@ -4101,7 +4101,7 @@ body[data-theme="dark"] .integration-flow,body[data-theme="dark"] .integration-c
     <header class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
       <div class="crumb" id="crumb">数据总览</div>
-      <span class="ver-badge" title="当前版本">v97 · 09-21</span>
+      <span class="ver-badge" title="当前版本">v97.1 · 09-21</span>
       <div class="topbar-right">
         <div class="iot-chip" id="iotChip" title="点击开/关智能硬件实时采集">● 实时采集</div>
         <button class="gear-btn" id="themeBtn" title="切换科技深色 / 浅色">🌙</button>
@@ -4120,7 +4120,7 @@ body[data-theme="dark"] .integration-flow,body[data-theme="dark"] .integration-c
     </header>
     <nav class="mnav" id="mnav"></nav>
     <section class="content" id="content"></section>
-    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v97 · 2026-09-21</footer>
+    <footer class="foot">© 2026 内蒙古艾牧戈数智科技有限公司 · 智慧畜牧业一体化管理平台 v97.1 · 2026-09-21</footer>
   </main>
 </div>
 <button class="fab" id="fabBtn" title="智能服务小伊">👩‍🌾</button>
@@ -4597,21 +4597,24 @@ const DEFAULT_DATA = {
 const KEY = 'yilate-ranch-v48';
 let DB = loadDB();
 
+function mergeDBState(input){
+  const d = input || {};
+  const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  const merged = Object.assign(base, d);
+  if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
+  if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
+  if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
+  if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
+  if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
+  merged.meta = Object.assign({}, base.meta, d.meta || {});
+  return merged;
+}
 function loadDB(){
   try {
     const raw = localStorage.getItem(KEY);
     if (raw){
       const d = JSON.parse(raw);
-      if (d && d.meta){
-        const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
-        const merged = Object.assign(base, d);
-        if (!Array.isArray(d.deviceTelemetry) || !d.deviceTelemetry.length) merged.deviceTelemetry = base.deviceTelemetry;
-        if (!Array.isArray(d.deviceAlerts) || !d.deviceAlerts.length) merged.deviceAlerts = base.deviceAlerts;
-        if (!Array.isArray(d.ports) || !d.ports.length) merged.ports = base.ports;
-        if (!d.earTagGateway) merged.earTagGateway = base.earTagGateway;
-        if (!Array.isArray(d.integrations) || !d.integrations.length) merged.integrations = base.integrations;
-        return merged;
-      }
+      if (d && d.meta) return mergeDBState(d);
     }
   } catch(e){}
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -4638,7 +4641,7 @@ async function loadCloudState(){
     if (!r.ok) return;
     const d = await r.json();
     if (d && d.data) {
-      DB = d.data;
+      DB = mergeDBState(d.data);
       try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){}
       window.dispatchEvent(new CustomEvent('ranch-cloud-data', { detail:DB }));
     } else {
@@ -4844,7 +4847,7 @@ const Charts = (() => {
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v97';
+  const APP_VERSION = 'v97.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -4857,7 +4860,7 @@ const Charts = (() => {
   const ROLE_MENUS = {
     owner: null,
     platform: null,
-    ranch_admin: ['bigscreen','dashboard','cycle','livestock','grassland','forage','vaccine','devices','slaughter','products','gov','tourism','log','ledger','labor','insurance','gallery','admin','agent'],
+    ranch_admin: ['bigscreen','dashboard','cycle','livestock','grassland','forage','vaccine','devices','slaughter','products','gov','tourism','integrations','log','ledger','labor','insurance','gallery','admin','agent'],
     veterinarian: ['bigscreen','dashboard','livestock','forage','vaccine','log','gallery','agent'],
     herder: ['bigscreen','dashboard','livestock','grassland','forage','vaccine','devices','slaughter','log','labor','insurance','gallery','agent'],
     service: ['bigscreen','dashboard','tourism','products','log','agent'],

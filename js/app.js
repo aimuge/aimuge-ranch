@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v97';
+  const APP_VERSION = 'v97.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -19,7 +19,7 @@
   const ROLE_MENUS = {
     owner: null,
     platform: null,
-    ranch_admin: ['bigscreen','dashboard','cycle','livestock','grassland','forage','vaccine','devices','slaughter','products','gov','tourism','log','ledger','labor','insurance','gallery','admin','agent'],
+    ranch_admin: ['bigscreen','dashboard','cycle','livestock','grassland','forage','vaccine','devices','slaughter','products','gov','tourism','integrations','log','ledger','labor','insurance','gallery','admin','agent'],
     veterinarian: ['bigscreen','dashboard','livestock','forage','vaccine','log','gallery','agent'],
     herder: ['bigscreen','dashboard','livestock','grassland','forage','vaccine','devices','slaughter','log','labor','insurance','gallery','agent'],
     service: ['bigscreen','dashboard','tourism','products','log','agent'],
