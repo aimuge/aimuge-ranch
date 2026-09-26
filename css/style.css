@@ -4095,3 +4095,27 @@ body[data-theme="dark"] .admin-loading,body[data-theme="dark"] .admin-empty,body
 /* v98 全站交互一致性与无障碍细节 */
 button,input,select,textarea{outline:none}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid rgba(22,129,152,.28);outline-offset:2px}button:disabled{opacity:.55;cursor:not-allowed}.btn,.mini-btn,.admin-row-actions button,.ic-actions a,.ic-actions button{transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease,border-color .15s ease}.page :is(input,select,textarea){transition:border-color .15s ease,box-shadow .15s ease}.page :is(input,select,textarea):focus{border-color:#35a7b9!important;box-shadow:0 0 0 3px rgba(53,167,185,.12)!important}.page :is(.card,.stat-card,.lv-work-item){isolation:isolate}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* v98.1 1920×1080 教学一体机全屏适配与统一返回主页 */
+.home-btn{
+  border:1px solid rgba(13,148,136,.28);background:linear-gradient(145deg,#f7ffff,#eefbfa);color:#0d6678;
+  border-radius:9px;padding:6px 11px;font-size:12px;line-height:1;font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap;
+  box-shadow:0 5px 14px -11px rgba(13,148,136,.72);transition:.18s;margin-left:2px;
+}
+.home-btn:hover{border-color:#168198;background:#eaf9fa;color:#075566;transform:translateY(-1px)}
+.home-btn.is-hidden{display:none!important}
+body[data-theme="dark"] .home-btn{background:rgba(4,29,40,.92);border-color:rgba(55,179,200,.34);color:#c8f2f8}
+@media(max-width:700px){.home-btn{padding:6px 8px;font-size:11px}.home-btn:not(.is-hidden){margin-left:0}}
+
+@media (min-width:1600px) and (min-height:900px){
+  body.bigscreen-active .sidebar,
+  body.bigscreen-active .topbar,
+  body.bigscreen-active .mnav{display:none!important}
+  body.bigscreen-active .main{margin-left:0!important;width:100vw!important;height:100vh!important;overflow:hidden!important}
+  body.bigscreen-active .content{width:100vw!important;height:100vh!important;padding:0!important;overflow:hidden!important}
+  body.bigscreen-active .bigscreen.bs-v8{
+    width:100vw!important;height:100vh!important;padding:8px 14px 54px!important;border-radius:0!important;box-sizing:border-box!important;
+  }
+  body.bigscreen-active .bs-v8 .bs-body{min-height:0!important}
+  body.bigscreen-active .bs-v8 .bs-foot{bottom:5px!important}
+}

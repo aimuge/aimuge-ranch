@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v98.0';
+  const APP_VERSION = 'v98.1';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -384,7 +384,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo-sm.webp?v=98.0d" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=98.1a" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -2568,7 +2568,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.0d" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.1a" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -3100,7 +3100,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
         ${statCard({icon:'🗂️', label:'数据表', value:'20+ 张', sub:'牲畜/草场/装备/账本/订单', color:'#4f46e5', bg:'#eef2ff'})}
         ${statCard({icon:'🧾', label:'记录总数', value:dbCount()+' 条', sub:'可增删改 · 本机保存', color:'#0ea5e9', bg:'#e0f2fe'})}
         ${statCard({icon:'👥', label:'账号角色', value:'4 类', sub:'场主/兽医/牧工/客服', color:'#f59e0b', bg:'#fef3c7'})}
-        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-23 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
+        ${statCard({icon:'🕒', label:'系统版本', value:APP_VERSION, sub:'2026-09-26 · 伊拉特智慧牧场', color:'#64748b', bg:'#f1f5f9'})}
       </div>
       <div class="grid-3">
         <div class="col2">
@@ -3525,6 +3525,8 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     content.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.goto)));
     bindPageSettings();
     renderNav();
+    const homeBtn=$('#homeBtn');
+    if(homeBtn) homeBtn.classList.toggle('is-hidden', name==='bigscreen');
     $('#sidebar').classList.remove('open'); $('#mask').classList.remove('show');
     window.scrollTo(0,0);
   }
@@ -3536,6 +3538,12 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
   $('#menuBtn').addEventListener('click', ()=>{ $('#sidebar').classList.add('open'); $('#mask').classList.add('show'); });
   $('#mask').addEventListener('click', ()=>{ $('#sidebar').classList.remove('open'); $('#mask').classList.remove('show'); });
   $('#settingsBtn').addEventListener('click', openNavSettings);
+  const homeBtn=$('#homeBtn');
+  if(homeBtn) homeBtn.addEventListener('click', ()=>{
+    if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+    document.body.classList.remove('bs-fullscreen');
+    render('bigscreen');
+  });
   const exitBtn = $('#exitBtn');
   if (exitBtn) exitBtn.addEventListener('click', async ()=>{
     if (!confirm('确定退出当前账号并返回总栏目吗？')) return;
