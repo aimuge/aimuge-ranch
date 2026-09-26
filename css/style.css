@@ -4107,6 +4107,14 @@ html.performance-mode .bs-v8 .bs-kpi{animation:none!important}
 html.performance-mode .bs-v8 .bs-panel,
 html.performance-mode .bs-v8 .bs-kpi{backdrop-filter:none!important}
 
+/* v98.6 全系统随屏幕自动适配：普通栏目使用当前可用宽度，小屏自动单列 */
+body:not(.bigscreen-active) .page{width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important}
+body:not(.bigscreen-active) .agent-page{max-width:1100px!important;margin-left:auto!important;margin-right:auto!important}
+body:not(.bigscreen-active) .content{width:100%!important;max-width:none!important}
+body:not(.bigscreen-active) .grid-3{grid-template-columns:minmax(0,2fr) minmax(280px,1fr)}
+@media(max-width:1100px){body:not(.bigscreen-active) .grid-3{grid-template-columns:1fr}body:not(.bigscreen-active) .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){body:not(.bigscreen-active) .kpi-grid{grid-template-columns:1fr 1fr}}
+
 /* v98 全站后台功能完善 */
 .admin-meta{color:#7b9098;font-size:10.5px;line-height:1.5}.admin-loading,.admin-empty{padding:18px;border:1px dashed var(--line);border-radius:10px;color:#7b9098;font-size:11px;text-align:center;background:#fbfdfd}.admin-empty{color:#b45309;background:#fffaf0}.admin-row-actions{display:flex;gap:5px;flex-wrap:wrap}.admin-row-actions button{border:1px solid rgba(13,148,136,.22);background:#fff;color:#0f6678;border-radius:7px;padding:5px 7px;font:inherit;font-size:10px;cursor:pointer}.admin-row-actions button:hover{border-color:#168198;background:#f3fbfc}.admin-runtime{display:grid;grid-template-columns:1fr 1fr;gap:9px}.admin-runtime>div{padding:11px 12px;border:1px solid #e3ecef;border-radius:10px;background:linear-gradient(145deg,#fff,#f8fbfc)}.admin-runtime span{display:block;color:#80949b;font-size:10px}.admin-runtime b{display:block;margin-top:3px;color:#1d4653;font-size:13px}.admin-runtime i{display:block;margin-top:3px;color:#81969d;font-size:9.5px;font-style:normal;word-break:break-all}.admin-actions+.admin-meta,.admin-actions .admin-meta{margin-left:auto}
 body[data-theme="dark"] .admin-loading,body[data-theme="dark"] .admin-empty,body[data-theme="dark"] .admin-row-actions button,body[data-theme="dark"] .admin-runtime>div{background:linear-gradient(145deg,rgba(7,31,42,.94),rgba(4,20,29,.97));border-color:rgba(55,179,200,.18)}body[data-theme="dark"] .admin-runtime b{color:#d9f3f7}

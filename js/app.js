@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v98.5';
+  const APP_VERSION = 'v98.6';
   const IS_WINDOWS = /Windows/i.test(navigator.userAgent || '');
   const PERFORMANCE_MODE = IS_WINDOWS;
   if (PERFORMANCE_MODE) document.documentElement.classList.add('performance-mode');
@@ -387,7 +387,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo-sm.webp?v=98.5a" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=98.6a" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -2617,7 +2617,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.5a" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.6a" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
