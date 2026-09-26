@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v98.1';
+  const APP_VERSION = 'v98.2';
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -384,7 +384,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo-sm.webp?v=98.1a" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=98.2a" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -813,9 +813,10 @@
       else document.exitFullscreen && document.exitFullscreen();
     });
 
-    /* ⑦ AI机器人数字讲解：牧场简介 + 新闻主播式语音播报 */
+    /* ⑦ AI机器人数字讲解：内置普通话离线音频 + 系统语音降级 */
     const profileIntro = (DB.narration && DB.narration[0] && DB.narration[0].text) || intro;
-    let voiceOn = false, newsVoice = null;
+    const NARRATOR_AUDIO_URL = 'assets/audio/narrator-intro.m4a';
+    let voiceOn = false, newsVoice = null, narratorAudio = null, narratorAudioBroken = false;
     const voiceBtn = $('#bsVoice'), dhBox = $('#dhBox'), calfBox = $('#calfBox');
     const pickNewsVoice = ()=>{
       if (!window.speechSynthesis) return;
@@ -883,6 +884,7 @@
     const stopSpeech = ()=>{
       speechRunId += 1;
       if (speechGapTimer){ clearTimeout(speechGapTimer); speechGapTimer = null; }
+      if (narratorAudio){ try{ narratorAudio.pause(); narratorAudio.currentTime = 0; }catch(e){} }
       if (window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
       stopTalkMotion();
     };
@@ -905,11 +907,43 @@
       return out.length ? out : [clean];
     };
     const pauseAfter = text=>/[！？!?]$/.test(text) ? 210 : /[。；;]$/.test(text) ? 170 : /[，,、]$/.test(text) ? 85 : 120;
+    const ensureNarratorAudio = ()=>{
+      if (narratorAudioBroken) return null;
+      if (!narratorAudio){
+        try{
+          narratorAudio = new Audio(NARRATOR_AUDIO_URL);
+          narratorAudio.preload = 'auto';
+          narratorAudio.volume = 1;
+          narratorAudio.load();
+        }catch(e){ narratorAudioBroken = true; return null; }
+      }
+      return narratorAudio;
+    };
+    const playOfflineNarration = (runId)=>new Promise(resolve=>{
+      const audio = ensureNarratorAudio();
+      if (!audio){ resolve(false); return; }
+      let resolved = false;
+      const finish = ok=>{ if(!resolved){ resolved=true; resolve(ok); } };
+      audio.onplay = ()=>{
+        if (runId !== speechRunId){ try{audio.pause();}catch(e){} finish(false); return; }
+        startTalkMotion();
+        finish(true);
+      };
+      audio.onended = ()=>{
+        if (runId !== speechRunId) return;
+        voiceOn = false; resetVoiceButton(); stopTalkMotion(); finish(true);
+      };
+      audio.onerror = ()=>{ narratorAudioBroken = true; finish(false); };
+      try{
+        audio.currentTime = 0;
+        const p = audio.play();
+        if (p && p.catch) p.catch(()=>{ narratorAudioBroken = true; finish(false); });
+      }catch(e){ narratorAudioBroken = true; finish(false); }
+      setTimeout(()=>finish(false), 2200);
+    });
     setMotionFrame(IDLE_FRAME_START);
-    const speak = (txt = profileIntro)=>{
-      if (!window.speechSynthesis) { toast('当前浏览器不支持语音播报，请使用新版 Edge 或 Chrome'); return; }
-      stopSpeech();
-      const runId = speechRunId;
+    const speakSystem = (txt, runId)=>{
+      if (!window.speechSynthesis) { toast('当前浏览器不支持语音播报，请使用新版 Edge 或 Chrome','warn'); return; }
       const chunks = narrationChunks(txt);
       const speakChunk = idx=>{
         if (runId !== speechRunId) return;
@@ -918,26 +952,25 @@
         try {
           const u = new SpeechSynthesisUtterance(text);
           u.lang = (newsVoice && newsVoice.lang) || 'zh-CN';
-          u.rate = 0.98;
-          u.pitch = 1.0;
-          u.volume = 1;
+          u.rate = 0.98; u.pitch = 1.0; u.volume = 1;
           if (newsVoice) u.voice = newsVoice;
           u.onstart = startTalkMotion;
           u.onboundary = e=>{ if (humanRoot) humanRoot.dataset.talk = String((e.charIndex || 0) % 3); };
-          u.onend = ()=>{
-            if (runId !== speechRunId) return;
-            speechGapTimer = setTimeout(()=>speakChunk(idx + 1), pauseAfter(text));
-          };
-          u.onerror = ()=>{
-            if (runId !== speechRunId) return;
-            speechGapTimer = setTimeout(()=>speakChunk(idx + 1), 260);
-          };
+          u.onend = ()=>{ if (runId !== speechRunId) return; speechGapTimer = setTimeout(()=>speakChunk(idx + 1), pauseAfter(text)); };
+          u.onerror = ()=>{ if (runId !== speechRunId) return; speechGapTimer = setTimeout(()=>speakChunk(idx + 1), 260); };
           speechSynthesis.speak(u);
-        } catch(e){
-          voiceOn = false; resetVoiceButton(); stopTalkMotion();
-        }
+        } catch(e){ voiceOn = false; resetVoiceButton(); stopTalkMotion(); }
       };
       speakChunk(0);
+    };
+    const speak = async (txt = profileIntro)=>{
+      stopSpeech();
+      const runId = speechRunId;
+      if (txt === profileIntro){
+        const played = await playOfflineNarration(runId);
+        if (played) return;
+      }
+      speakSystem(txt, runId);
     };
     const startNarration = (msg)=>{
       voiceOn = true;
@@ -2568,7 +2601,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.1a" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.2a" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
