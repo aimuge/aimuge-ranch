@@ -6,7 +6,7 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v98.3';
+  const APP_VERSION = 'v98.4';
   const IS_WINDOWS = /Windows/i.test(navigator.userAgent || '');
   const PERFORMANCE_MODE = IS_WINDOWS;
   if (PERFORMANCE_MODE) document.documentElement.classList.add('performance-mode');
@@ -387,7 +387,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo-sm.webp?v=98.3a" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=98.4a" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -654,7 +654,7 @@
     const T = window.THREE;
     const renderer = new T.WebGLRenderer({canvas, antialias:false, alpha:true, powerPreference:'high-performance'});
     const lowPower = document.documentElement.classList.contains('performance-mode') || (navigator.hardwareConcurrency || 8) <= 4 || matchMedia('(prefers-reduced-motion: reduce)').matches;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? .85 : 1));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     renderer.setClearColor(0x031027, 0);
     const scene = new T.Scene();
     scene.fog = new T.FogExp2(0x031027, 0.018);
@@ -2617,7 +2617,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.3a" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.4a" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
@@ -3569,6 +3569,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     crumb.textContent = ps.title || p.title;
     content.classList.remove('fade-in');
     content.innerHTML = p.render();
+    if(name!=='bigscreen') content.insertAdjacentHTML('beforeend','<button class="page-home-float" data-goto="bigscreen" type="button">🏠 返回主页</button>');
     requestAnimationFrame(()=>content.classList.add('fade-in'));
     if (p.after) p.after();
     content.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.goto)));

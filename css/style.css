@@ -4128,6 +4128,7 @@ button,input,select,textarea{outline:none}button:focus-visible,input:focus-visib
 .home-btn.is-hidden{display:none!important}
 body[data-theme="dark"] .home-btn{background:rgba(4,29,40,.92);border-color:rgba(55,179,200,.34);color:#c8f2f8}
 @media(max-width:700px){.home-btn{padding:6px 8px;font-size:11px}.home-btn:not(.is-hidden){margin-left:0}}
+.page-home-float{position:fixed;right:92px;bottom:22px;z-index:90;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(13,148,136,.38);border-radius:999px;padding:10px 15px;background:linear-gradient(145deg,#f7ffff,#e7f8f6);color:#0b6575;font:700 12px/1 inherit;cursor:pointer;box-shadow:0 14px 32px -18px rgba(8,60,70,.75);transition:.18s}.page-home-float:hover{transform:translateY(-2px);border-color:#168198;background:#effcfb}.page-home-float:active{transform:translateY(0)}body[data-theme="dark"] .page-home-float{background:linear-gradient(145deg,#07303d,#041f2a);border-color:rgba(55,179,200,.42);color:#d0f7fa}@media(max-width:640px){.page-home-float{right:12px;bottom:82px;padding:9px 12px;font-size:11px}}
 
 @media (min-width:1000px) and (min-height:600px){
   body.bigscreen-active .sidebar,
