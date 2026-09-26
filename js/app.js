@@ -654,7 +654,7 @@
     const T = window.THREE;
     const renderer = new T.WebGLRenderer({canvas, antialias:false, alpha:true, powerPreference:'high-performance'});
     const lowPower = document.documentElement.classList.contains('performance-mode') || (navigator.hardwareConcurrency || 8) <= 4 || matchMedia('(prefers-reduced-motion: reduce)').matches;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.25));
     renderer.setClearColor(0x031027, 0);
     const scene = new T.Scene();
     scene.fog = new T.FogExp2(0x031027, 0.018);
@@ -697,7 +697,7 @@
     // 交互旋转 / 缩放
     let rotY=0, rotX=0, targetY=0, targetX=0, distance=35, targetDistance=35, drag=false, lx=0, ly=0, raf=0, alive=true, lastFrame=0, inView=true;
     const resize=()=>{const r=host.getBoundingClientRect();const w=Math.max(2,Math.round(r.width)),h=Math.max(2,Math.round(r.height));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
-    const render=(now=0)=>{if(!alive)return;raf=requestAnimationFrame(render);if(document.hidden||!inView||now-lastFrame<(lowPower?100:50))return;lastFrame=now;if(!drag){targetY+=lowPower?.0006:.0012;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);};
+    const render=(now=0)=>{if(!alive)return;raf=requestAnimationFrame(render);const due=drag?0:(lowPower?200:50);if(document.hidden||!inView||now-lastFrame<due)return;lastFrame=now;if(!drag){targetY+=lowPower?.0008:.0012;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);};
     canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
     canvas.addEventListener('pointermove',e=>{if(!drag)return;targetY+=(e.clientX-lx)*.008;targetX=Math.max(-.32,Math.min(.32,targetX+(e.clientY-ly)*.004));lx=e.clientX;ly=e.clientY;});
     const end=e=>{drag=false;try{canvas.releasePointerCapture&&canvas.releasePointerCapture(e.pointerId);}catch(_){}};
