@@ -6,7 +6,10 @@
   const crumb = $('#crumb');
   const fmt = n => Number(n).toLocaleString('zh-CN');
   const money = n => '¥' + Number(n).toLocaleString('zh-CN');
-  const APP_VERSION = 'v98.2';
+  const APP_VERSION = 'v98.3';
+  const IS_WINDOWS = /Windows/i.test(navigator.userAgent || '');
+  const PERFORMANCE_MODE = IS_WINDOWS;
+  if (PERFORMANCE_MODE) document.documentElement.classList.add('performance-mode');
   let current = 'dashboard';
   let demoMonth = new Date().getMonth() + 1;
   const SEASON_COLOR = { '春':'#7fb069', '夏':'#4f46e5', '秋':'#f59e0b', '冬':'#64748b' };
@@ -384,7 +387,7 @@
 
       <div class="bs-top">
         <div class="bs-brand">
-          <img src="assets/logo-sm.webp?v=98.2a" alt="YILATE">
+          <img src="assets/logo-sm.webp?v=98.3a" alt="YILATE">
           <div><div class="bs-name">${DB.meta.name}</div><div class="bs-en">YILATE SMART RANCH</div></div>
         </div>
         <div class="bs-title-wrap">
@@ -593,21 +596,25 @@
   function startBigscreenCanvas(){
     const canvas = document.getElementById('bsFxCanvas');
     if (!canvas || !canvas.getContext) return ()=>{};
+    if (document.documentElement.classList.contains('performance-mode')) return ()=>{};
     const ctx = canvas.getContext('2d');
-    let raf = 0, w = 0, h = 0, dpr = 1;
-    const nodes = Array.from({length:64}, (_,i)=>({
+    let raf = 0, w = 0, h = 0, dpr = 1, lastDraw = 0;
+    const nodes = Array.from({length:28}, (_,i)=>({
       x:Math.random(), y:Math.random(), vx:(Math.random()-.5)*.00028, vy:(Math.random()-.5)*.00028,
       r:1 + (i%5)*.34, c:['#5eead4','#7dd3fc','#a78bfa','#f0b429','#fb7185'][i%5]
     }));
     const resize = ()=>{
       const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       w = Math.max(1, Math.round(rect.width)); h = Math.max(1, Math.round(rect.height));
       canvas.width = Math.round(w*dpr); canvas.height = Math.round(h*dpr);
       ctx.setTransform(dpr,0,0,dpr,0,0);
     };
     const draw = (now)=>{
       if (!document.body.contains(canvas)) return;
+      raf = requestAnimationFrame(draw);
+      if (document.hidden || now - lastDraw < 42) return;
+      lastDraw = now;
       ctx.clearRect(0,0,w,h);
       const t = now/1000;
       for (let k=0;k<3;k++){
@@ -619,7 +626,7 @@
         }
         ctx.strokeStyle = ['rgba(94,234,212,.18)','rgba(125,211,252,.17)','rgba(167,139,250,.15)'][k];
         ctx.lineWidth = 1.1;
-        ctx.shadowColor = ['#5eead4','#7dd3fc','#a78bfa'][k]; ctx.shadowBlur = 14; ctx.stroke();
+        ctx.shadowColor = ['#5eead4','#7dd3fc','#a78bfa'][k]; ctx.shadowBlur = 8; ctx.stroke();
       }
       nodes.forEach(n=>{ n.x += n.vx; n.y += n.vy; if(n.x<0||n.x>1)n.vx*=-1; if(n.y<0||n.y>1)n.vy*=-1; });
       ctx.shadowBlur = 0;
@@ -627,15 +634,14 @@
         const a=nodes[i], ax=a.x*w, ay=a.y*h;
         for(let j=i+1;j<nodes.length;j++){
           const b=nodes[j], bx=b.x*w, by=b.y*h, dx=ax-bx, dy=ay-by, d=Math.hypot(dx,dy);
-          if(d<125){
+          if(d<115){
             ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by);
-            ctx.strokeStyle = `rgba(125,211,252,${(1-d/125)*.20})`; ctx.lineWidth=.8; ctx.stroke();
+            ctx.strokeStyle = `rgba(125,211,252,${(1-d/115)*.18})`; ctx.lineWidth=.7; ctx.stroke();
           }
         }
         ctx.beginPath(); ctx.arc(ax,ay,a.r,0,Math.PI*2);
         ctx.fillStyle=a.c; ctx.globalAlpha=.62 + .28*Math.sin(t*2+i); ctx.fill(); ctx.globalAlpha=1;
       }
-      raf = requestAnimationFrame(draw);
     };
     resize(); window.addEventListener('resize', resize); raf = requestAnimationFrame(draw);
     return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', resize); ctx.clearRect(0,0,w,h); };
@@ -647,7 +653,8 @@
     if (!canvas || !host || !window.THREE) return ()=>{};
     const T = window.THREE;
     const renderer = new T.WebGLRenderer({canvas, antialias:false, alpha:true, powerPreference:'high-performance'});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+    const lowPower = document.documentElement.classList.contains('performance-mode') || (navigator.hardwareConcurrency || 8) <= 4 || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? .85 : 1));
     renderer.setClearColor(0x031027, 0);
     const scene = new T.Scene();
     scene.fog = new T.FogExp2(0x031027, 0.018);
@@ -657,12 +664,19 @@
     const sun = new T.DirectionalLight(0xfff1cf, 2.6); sun.position.set(18, 30, 15); scene.add(sun);
     const rim = new T.DirectionalLight(0x3b82f6, 1.4); rim.position.set(-18, 16, -14); scene.add(rim);
     const world = new T.Group(); scene.add(world);
-    const box=(w,h,d,color,x,y,z)=>{const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial({color,roughness:.72,metalness:.08}));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;world.add(m);return m;};
+    const unitBox = new T.BoxGeometry(1,1,1);
+    const materialCache = new Map();
+    const material = color=>{ if(!materialCache.has(color)) materialCache.set(color,new T.MeshLambertMaterial({color})); return materialCache.get(color); };
+    const box=(w,h,d,color,x,y,z)=>{const m=new T.Mesh(unitBox,material(color));m.scale.set(w,h,d);m.position.set(x,y,z);world.add(m);return m;};
     const label=(text,color,x,y,z,s=2.4)=>{const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);g.fillStyle='rgba(3,18,35,.86)';g.strokeStyle=color;g.lineWidth=3;g.beginPath();if(g.roundRect)g.roundRect(8,8,496,112,22);else g.rect(8,8,496,112);g.fill();g.stroke();g.font='bold 44px "PingFang SC","Microsoft YaHei",sans-serif';g.fillStyle='#e9fbff';g.textAlign='center';g.textBaseline='middle';g.fillText(text,256,64);const tex=new T.CanvasTexture(c);const sp=new T.Sprite(new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));sp.position.set(x,y,z);sp.scale.set(s,s/4,1);world.add(sp);return sp;};
-    const cattle=(x,z,scale=1)=>{const g=new T.Group();const body=new T.Mesh(new T.CapsuleGeometry(.34*scale,.78*scale,4,8),new T.MeshStandardMaterial({color:0xb97845,roughness:.86}));body.rotation.z=Math.PI/2;body.position.y=.55*scale;g.add(body);const head=new T.Mesh(new T.SphereGeometry(.28*scale,10,8),new T.MeshStandardMaterial({color:0xd39b6b,roughness:.86}));head.position.set(.72*scale,.63*scale,0);g.add(head);for(const dx of[-.28,.28])for(const dz of[-.22,.22]){const leg=box(.10*scale,.55*scale,.10*scale,0x8f5938,dx,.22*scale,dz);g.remove(leg);world.remove(leg);const l=new T.Mesh(new T.BoxGeometry(.09*scale,.55*scale,.09*scale),new T.MeshStandardMaterial({color:0x8f5938}));l.position.set(dx,.25*scale,dz);g.add(l);}g.position.set(x,0,z);g.rotation.y=(x+z)*.4;world.add(g);return g;};
+    const cattleBodyGeo = new T.CapsuleGeometry(.34,.78,3,6);
+    const cattleHeadGeo = new T.SphereGeometry(.28,8,6);
+    const cattleLegGeo = new T.BoxGeometry(.09,.55,.09);
+    const cattleMat = material(0xb97845), cattleHeadMat = material(0xd39b6b), cattleLegMat = material(0x8f5938);
+    const cattle=(x,z,scale=1)=>{const g=new T.Group();const body=new T.Mesh(cattleBodyGeo,cattleMat);body.rotation.z=Math.PI/2;body.position.y=.55*scale;body.scale.setScalar(scale);g.add(body);const head=new T.Mesh(cattleHeadGeo,cattleHeadMat);head.scale.setScalar(scale);head.position.set(.72*scale,.63*scale,0);g.add(head);for(const dx of[-.28,.28])for(const dz of[-.22,.22]){const l=new T.Mesh(cattleLegGeo,cattleLegMat);l.scale.setScalar(scale);l.position.set(dx*scale,.25*scale,dz*scale);g.add(l);}g.position.set(x,0,z);g.rotation.y=(x+z)*.4;world.add(g);return g;};
     // 地形底座与网格
     box(38,.7,29,0x0b3a43,0,-.42,0);
-    const land=new T.Mesh(new T.PlaneGeometry(37,28),new T.MeshStandardMaterial({color:0x0d514b,roughness:.96,metalness:.02}));land.rotation.x=-Math.PI/2;land.position.y=.01;world.add(land);
+    const land=new T.Mesh(new T.PlaneGeometry(37,28),material(0x0d514b));land.rotation.x=-Math.PI/2;land.position.y=.01;world.add(land);
     const grid=new T.GridHelper(36,24,0x46d8e8,0x1e6682);grid.position.y=.035;grid.material.opacity=.28;grid.material.transparent=true;world.add(grid);
     // 牧场道路
     const roadPts=[new T.Vector3(-15,.08,10),new T.Vector3(-5,.08,8),new T.Vector3(1,.08,2),new T.Vector3(12,.08,-7),new T.Vector3(16,.08,-11)];
@@ -671,25 +685,27 @@
     box(8,2.5,6,0x8f5d32,7,1.25,-6); box(8.6,.6,6.4,0x39c6db,7,2.82,-6); label('大牛棚圈','#5eead4',7,5.2,-6,3.5);
     box(5.8,2.05,4.8,0x9b683f,-5.8,1.02,-7.5); box(6.2,.5,5.1,0xa3e635,-5.8,2.28,-7.5); label('犊牛舍','#a3e635',-5.8,4.25,-7.5,3.0);
     box(5.5,2.8,4.5,0x334e72,-12,1.4,5.5); box(6,.55,5,0xf472b6,-12,3.15,5.5); label('生活区','#f472b6',-12,5.05,5.5,3.0);
-    for(let i=0;i<8;i++){const b=new T.Mesh(new T.CylinderGeometry(.62,.62,1.12,12),new T.MeshStandardMaterial({color:i%2?0xe1b85a:0xc99542,roughness:.94}));b.rotation.z=Math.PI/2;b.position.set(10+(i%4)*1.35,.78,5.4+Math.floor(i/4)*1.35);world.add(b);} label('饲草区','#f0b429',11.8,3.1,6.0,3.0);
+    const hayGeo=new T.CylinderGeometry(.62,.62,1.12,10), hayCount=lowPower?5:8;for(let i=0;i<hayCount;i++){const b=new T.Mesh(hayGeo,material(i%2?0xe1b85a:0xc99542));b.rotation.z=Math.PI/2;b.position.set(10+(i%4)*1.35,.78,5.4+Math.floor(i/4)*1.35);world.add(b);} label('饲草区','#f0b429',11.8,3.1,6.0,3.0);
     box(5,1.2,3.5,0x6b7d92,-4,1.6,8.5); label('设备区','#a78bfa',-4,3.3,8.5,3.0);
     // 牛只活动区
-    for(let i=0;i<12;i++) cattle(-7+(i%4)*3.2,2+Math.floor(i/4)*3.1,.78);
+    const cattleCount=lowPower?6:12;for(let i=0;i<cattleCount;i++) cattle(-7+(i%4)*3.2,2+Math.floor(i/4)*3.1,.78);
     label('牛只活动区','#34d399',-5,3.7,4,4.1);
     // 摄像头点位
     const camPos=[[-13,10],[-4,11],[6,10],[13,-2],[-8,-1]];
-    camPos.forEach(([x,z],i)=>{const p=box(.18,1.5,.18,0x183c69,x,.75,z);p.geometry.dispose();p.geometry=new T.CylinderGeometry(.08,.12,1.5,8);const eye=new T.Mesh(new T.SphereGeometry(.25,10,8),new T.MeshStandardMaterial({color:i===4?0xf59e0b:0x5eead4,emissive:i===4?0x6b4a00:0x0b6b68,emissiveIntensity:1.2}));eye.position.set(x,1.55,z);world.add(eye);});
+    const camGeo=new T.CylinderGeometry(.08,.12,1.5,7), camEyeGeo=new T.SphereGeometry(.25,8,6);
+    camPos.forEach(([x,z],i)=>{const p=new T.Mesh(camGeo,material(0x183c69));p.position.set(x,.75,z);world.add(p);const eyeMat=new T.MeshLambertMaterial({color:i===4?0xf59e0b:0x5eead4,emissive:i===4?0x6b4a00:0x0b6b68,emissiveIntensity:1});const eye=new T.Mesh(camEyeGeo,eyeMat);eye.position.set(x,1.55,z);world.add(eye);});
     // 交互旋转 / 缩放
-    let rotY=0, rotX=0, targetY=0, targetX=0, distance=35, targetDistance=35, drag=false, lx=0, ly=0, raf=0, alive=true, lastFrame=0;
+    let rotY=0, rotX=0, targetY=0, targetX=0, distance=35, targetDistance=35, drag=false, lx=0, ly=0, raf=0, alive=true, lastFrame=0, inView=true;
     const resize=()=>{const r=host.getBoundingClientRect();const w=Math.max(2,Math.round(r.width)),h=Math.max(2,Math.round(r.height));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
-    const render=(now=0)=>{if(!alive)return;raf=requestAnimationFrame(render);if(now-lastFrame<33)return;lastFrame=now;if(!drag){targetY+=.0014;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);};
+    const render=(now=0)=>{if(!alive)return;raf=requestAnimationFrame(render);if(document.hidden||!inView||now-lastFrame<(lowPower?100:50))return;lastFrame=now;if(!drag){targetY+=lowPower?.0006:.0012;}rotY+=(targetY-rotY)*.07;rotX+=(targetX-rotX)*.07;distance+=(targetDistance-distance)*.08;world.rotation.y=rotY;world.rotation.x=rotX;camera.position.set(0,distance*.63,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);};
     canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
     canvas.addEventListener('pointermove',e=>{if(!drag)return;targetY+=(e.clientX-lx)*.008;targetX=Math.max(-.32,Math.min(.32,targetX+(e.clientY-ly)*.004));lx=e.clientX;ly=e.clientY;});
     const end=e=>{drag=false;try{canvas.releasePointerCapture&&canvas.releasePointerCapture(e.pointerId);}catch(_){}};
     canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);canvas.addEventListener('pointerleave',()=>{drag=false;});
     canvas.addEventListener('wheel',e=>{e.preventDefault();targetDistance=Math.max(24,Math.min(48,targetDistance+e.deltaY*.018));},{passive:false});
+    const io='IntersectionObserver' in window ? new IntersectionObserver(entries=>{inView=entries.some(e=>e.isIntersecting);},{threshold:.01}) : null;if(io)io.observe(host);
     window.addEventListener('resize',resize);resize();render();
-    return ()=>{alive=false;cancelAnimationFrame(raf);window.removeEventListener('resize',resize);renderer.dispose();scene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{if(m.map)m.map.dispose();m.dispose();});}});};
+    return ()=>{alive=false;cancelAnimationFrame(raf);if(io)io.disconnect();window.removeEventListener('resize',resize);renderer.dispose();scene.traverse(o=>{if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{if(m.map)m.map.dispose();m.dispose();});}});unitBox.dispose();cattleBodyGeo.dispose();cattleHeadGeo.dispose();cattleLegGeo.dispose();hayGeo.dispose();camGeo.dispose();camEyeGeo.dispose();};
   }
 
   function countUp(el, target, dur=1200, suffix=''){
@@ -2601,7 +2617,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     <div class="page">
       <div class="ranch-hero">
         <div class="rh-inner">
-          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.2a" alt="YILATE Smart Ranch"></div>
+          <div class="rh-logo"><img src="assets/logo-sm.webp?v=98.3a" alt="YILATE Smart Ranch"></div>
           <div class="rh-name">${ps.title || r.name}</div>
           <div class="rh-en">${ps.subtitle || (r.nameEn+' · 新一代家庭牧场')}</div>
           <div class="rh-loc">📍 ${r.location}</div>
