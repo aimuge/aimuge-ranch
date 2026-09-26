@@ -201,20 +201,33 @@ function setRole(next){
   $('loginBtn').textContent=c.mode==='sms'?'验证码登录':'登 录 系 统';
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setRole(b.dataset.role)));
-const isStaticDemoHost = location.protocol==='file:' || /(^|\.)github\.io$/i.test(location.hostname) || ['8123','8124'].includes(location.port);
+const offlineMode = location.protocol==='file:';
+const isStaticDemoHost = offlineMode || /(^|\.)github\.io$/i.test(location.hostname) || ['8123','8124'].includes(location.port);
+const offlineAccounts = {
+  owner: [
+    {account:'yilate', password:'123456', user:{username:'yilate',name:'伊拉特',role:'owner',mustChangePassword:false}},
+    {account:'13900006688', password:'123456', user:{username:'yilate',name:'伊拉特',role:'owner',mustChangePassword:false}}
+  ],
+  service: [
+    {account:'service', password:'123456', user:{username:'service',name:'牧户游客服',role:'service',mustChangePassword:false}}
+  ],
+  aimugo: [
+    {account:'aimugo_admin', password:'123456', user:{username:'aimugo_admin',name:'Aimugo技术',role:'platform',mustChangePassword:false}}
+  ]
+};
 const demoLoginBtn = $('demoLoginBtn');
 if (isStaticDemoHost && demoLoginBtn) {
   const offline = location.protocol==='file:';
   demoLoginBtn.style.display='block';
-  demoLoginBtn.textContent = offline ? '进入离线演示版' : '进入公网演示版';
+  demoLoginBtn.textContent = offline ? '一键进入完整系统' : '进入公网演示版';
   $('loginNotice').textContent = offline
-    ? '当前为U盘离线演示版：可直接进入系统查看数据大屏；正式账号登录仍需连接云端后端。'
+    ? 'U盘完整系统版。演示账号：yilate　密码：123456；也可点击下方“一键进入完整系统”。'
     : '当前为公网演示版：可直接进入系统查看数据大屏；本地服务器登录仍使用正式账号。';
   $('loginNotice').style.borderColor='rgba(94,234,212,.38)';
   $('loginNotice').style.background='rgba(94,234,212,.07)';
 }
 if (demoLoginBtn) demoLoginBtn.addEventListener('click',()=>{
-  const demoUser={username:'public_demo',name:'伊拉特演示账号',role:'owner',demo:true,mustChangePassword:false};
+  const demoUser={username:'yilate',name:'伊拉特',role:'owner',mustChangePassword:false};
   localStorage.setItem('yilate-auth-user',JSON.stringify(demoUser));
   location.href='index.html';
 });
@@ -240,6 +253,7 @@ function notice(text,type='info'){
 $('sendCodeBtn').addEventListener('click',async()=>{
   const phone=accountInput.value.trim();
   if(!/^1[3-9]\d{9}$/.test(phone)) return notice('请输入正确的手机号','error');
+  if(offlineMode) return notice('U盘离线版请使用账号密码登录，演示密码：123456');
   $('sendCodeBtn').disabled=true;$('sendCodeBtn').textContent='发送中…';
   try{
     const d=await api('/api/auth/send-code',{method:'POST',body:JSON.stringify({phone})});
@@ -254,6 +268,14 @@ $('loginForm').addEventListener('submit',async e=>{
   $('loginBtn').disabled=true;$('loginBtn').textContent='登录中…';
   try{
     let d;
+    if(offlineMode){
+      const password=$('passwordInput').value;
+      const found=(offlineAccounts[role]||[]).find(x=>x.account.toLowerCase()===account.toLowerCase()&&x.password===password);
+      if(!found) throw new Error('账号或密码错误。演示账号：yilate，密码：123456');
+      localStorage.setItem('yilate-auth-user',JSON.stringify(found.user));
+      location.href='index.html';
+      return;
+    }
     if(roleConfig[role].mode==='sms') d=await api('/api/auth/login/sms',{method:'POST',body:JSON.stringify({phone:account,code:$('codeInput').value.trim()})});
     else d=await api('/api/auth/login/password',{method:'POST',body:JSON.stringify({account,password:$('passwordInput').value})});
     localStorage.setItem('yilate-auth-user',JSON.stringify(d.user));

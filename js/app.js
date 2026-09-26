@@ -3569,14 +3569,14 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
     crumb.textContent = ps.title || p.title;
     content.classList.remove('fade-in');
     content.innerHTML = p.render();
-    if(name!=='bigscreen') content.insertAdjacentHTML('beforeend','<button class="page-home-float" data-goto="bigscreen" type="button">🏠 返回主页</button>');
+    if(name!=='dashboard' && name!=='bigscreen') content.insertAdjacentHTML('beforeend','<button class="page-home-float" data-goto="dashboard" type="button">🏠 返回总览主页</button>');
     requestAnimationFrame(()=>content.classList.add('fade-in'));
     if (p.after) p.after();
     content.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.goto)));
     bindPageSettings();
     renderNav();
     const homeBtn=$('#homeBtn');
-    if(homeBtn) homeBtn.classList.toggle('is-hidden', name==='bigscreen');
+    if(homeBtn) homeBtn.classList.toggle('is-hidden', name==='dashboard' || name==='bigscreen');
     $('#sidebar').classList.remove('open'); $('#mask').classList.remove('show');
     window.scrollTo(0,0);
   }
@@ -3592,7 +3592,7 @@ ${escTxt(sample)}</pre></div><div class="modal-foot"><button class="btn ghost" d
   if(homeBtn) homeBtn.addEventListener('click', ()=>{
     if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
     document.body.classList.remove('bs-fullscreen');
-    render('bigscreen');
+    render('dashboard');
   });
   const exitBtn = $('#exitBtn');
   if (exitBtn) exitBtn.addEventListener('click', async ()=>{
